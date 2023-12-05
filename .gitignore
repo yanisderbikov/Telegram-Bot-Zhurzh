@@ -1,0 +1,14 @@
+.idea
+/logs
+common-jpa/target
+common-node-service/target
+common-rabbitmq/target
+common-utils/target
+demo/target
+dispatcher/target
+node/target
+node-check-order-service/target
+node-order-service/target
+node-start-service/target
+
+dispatcher/src/main/resources/application.properties

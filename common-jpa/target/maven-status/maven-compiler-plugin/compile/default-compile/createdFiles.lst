@@ -1,0 +1,13 @@
+com/zhurzh/commonjpa/entity/AppUser$AppUserBuilder.class
+com/zhurzh/commonjpa/entity/AppUser.class
+com/zhurzh/commonjpa/entity/AppPhoto.class
+com/zhurzh/commonjpa/dao/AppDocumentDAO.class
+com/zhurzh/commonjpa/entity/AppPhoto$AppPhotoBuilder.class
+com/zhurzh/commonjpa/dao/AppUserDAO.class
+com/zhurzh/commonjpa/entity/BinaryContent.class
+com/zhurzh/commonjpa/dao/AppPhotoDAO.class
+com/zhurzh/commonjpa/entity/UserState.class
+com/zhurzh/commonjpa/entity/AppDocument$AppDocumentBuilder.class
+com/zhurzh/commonjpa/dao/BinaryContentDAO.class
+com/zhurzh/commonjpa/entity/BinaryContent$BinaryContentBuilder.class
+com/zhurzh/commonjpa/entity/AppDocument.class
