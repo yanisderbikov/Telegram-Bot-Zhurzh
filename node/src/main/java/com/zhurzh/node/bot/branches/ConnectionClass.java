@@ -11,6 +11,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import org.springframework.web.client.RestTemplate;
 @Log4j
@@ -46,15 +51,22 @@ public class ConnectionClass implements Branches {
 
     private ResponseEntity<String> sendRequest(Update update, String path) {
         try {
-            // Создание URL с параметром update
-            String urlWithParams = buildUri(path) + "?update=" + update;
-            log.debug("uri : " + urlWithParams);
+            // Создание URL
+            var url = buildUri(path);
+            log.debug("URI: " + url);
+
+            // Создание HTTP-заголовков
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            // Создание HTTP-сущности с объектом Update и заголовками
+            HttpEntity<Update> requestEntity = new HttpEntity<>(update, headers);
 
             // Создание RestTemplate
             RestTemplate restTemplate = new RestTemplate();
 
-            // Отправка HTTP GET-запроса на контроллер микросервиса
-            ResponseEntity<String> response = restTemplate.getForEntity(urlWithParams, String.class);
+            // Отправка HTTP POST-запроса на контроллер микросервиса
+            ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
 
             // Обработка ответа, если необходимо
             if (response.getStatusCode().is2xxSuccessful()) {
@@ -64,8 +76,10 @@ public class ConnectionClass implements Branches {
                 // Обработка ошибки
                 log.debug("Error sending update");
             }
+
+            log.debug("response : " + response.getBody());
             return response;
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
