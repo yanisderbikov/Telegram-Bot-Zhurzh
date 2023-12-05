@@ -3,12 +3,10 @@ package com.zhurzh.demo.controller;
 import com.zhurzh.commonnodeservice.service.MainService;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import lombok.AllArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 

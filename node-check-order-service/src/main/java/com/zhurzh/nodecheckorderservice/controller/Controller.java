@@ -1,28 +1,23 @@
-package com.zhurzh.nodeorderservice.controller;
+package com.zhurzh.nodecheckorderservice.controller;
 
-import com.zhurzh.nodeorderservice.service.OrderService;
-import lombok.AllArgsConstructor;
+import com.zhurzh.commonjpa.entity.AppUser;
+import com.zhurzh.model.Branches;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import com.zhurzh.commonjpa.entity.AppUser;
-
-import com.zhurzh.model.Branches;
 
 @RestController
 @Log4j
-@AllArgsConstructor
 public class Controller implements Branches {
-
-    private OrderService orderService;
-
     @Override
-    @GetMapping
-    public ResponseEntity<String> isActive(){
-        var out = "The branch 'node order service' is online";
+    @GetMapping("/")
+    public ResponseEntity<String> isActive() {
+        var out = "The branch 'check order service' is online";
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
 
@@ -30,7 +25,6 @@ public class Controller implements Branches {
     @GetMapping("/callback")
     public ResponseEntity<String> manageCallBack(Update update, AppUser appUser){
         try {
-            orderService.callback(update, appUser);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);
@@ -41,11 +35,15 @@ public class Controller implements Branches {
     @GetMapping("/text")
     public ResponseEntity<String> manageText(Update update, AppUser appUser){
         try {
-            orderService.text(update, appUser);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

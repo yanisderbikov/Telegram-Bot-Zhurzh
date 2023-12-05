@@ -1,7 +1,7 @@
-package com.zhurzh.commonnodeservice.service.impl;
+package com.zhurzh.node.service.impl;
 
-import com.zhurzh.commonnodeservice.service.ConsumerService;
-import com.zhurzh.commonnodeservice.service.MainService;
+import com.zhurzh.node.service.ConsumerService;
+import com.zhurzh.node.service.MainService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -19,7 +19,7 @@ public class ConsumerServiceImpl implements ConsumerService {
     @Override
     @RabbitListener(queues = TEXT_MESSAGE_UPDATE)
     public void consumeTextMessageUpdates(Update update) {
-//        log.debug("NODE: Text message is received");
+        log.debug("NODE: Text message is received");
         mainService.processTextMessage(update);
     }
 

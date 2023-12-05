@@ -1,6 +1,6 @@
-package com.zhurzh.nodeorderservice.controller;
+package com.zhurzh.nodestartservice.controller;
 
-import com.zhurzh.nodeorderservice.service.OrderService;
+import com.zhurzh.model.Branches;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
@@ -10,19 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import com.zhurzh.commonjpa.entity.AppUser;
 
-import com.zhurzh.model.Branches;
 
 @RestController
 @Log4j
 @AllArgsConstructor
 public class Controller implements Branches {
 
-    private OrderService orderService;
 
     @Override
     @GetMapping
     public ResponseEntity<String> isActive(){
-        var out = "The branch 'node order service' is online";
+        var out = "The branch 'check order service' is online";
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
 
@@ -30,19 +28,18 @@ public class Controller implements Branches {
     @GetMapping("/callback")
     public ResponseEntity<String> manageCallBack(Update update, AppUser appUser){
         try {
-            orderService.callback(update, appUser);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }catch (Exception e){
             log.error(e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.IM_USED);
         }
     }
     @Override
     @GetMapping("/text")
     public ResponseEntity<String> manageText(Update update, AppUser appUser){
         try {
-            orderService.text(update, appUser);
-            return new ResponseEntity<>(HttpStatus.OK);
+            var out = "text";
+            return ResponseEntity.ok(out);
         }catch (Exception e){
             log.error(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
