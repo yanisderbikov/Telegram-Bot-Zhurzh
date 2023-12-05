@@ -16,14 +16,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class Controller implements Branches {
     @Override
     @GetMapping("/")
-    public ResponseEntity<String> isActive() {
+    public ResponseEntity<String> isActive(Update update) {
         var out = "The branch 'check order service' is online";
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
 
     @Override
     @GetMapping("/callback")
-    public ResponseEntity<String> manageCallBack(Update update, AppUser appUser){
+    public ResponseEntity<String> manageCallBack(Update update){
         try {
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
@@ -33,7 +33,7 @@ public class Controller implements Branches {
     }
     @Override
     @GetMapping("/text")
-    public ResponseEntity<String> manageText(Update update, AppUser appUser){
+    public ResponseEntity<String> manageText(Update update){
         try {
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){

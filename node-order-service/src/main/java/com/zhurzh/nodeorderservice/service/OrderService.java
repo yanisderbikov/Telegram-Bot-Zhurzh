@@ -13,14 +13,14 @@ import com.zhurzh.commonjpa.entity.AppUser;
 public class OrderService {
 //    private CommandsManager cm;
 
-    public void callback(Update update, AppUser appUser){
+    public void callback(Update update){
 //        List<List<InlineKeyboardButton>> list = new ArrayList<>();
 //        cm.addButtonToList(list, Message.HI.getMessage(appUser.getLen()), "fds");
 //        cm.sendAnswerEdit(appUser, update, Message.BYE.getMessage(appUser.getLen()), list);
-        log.debug(String.format("callback hendler: \n%s\n%s", update, appUser));
+        log.debug(String.format("callback hendler: \n%s", update));
     }
-    public void text(Update update, AppUser appUser){
-        log.debug(String.format("text hendler: \n%s\n%s", update, appUser));
+    public void text(Update update){
+        log.debug(String.format("text hendler: \n%s", update));
     }
 
 }

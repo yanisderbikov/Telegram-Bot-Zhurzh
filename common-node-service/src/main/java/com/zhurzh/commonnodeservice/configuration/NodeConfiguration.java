@@ -18,15 +18,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages = "com.zhurzh.commonjpa.entity")
 @ComponentScan
 public class NodeConfiguration {// это как-то связывает со спрингом чтобы все заработало
-
-    @Value("${version.node}")
-    private String version;
     @Value("${salt}")
     private String salt;
 
     @Bean
     public CryptoTool getCryptoTool() {
-        log.debug("NODE VERSION: " + version);
         return new CryptoTool(salt);
     }
 

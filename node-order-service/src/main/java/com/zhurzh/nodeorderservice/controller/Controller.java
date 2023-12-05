@@ -21,16 +21,16 @@ public class Controller implements Branches {
 
     @Override
     @GetMapping
-    public ResponseEntity<String> isActive(){
+    public ResponseEntity<String> isActive(Update update){
         var out = "The branch 'node order service' is online";
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
 
     @Override
     @GetMapping("/callback")
-    public ResponseEntity<String> manageCallBack(Update update, AppUser appUser){
+    public ResponseEntity<String> manageCallBack(Update update){
         try {
-            orderService.callback(update, appUser);
+            orderService.callback(update);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);
@@ -39,9 +39,9 @@ public class Controller implements Branches {
     }
     @Override
     @GetMapping("/text")
-    public ResponseEntity<String> manageText(Update update, AppUser appUser){
+    public ResponseEntity<String> manageText(Update update){
         try {
-            orderService.text(update, appUser);
+            orderService.text(update);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);

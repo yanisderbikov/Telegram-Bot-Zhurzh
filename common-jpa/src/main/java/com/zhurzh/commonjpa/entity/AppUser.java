@@ -1,5 +1,6 @@
 package com.zhurzh.commonjpa.entity;
 
+import com.zhurzh.commonjpa.enums.BranchStatus;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -20,25 +21,15 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String len;
+    private String language;
     @EqualsAndHashCode.Include
     private Long telegramUserId;
+    @EqualsAndHashCode.Include
     private Long chatId;
     @CreationTimestamp
     private LocalDateTime firstLoginDate;
     private String telegramUserName;
     @Enumerated(EnumType.STRING)
-    private UserState state;
-
-
-//    private List<String> userFreeDays;
-
-
-//    @Override
-//    public String toString() {
-//        return String.format("ID %s %s %s %s [@%s] location : %s",
-//                id, lastName, firstName, fatherName, telegramUserName, location.getStreet());
-//    }
+    @Builder.Default
+    private BranchStatus branchStatus = BranchStatus.START;
 }
-
-//Как сдеать так чтобы  Locations location отображались в формате toString?

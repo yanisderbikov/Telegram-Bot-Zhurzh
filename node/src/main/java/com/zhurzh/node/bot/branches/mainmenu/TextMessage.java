@@ -1,15 +1,14 @@
-package com.zhurzh.nodeorderservice.enums;
+package com.zhurzh.node.bot.branches.mainmenu;
 
-
-enum Message {
-    HI("HI", "привет"),
-    BYE("Goodbye", "пока"),
+enum TextMessage {
+    MENU("menu", "меню"),
+    NO_SERVICE_AVAILABLE("No one service is runs, sorry. Try later", "Не один из сервисов не запущен. Попробуйте позже"),
     GREETING("Greetings", "приветствия");
 
     private final String englishMessage;
     private final String russianMessage;
 
-    Message(String englishMessage, String russianMessage) {
+    TextMessage(String englishMessage, String russianMessage) {
         this.englishMessage = englishMessage;
         this.russianMessage = russianMessage;
     }

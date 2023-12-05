@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @AllArgsConstructor
-@Service
+//@Service
 @Log4j
 public class MainServiceTestImpl implements MainService {
     @Override

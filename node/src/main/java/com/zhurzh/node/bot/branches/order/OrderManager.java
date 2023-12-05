@@ -12,9 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 @Component
 @Log4j
 public class OrderManager extends ConnectionClass {
-    public OrderManager(@Value("${order.service.url}") String url,
+    public OrderManager(@Value("${order.service.callbackpath}") String c,
+            @Value("${order.service.url}") String url,
                              @Value("${order.service.port}") String port){
-        super(url, port);
+        super(c, url, port);
     }
 }
 
