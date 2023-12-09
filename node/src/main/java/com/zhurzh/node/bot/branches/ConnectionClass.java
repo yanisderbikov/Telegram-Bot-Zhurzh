@@ -26,13 +26,16 @@ public class ConnectionClass implements Branches {
     private String port;
 
     public ConnectionClass(String callbackPath, String url, String port){
+        this.callbackPath = callbackPath;
         this.port = port;
         this.url = url;
     }
     @Override
     public ResponseEntity<String> isActive(Update update) {
         String path = "/";
-        return sendRequest(update, path);
+        var response =  sendRequest(update, path);
+        log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
+        return response;
     }
 
 
@@ -40,13 +43,17 @@ public class ConnectionClass implements Branches {
     public ResponseEntity<String> manageText(Update update) {
         log.debug("manage Text now");
         String path = "/text";
-        return sendRequest(update, path);
+        var response =  sendRequest(update, path);
+        log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
+        return response;
     }
 
     @Override
     public ResponseEntity<String> manageCallBack(Update update) {
         String path = "/callback";
-        return sendRequest(update, path);
+        var response =  sendRequest(update, path);
+        log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
+        return response;
     }
 
     private ResponseEntity<String> sendRequest(Update update, String path) {
@@ -76,8 +83,6 @@ public class ConnectionClass implements Branches {
                 // Обработка ошибки
                 log.debug("Error sending update");
             }
-
-            log.debug("response : " + response.getBody());
             return response;
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

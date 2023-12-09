@@ -1,5 +1,7 @@
 package com.zhurzh.nodeorderservice.controller;
 
+import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
+import com.zhurzh.nodeorderservice.enums.TextMessage;
 import com.zhurzh.nodeorderservice.service.OrderService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -20,11 +22,13 @@ import com.zhurzh.model.Branches;
 public class Controller implements Branches {
 
     private OrderService orderService;
+    private CommandsManager cm;
 
     @Override
     @PostMapping
     public ResponseEntity<String> isActive(@RequestBody Update update){
-        var out = "The branch 'node order service' is online";
+        var appUser = cm.findOrSaveAppUser(update);
+        var out = TextMessage.ACTIVATION_BUTTON.getMessage(appUser.getLanguage());
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
 

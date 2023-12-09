@@ -1,6 +1,6 @@
 package com.zhurzh.nodeorderservice;
 
-import com.zhurzh.commonnodeservice.service.MainService;
+//import com.zhurzh.commonnodeservice.service.MainService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

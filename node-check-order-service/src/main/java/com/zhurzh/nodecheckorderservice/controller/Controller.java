@@ -1,8 +1,11 @@
 package com.zhurzh.nodecheckorderservice.controller;
 
-import com.zhurzh.commonjpa.entity.AppUser;
+import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.model.Branches;
+import com.zhurzh.nodecheckorderservice.enums.TextMessage;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,11 +13,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @RestController
 @Log4j
+@AllArgsConstructor
 public class Controller implements Branches {
+    private CommandsManager cm;
     @Override
     @PostMapping("/")
     public ResponseEntity<String> isActive(@RequestBody Update update) {
-        var out = "The branch 'check order service' is online";
+        var appUser = cm.findOrSaveAppUser(update);
+        var out = TextMessage.ACTIVATION_BUTTON.getMessage(appUser.getLanguage());
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
 

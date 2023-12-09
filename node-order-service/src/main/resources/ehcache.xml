@@ -1,0 +1,12 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://www.ehcache.org/ehcache.xsd"
+         updateCheck="false">
+
+
+<cache name="userStateCache"
+           maxEntriesLocalHeap="1000"
+           eternal="false"
+           timeToLiveSeconds="3600"
+           timeToIdleSeconds="1800"
+           memoryStoreEvictionPolicy="LRU"/>
+</ehcache>

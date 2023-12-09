@@ -39,7 +39,7 @@
         <module>node-order-service</module>
         <module>node-check-order-service</module>
         <module>node-start-service</module>
-        <module>demo</module>
+<!--        <module>demo</module>-->
     </modules>
 
     <dependencies>

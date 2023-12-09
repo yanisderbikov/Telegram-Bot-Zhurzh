@@ -44,12 +44,12 @@ public class TelegramBot extends TelegramWebhookBot {
 //        listOfCommands.add(new BotCommand("/choose_days", "выбрать рабочие дни"));
 //        listOfCommands.add(new BotCommand("/my_work_days", "посмотреть свои рабочии дни"));
 //        listOfCommands.add(new BotCommand("/choose_location", "выбрать место работы"));
-        listOfCommands.add(new BotCommand("/help", "МЕНЮ"));
+        listOfCommands.add(new BotCommand("/menu", "menu"));
 //        listOfCommands.add(new BotCommand("/begin", "начать с начала"));
-        listOfCommands.add(new BotCommand("/cancel", "отмена любого действия"));
-        listOfCommands.add(new BotCommand("/clear", "отчистить историю"));
+//        listOfCommands.add(new BotCommand("/cancel", "отмена любого действия"));
+//        listOfCommands.add(new BotCommand("/clear", "отчистить историю"));
 
-        listOfCommands.add(new BotCommand("/start", "get a welcome message"));
+        listOfCommands.add(new BotCommand("/start", "very begin"));
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {

@@ -7,6 +7,7 @@ import com.zhurzh.node.bot.branches.order.OrderManager;
 import com.zhurzh.node.bot.branches.start.StartManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -32,14 +33,22 @@ public class MainMenu implements Branches {
 
     @Override
     public ResponseEntity<String> manageCallBack(Update update) {
-        manager(update);
-        return ResponseEntity.ok("ok");
+        try {
+            manager(update);
+            return ResponseEntity.ok("ok");
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override
     public ResponseEntity<String> manageText(Update update) {
-        manager(update);
-        return ResponseEntity.ok("ok");
+        try {
+            manager(update);
+            return ResponseEntity.ok("ok");
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
@@ -60,8 +69,18 @@ public class MainMenu implements Branches {
 
     private void addButtons(List<List<InlineKeyboardButton>> list, Update update){
         var response = orderManager.isActive(update);
-        if (response.getStatusCode().is2xxSuccessful()) commandsManager.addButtonToList(list, response.getBody(), orderManager.getCallbackPath());
+        var callbackPath = orderManager.getCallbackPath();
+        var body = response.getBody();
+        if (response.getStatusCode().is2xxSuccessful()) {
+            commandsManager.addButtonToList(list, body, callbackPath);
+        }
         response = checkOrderManager.isActive(update);
-        if (response.getStatusCode().is2xxSuccessful()) commandsManager.addButtonToList(list, response.getBody(), checkOrderManager.getCallbackPath());
+        callbackPath = checkOrderManager.getCallbackPath();
+        body = response.getBody();
+        if (response.getStatusCode().is2xxSuccessful()) {
+            commandsManager.addButtonToList(list, body, callbackPath);
+        }
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.zhurzh.commonnodeservice.service.impl;
 
 import com.zhurzh.commonjpa.dao.AppUserDAO;
+import com.zhurzh.commonjpa.enums.BranchStatus;
 import com.zhurzh.commonnodeservice.service.ProducerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -39,8 +40,13 @@ public class CommandsManager {
     private final String IMAGES_PATH = "dispatcher/src/main/resources/static/images/ZM/";
     private final String TELEGRAM_LINK = "http://t.me/";
 
+
     public void sendAnswerEdit(AppUser appUser, Update update, @NotNull String text, List<List<InlineKeyboardButton>> list) {
         sendAnswerEdit(appUser, update, text, new InlineKeyboardMarkup(list));
+    }
+    public void sendAnswerEdit(@NotNull Update update, @NotNull String text, @NotNull List<List<InlineKeyboardButton>> list){
+        var appUser = findOrSaveAppUser(update);
+        sendAnswerEdit(appUser, update, text, list);
     }
 
     public void sendAnswerEdit(AppUser appUser, Update update, String text) {
@@ -314,8 +320,8 @@ public class CommandsManager {
     private List<InlineKeyboardButton> buttonHelp() {
         List<InlineKeyboardButton> list = new ArrayList<>();
         var button = new InlineKeyboardButton();
-        button.setText("МЕНЮ");
-        button.setCallbackData("/help");
+        button.setText("Menu");
+        button.setCallbackData("/menu");
         list.add(button);
         return list;
     }
@@ -337,6 +343,7 @@ public class CommandsManager {
             AppUser transientAppUser = AppUser.builder()
                     .telegramUserId(telegramUser.getId())
                     .telegramUserName(telegramUser.getUserName())
+                    .branchStatus(BranchStatus.START)
                     .chatId(update.getMessage().getChatId())
                     .build();
             return appUserDAO.save(transientAppUser);
