@@ -11,8 +11,9 @@ Jar файлы будут находиться в кажом модуле.
 
 
 ----
+Быстрый запуск программы  
+`mvn clean install`  
+`mvn package`
 
-`mvn clean install`
-
-[//]: # (`mvn install pl `)
+Затем запустите файл `run_services.sh`
 

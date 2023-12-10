@@ -29,7 +29,7 @@
 
     <modules>
         <module>dispatcher</module>
-<!--        <module>node</module>-->
+        <module>node</module>
         <module>common-jpa</module>
         <module>common-utils</module>
 <!--        <module>api-service</module>-->
@@ -73,26 +73,6 @@
         </dependency>
     </dependencies>
 
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            &lt;!&ndash; Плагин для упаковки и запуска Spring Boot приложений в родительском POM &ndash;&gt;-->
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <goals>-->
-<!--                            <goal>repackage</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            &lt;!&ndash; Указываем, что необходимо упаковать все модули &ndash;&gt;-->
-<!--                            <includeSystemScope>false</includeSystemScope>-->
-<!--                            <layout>ZIP</layout>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
+
 
 </project>
