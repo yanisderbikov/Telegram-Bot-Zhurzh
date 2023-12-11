@@ -3,6 +3,7 @@ package com.zhurzh.nodecheckorderservice.controller;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.model.Branches;
 import com.zhurzh.nodecheckorderservice.enums.TextMessage;
+import com.zhurzh.nodecheckorderservice.service.CheckOrderService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.checkerframework.checker.units.qual.A;
@@ -16,6 +17,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @AllArgsConstructor
 public class Controller implements Branches {
     private CommandsManager cm;
+    private CheckOrderService checkOrderService;
+
     @Override
     @PostMapping("/")
     public ResponseEntity<String> isActive(@RequestBody Update update) {
@@ -28,6 +31,7 @@ public class Controller implements Branches {
     @PostMapping("/callback")
     public ResponseEntity<String> manageCallBack(@RequestBody Update update){
         try {
+            checkOrderService.mange(update);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);
@@ -38,6 +42,7 @@ public class Controller implements Branches {
     @PostMapping("/text")
     public ResponseEntity<String> manageText(@RequestBody Update update){
         try {
+            checkOrderService.mange(update);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);

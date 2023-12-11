@@ -21,7 +21,7 @@ public class DemoController {
     @GetMapping
     public String get(){
         List<List<InlineKeyboardButton>> list = new ArrayList<>();
-        commandsManager.addButtonHelp(list);
+        commandsManager.addButtonToMainManu(list);
         list.forEach(e -> e.forEach(e2 -> System.out.println(e2)));
 
 //        System.out.println(cm);

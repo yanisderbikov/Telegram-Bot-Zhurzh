@@ -66,9 +66,8 @@ public class UserStateController {
     }
 
 //    @Cacheable(value = "userStateCache", key = "#appUser", unless = "#result == null")
-    public UserState getUserState(AppUser appUser) {
-        // Логика получения состояния пользователя
-        // может быть несколько заказов, но текущая только одна
+    private UserState getUserState(AppUser appUser) {
+
         if (!map.containsKey(appUser)){
             if (isThereNotFinishedOrder(appUser)){
                 map.put(appUser, correctOrderCommand.getUserState());

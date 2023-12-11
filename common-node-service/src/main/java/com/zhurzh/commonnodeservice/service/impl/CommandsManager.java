@@ -115,7 +115,7 @@ public class CommandsManager {
 //        userToDefault(appUser);
         List<List<InlineKeyboardButton>> list = new ArrayList<>();
 //        addButtonToListAsURL(list, tech());
-        addButtonHelp(list);
+        addButtonToMainManu(list);
         sendAnswerEdit(appUser, update, text, list);
     }
 
@@ -213,8 +213,11 @@ public class CommandsManager {
         }
     }
 
-    public void addButtonHelp(List<List<InlineKeyboardButton>> list) {
-        list.add(buttonHelp());
+    public void addButtonToMainManu(List<List<InlineKeyboardButton>> list) {
+        list.add(buttonMainMenu("eng"));
+    }
+    public void addButtonToMainManu(List<List<InlineKeyboardButton>> list, AppUser appUser) {
+        list.add(buttonMainMenu(appUser.getLanguage()));
     }
 
     public void addButtonToList(List<List<InlineKeyboardButton>> list, String buttonText, String callbackMessage) {
@@ -317,19 +320,15 @@ public class CommandsManager {
         producerService.producerAnswer(sendMessage);
     }
 
-    private List<InlineKeyboardButton> buttonHelp() {
+    public List<InlineKeyboardButton> buttonMainMenu(String len) {
         List<InlineKeyboardButton> list = new ArrayList<>();
         var button = new InlineKeyboardButton();
-        button.setText("Menu");
+        button.setText(len.equals("eng") ? "Menu" : "Меню");
         button.setCallbackData("/menu");
         list.add(button);
         return list;
     }
 
-    //    private void userToDefault(AppUser appUser){
-//        appUser.setState(BASIC_STATE);
-//        appUserDAO.save(appUser);
-//    }
     public AppUser findOrSaveAppUser(Update update) {
         User telegramUser = update.hasCallbackQuery() ? update.getCallbackQuery().getFrom() : update.getMessage().getFrom();
         var userid = telegramUser.getId();

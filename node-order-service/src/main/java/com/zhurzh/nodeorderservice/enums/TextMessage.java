@@ -8,6 +8,7 @@ public enum TextMessage {
                   "Я - вопрос, а ты - ответ.\n" +
                   "Итак, начнем с количества персонажей.\n" +
                   "Сколько их будет на арте?"),
+    START_HAS_NOT_FINISHED("You have not finished order.", "У тебя есть незавершенная заяка"),
     ACTIVATION_BUTTON("Make an order", "Оформить заявку на заказ"),
     REFERENCE_START("Great, attach one ore more links bellow to your reference",
             "Отлично, прикрепи ссылки на референсы"),

@@ -25,6 +25,7 @@ import java.util.List;
 public class StartCommand implements Command, HasUserState {
     private CommandsManager cm;
     private CommonCommands cc;
+    private OrderDAO orderDAO;
     @NonNull
     public static final UserState userState = UserState.START;
 
@@ -37,6 +38,7 @@ public class StartCommand implements Command, HasUserState {
     public void execute(Update update) throws CommandException {
         // может приходить /orderservice
         var appUser = cm.findOrSaveAppUser(update);
+        if (isThereNotFinished(appUser, update)) return;
         if (isMainMessage(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
 
@@ -50,6 +52,26 @@ public class StartCommand implements Command, HasUserState {
         cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
         cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
         return true;
+    }
+
+    private boolean isThereNotFinished(AppUser appUser, Update update){
+        // есть незаконченная заявка
+        if (update.hasCallbackQuery()){
+            if (!update.getCallbackQuery().getData().equals(userState.getPath())) return false;
+            try {
+                var order = cc.findActiveOrder(appUser);
+                List<InlineKeyboardButton> row = new ArrayList<>();
+                cm.addButtonToRow(row,
+                        FinalizeCommand.userState.getMessage(appUser.getLanguage()),
+                        FinalizeCommand.userState.getPath());
+                var out = TextMessage.START_HAS_NOT_FINISHED.getMessage(appUser.getLanguage());
+                cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+                return true;
+            }catch (Exception e){
+                return false;
+            }
+        }
+        return false;
     }
 
 }

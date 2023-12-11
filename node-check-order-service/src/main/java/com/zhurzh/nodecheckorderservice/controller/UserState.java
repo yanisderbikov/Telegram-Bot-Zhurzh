@@ -1,4 +1,4 @@
-package com.zhurzh.nodeorderservice.controller;
+package com.zhurzh.nodecheckorderservice.controller;
 
 /**
  * Тут название кнопок и пути к конкретному состоянию/классу.
@@ -8,17 +8,9 @@ package com.zhurzh.nodeorderservice.controller;
  *
  */
 public enum UserState {
-    CORRECT_ORDER("Correction", "Исправить", "/correct_order_command"),
-    START("Start", "Старт", "/nodeorderservice"),
-    COUNT_PERSONS("Count persons", "Количество персонажей", "/count_persons_command"),
-    REFERENCES("Reference", "Референс", "/reference_command"),
-    FORMAT_ILLUSTRATION("Format", "Вид иллюстрации", "/format_illustration_command"),
-    DETALIZATION("Detalization", "Детализация", "detalization_command"),
-    BACKGROUND("Background", "Фон", "/background_command"),
-    COMMENT_TO_ART("Comment", "Комментарий", "/comment_to_art_command"),
-    PRICE("Price", "Цена", "/price_command"),
-    NAME("Name", "Имя", "/name_command"),
-    FINALIZE("Review order", "Проверить заказ", "/review_order_command");
+    CHOOSE_ORDER("Choose order", "Выбрать заказ", "/checkorderservice"),
+    VIEW_ORDER("View order", "Посмотреть", "/view_order_command"),
+    MAIN_MENU("Menu", "Меню", "/menu");
 
     private final String englishMessage;
     private final String russianMessage;

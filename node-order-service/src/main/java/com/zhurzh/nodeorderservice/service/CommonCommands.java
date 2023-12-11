@@ -43,9 +43,7 @@ public class CommonCommands {
         return list.stream()
                 .filter(o -> !o.getIsFinished())
                 .findFirst()
-                .orElse(Order.builder()
-                        .owner(appUser)
-                        .build());
+                .orElseThrow();
     }
     public <T extends Enum<T> & Language> void addAllButtons(AppUser appUser, Class<T> enumClass,
                                                              List<List<InlineKeyboardButton>> lists) {

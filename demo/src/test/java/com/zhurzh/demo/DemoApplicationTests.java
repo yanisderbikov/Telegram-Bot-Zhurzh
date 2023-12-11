@@ -21,7 +21,7 @@ class DemoApplicationTests {
     @Test
     void contextLoads() {
         List<List<InlineKeyboardButton>> list = new ArrayList<>();
-        commandsManager.addButtonHelp(list);
+        commandsManager.addButtonToMainManu(list);
         commandsManager.sendAnswerEdit(createUser(), null, "Hello man", list);
         var l = appUserDAO.findAll();
         System.out.println("the list is : ");
