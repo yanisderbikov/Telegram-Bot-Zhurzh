@@ -2,8 +2,7 @@ package com.zhurzh.nodecheckorderservice.controller;
 
 import com.zhurzh.commonjpa.dao.OrderDAO;
 import com.zhurzh.commonjpa.entity.AppUser;
-import com.zhurzh.commonjpa.entity.Order;
-import com.zhurzh.model.Command;
+import com.zhurzh.commonutils.model.Command;
 import com.zhurzh.nodecheckorderservice.commands.ChooseOrderCommand;
 import com.zhurzh.nodecheckorderservice.commands.ViewOrderCommand;
 import lombok.AllArgsConstructor;

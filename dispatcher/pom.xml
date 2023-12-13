@@ -29,7 +29,7 @@
         </dependency>
 
         <dependency>
-            <groupId>ru.relex</groupId>
+            <groupId>com.zhuzh</groupId>
             <artifactId>common-rabbitmq</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -52,7 +52,7 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <mainClass>ru.relex.dispatcher.DispatcherApplication</mainClass>
+                            <mainClass>com.zhurzh.dispatcher.DispatcherApplication</mainClass>
                         </configuration>
                     </execution>
                 </executions>

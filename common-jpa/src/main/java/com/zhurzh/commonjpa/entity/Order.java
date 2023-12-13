@@ -44,12 +44,37 @@ public class Order {
         var len = owner.getLanguage();
         return
                 "\nname='" + name + '\'' +
-                "\ncountOfPersons=" + countOfPersons.getMessage(len) +
+                "\ncountOfPersons=" + (isNull(countOfPersons) ? unfilled() : countOfPersons.getMessage(owner.getLanguage())) +
                 "\nreference='" + reference + '\'' +
-                "\nformatOfIllustration=" + formatOfIllustration.getMessage(len) +
-                "\ndetalizationOfIllustration=" + detalizationOfIllustration.getMessage(len) +
-                "\nbackgroundOfIllustration=" + backgroundOfIllustration.getMessage(len) +
+                "\nformatOfIllustration=" + (isNull(formatOfIllustration) ? unfilled() : formatOfIllustration.getMessage(owner.getLanguage())) +
+                "\ndetalizationOfIllustration=" +   (isNull(detalizationOfIllustration) ? unfilled() : detalizationOfIllustration.getMessage(owner.getLanguage()))+
+                "\nbackgroundOfIllustration=" +     (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(owner.getLanguage())  )+
                 "\ncommentToArt='" + commentToArt + '\'' +
                 "\nyours set price is = " + price;
+    }
+    private boolean isNull(Object o){
+        return o == null;
+    }
+    private String unfilled(){
+        return owner.getLanguage().equals("eng") ? "Onfilled" : "Не заполнено";
+    }
+    public boolean isAllFilled(){
+        return
+                isAllFilledExceptPrice()
+                && ! isNull(price)
+                ;
+
+    }
+    public boolean isAllFilledExceptPrice(){
+        return
+                   ! isNull(name)
+                && ! isNull(owner)
+                && ! isNull(countOfPersons)
+                && ! isNull(reference)
+                && ! isNull(formatOfIllustration)
+                && ! isNull(detalizationOfIllustration)
+                && ! isNull(backgroundOfIllustration)
+                && ! isNull(commentToArt)
+                ;
     }
 }

@@ -57,10 +57,9 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
         <dependency>
-            <groupId>ru.relex</groupId>
+            <groupId>com.zhuzh</groupId>
             <artifactId>common-utils</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

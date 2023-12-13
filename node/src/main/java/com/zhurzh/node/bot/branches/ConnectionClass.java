@@ -1,10 +1,9 @@
 package com.zhurzh.node.bot.branches;
 
-import com.zhurzh.model.Branches;
+import com.zhurzh.commonutils.model.Branches;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.http.client.utils.URIBuilder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -14,10 +13,8 @@ import java.net.URISyntaxException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import org.springframework.web.client.RestTemplate;
 @Log4j
 @Getter
 public class ConnectionClass implements Branches {

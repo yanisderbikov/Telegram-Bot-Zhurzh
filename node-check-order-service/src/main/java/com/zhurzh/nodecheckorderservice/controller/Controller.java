@@ -1,12 +1,11 @@
 package com.zhurzh.nodecheckorderservice.controller;
 
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
-import com.zhurzh.model.Branches;
+import com.zhurzh.commonutils.model.Branches;
 import com.zhurzh.nodecheckorderservice.enums.TextMessage;
 import com.zhurzh.nodecheckorderservice.service.CheckOrderService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

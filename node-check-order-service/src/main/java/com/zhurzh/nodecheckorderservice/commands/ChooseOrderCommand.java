@@ -3,8 +3,8 @@ package com.zhurzh.nodecheckorderservice.commands;
 import com.zhurzh.commonjpa.dao.OrderDAO;
 import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
-import com.zhurzh.exception.CommandException;
-import com.zhurzh.model.Command;
+import com.zhurzh.commonutils.exception.CommandException;
+import com.zhurzh.commonutils.model.Command;
 import com.zhurzh.nodecheckorderservice.controller.HasUserState;
 import com.zhurzh.nodecheckorderservice.controller.OrderCasheController;
 import com.zhurzh.nodecheckorderservice.controller.UserState;
@@ -39,6 +39,11 @@ public class ChooseOrderCommand implements Command, HasUserState {
         if (startCommand(appUser, update)) return;
         if (endCommand(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
+    }
+
+    @Override
+    public boolean isExecuted(AppUser appUser) {
+        return false;
     }
 
     private boolean startCommand(AppUser appUser, Update update){

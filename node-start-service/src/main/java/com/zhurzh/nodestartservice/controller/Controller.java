@@ -1,6 +1,6 @@
 package com.zhurzh.nodestartservice.controller;
 
-import com.zhurzh.model.Branches;
+import com.zhurzh.commonutils.model.Branches;
 import com.zhurzh.nodestartservice.service.MainNodeStartService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;

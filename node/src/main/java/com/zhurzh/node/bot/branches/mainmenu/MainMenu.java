@@ -1,7 +1,7 @@
 package com.zhurzh.node.bot.branches.mainmenu;
 
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
-import com.zhurzh.model.Branches;
+import com.zhurzh.commonutils.model.Branches;
 import com.zhurzh.node.bot.branches.order.CheckOrderManager;
 import com.zhurzh.node.bot.branches.order.OrderManager;
 import com.zhurzh.node.bot.branches.start.StartManager;

@@ -3,11 +3,13 @@ package com.zhurzh.nodeorderservice.enums;
 
 public enum TextMessage {
     TO_MAIN_MENU("To main menu", "На главное меню"),
-    CORRECT_ORDER("What do you want to change on your order", "Что ты хочешь изменить в своей заявке?"),
+    CORRECT_ORDER("We need to add some correction to your order", "Нам нужно внести несколько изменений в твою заявку"),
+    CORRECT_ORDER_FORSED("Firstly we need to fill fully our order", "Сначала нам нужно завершить заявку, чтобы можно было узначть цену"),
     START("Welcome message", "Сейчас я задам тебе несколько вопросов, чтобы узнать, какую картину от Журжа ты хочешь. Только давай договоримся - строго по пунктам!\n" +
                   "Я - вопрос, а ты - ответ.\n" +
                   "Итак, начнем с количества персонажей.\n" +
                   "Сколько их будет на арте?"),
+    START_VERY_BEGIN_BUTTON("Start over", "Начать с самого начала"),
     START_HAS_NOT_FINISHED("You have not finished order.", "У тебя есть незавершенная заяка"),
     ACTIVATION_BUTTON("Make an order", "Оформить заявку на заказ"),
     REFERENCE_START("Great, attach one ore more links bellow to your reference",
@@ -26,7 +28,8 @@ public enum TextMessage {
     PRICE_START("So ok. Fine. I calculated your order. But I'd be so glad if you will write the price that you are redy to pay. Maybe Zhurzh will be more motivated if you pay more. But i'm not sure :)",
     "Отлично, я подсчитал стоимость твоего заказа. Попрошу тебя написать сколько ты готов заплатить за заказ, может быть журж будет более мотивирована выполнить твой заказ, но это не точно)"),
     PRICE_PAYMENTS("\n\nAcceptable paymant:\nPayPal : yanisderbikov.bali@gmail.com\nPatreon : patreon.com",
-            "\n\nТы можешь оплатить заказ удобным тебе способом\nкарта сбера : xxxx xxxx xxxx xxxx\nСБП на сбер по номеру +7999 ---- --- ---"),
+            "\n\nТы можешь оплатить заказ удобным тебе способом\nкарта сбера : xxxx xxxx xxxx xxxx\nСБП на сбер по номеру +7999 ---- --- ---" +
+                    "\n\nНапиши пожалуйста цену, которую ты готов заплатить"),
     PRICE_END("Oh yeah, good price", "Супер, хорошая цена"),
     COMMENT_TO_ART_END("I wrote it down", "записал"),
     NAME_START("Write down a shirt name of your order", "Напиши короткое название для своей заявки"),

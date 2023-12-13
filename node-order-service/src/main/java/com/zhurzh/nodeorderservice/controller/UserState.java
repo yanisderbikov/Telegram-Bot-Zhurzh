@@ -9,15 +9,15 @@ package com.zhurzh.nodeorderservice.controller;
  */
 public enum UserState {
     CORRECT_ORDER("Correction", "Исправить", "/correct_order_command"),
-    START("Start", "Старт", "/nodeorderservice"),
+    START("Start over", "Начать с начала", "/orderservice"),
     COUNT_PERSONS("Count persons", "Количество персонажей", "/count_persons_command"),
     REFERENCES("Reference", "Референс", "/reference_command"),
     FORMAT_ILLUSTRATION("Format", "Вид иллюстрации", "/format_illustration_command"),
     DETALIZATION("Detalization", "Детализация", "detalization_command"),
     BACKGROUND("Background", "Фон", "/background_command"),
     COMMENT_TO_ART("Comment", "Комментарий", "/comment_to_art_command"),
-    PRICE("Price", "Цена", "/price_command"),
     NAME("Name", "Имя", "/name_command"),
+    PRICE("Price", "Цена", "/price_command"),
     FINALIZE("Review order", "Проверить заказ", "/review_order_command");
 
     private final String englishMessage;

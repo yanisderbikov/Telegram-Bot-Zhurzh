@@ -2,11 +2,10 @@ package com.zhurzh.nodeorderservice.commands;
 
 import com.zhurzh.commonjpa.dao.OrderDAO;
 import com.zhurzh.commonjpa.entity.AppUser;
-import com.zhurzh.commonjpa.enums.DetalizationOfIllustration;
 import com.zhurzh.commonjpa.enums.FormatOfIllustration;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
-import com.zhurzh.exception.CommandException;
-import com.zhurzh.model.Command;
+import com.zhurzh.commonutils.exception.CommandException;
+import com.zhurzh.commonutils.model.Command;
 import com.zhurzh.nodeorderservice.controller.HasUserState;
 import com.zhurzh.nodeorderservice.controller.UserState;
 import com.zhurzh.nodeorderservice.enums.TextMessage;
@@ -43,6 +42,11 @@ public class FormatIllustrationCommand implements Command, HasUserState {
         if (endCommand(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
 
+    }
+    @Override
+    public boolean isExecuted(AppUser appUser) {
+        var order = cc.findActiveOrder(appUser);
+        return order.getFormatOfIllustration() != null;
     }
 
     private boolean startCommand(AppUser appUser, Update update){

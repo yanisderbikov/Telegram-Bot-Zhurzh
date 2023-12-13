@@ -3,7 +3,6 @@ package com.zhurzh.commonnodeservice.service.impl;
 import com.zhurzh.commonnodeservice.service.ProducerService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -11,7 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 
-import static com.zhurzh.model.RabbitQueue.*;
+import static com.zhurzh.commonrabbitmq.model.RabbitQueue.*;
 
 
 /**
