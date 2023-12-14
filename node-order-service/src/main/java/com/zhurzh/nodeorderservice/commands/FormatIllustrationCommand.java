@@ -53,7 +53,7 @@ public class FormatIllustrationCommand implements Command, HasUserState {
         if (update.hasCallbackQuery()) {
             var input = update.getCallbackQuery().getData();
             if (!input.equals(userState.getPath())) return false;
-            var out = TextMessage.START.getMessage(appUser.getLanguage());
+            var out = TextMessage.FORMAT_ILLUSTRATION_START.getMessage(appUser.getLanguage());
             List<List<InlineKeyboardButton>> lists = new ArrayList<>();
             cc.addAllButtons(appUser, FormatOfIllustration.class, lists);
             cm.sendAnswerEdit(appUser, update, out, lists);

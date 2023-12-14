@@ -56,7 +56,7 @@ public class ChooseOrderCommand implements Command, HasUserState {
             List<List<InlineKeyboardButton>> lists = new ArrayList<>();
             if (orders.isEmpty()){
                 var out = TextMessage.FAIL_FIND_ORDER.getMessage(appUser.getLanguage());
-                cm.addButtonToMainManu(lists);
+                cm.addButtonToMainMenu(lists, appUser);
                 cm.sendAnswerEdit(appUser, update, out, lists);
                 return true;
             }

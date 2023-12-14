@@ -7,24 +7,38 @@ import com.zhurzh.commonjpa.enums.BranchStatus;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.commonutils.model.Branches;
 import com.zhurzh.node.bot.branches.mainmenu.MainMenu;
+import com.zhurzh.node.bot.branches.pricelist.PriceListManager;
 import com.zhurzh.node.bot.branches.start.StartManager;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import com.zhurzh.node.bot.branches.order.CheckOrderManager;
 import com.zhurzh.node.bot.branches.order.OrderManager;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Component
 @AllArgsConstructor
 @Log4j
 public class BranchesManager {
+    @Autowired
+    private ApplicationContext applicationContext;
     private AppUserDAO appUserDAO;
     private CheckOrderManager checkOrderManager;
     private OrderManager orderManager;
     private StartManager startManager;
     private MainMenu mainMenu;
+    private PriceListManager priceListManager;
     private CommandsManager commandsManager;
+//    @NonNull
+//    private Map<String, Branches> beansOfCommands;
 
     public void consumeText(Update update){
         findCurrentBranch(update).manageText(update);
@@ -33,20 +47,42 @@ public class BranchesManager {
         findCurrentBranch(update).manageCallBack(update);
     }
 
+
+
+//    @PostConstruct
+//    private void findAllBranchBeans() {
+//        // Получаем все бины, реализующие интерфейс Branch, из контекста приложения
+//        beansOfCommands = applicationContext.getBeansOfType(Branches.class);
+//    }
+
     private Branches findCurrentBranch(Update update){
         Branches branches;
+
         AppUser appUser = commandsManager.findOrSaveAppUser(update);
         if (isStartBranch(update, appUser)) return startManager;
         if (isMenuBranch(update, appUser)) return mainMenu;
         if (isCheckOrderBranch(update, appUser)) return checkOrderManager;
         if (isOrderBranch(update, appUser)) return orderManager;
+        if (isPriceListBranch(update, appUser)) return priceListManager;
         switch (appUser.getBranchStatus()){
             case START -> branches = startManager;
             case ORDER -> branches = orderManager;
+            case PRICE_LIST -> branches = priceListManager;
             case CHECK_ORDER -> branches = checkOrderManager;
             default -> branches = mainMenu;
         }
         return branches;
+    }
+
+    private boolean isPriceListBranch(Update update, AppUser appUser) {
+        var isTrue =  update.hasCallbackQuery() &&
+                update.getCallbackQuery().getData().equals(priceListManager.getCallbackPath());
+        if (isTrue) {
+            appUser.setBranchStatus(BranchStatus.PRICE_LIST);
+            appUserDAO.save(appUser);
+            return true;
+        }
+        return false;
     }
 
     private boolean isCheckOrderBranch(Update update, AppUser appUser) {

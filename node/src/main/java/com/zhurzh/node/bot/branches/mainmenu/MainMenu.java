@@ -2,28 +2,37 @@ package com.zhurzh.node.bot.branches.mainmenu;
 
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.commonutils.model.Branches;
+import com.zhurzh.node.bot.branches.ConnectionClass;
 import com.zhurzh.node.bot.branches.order.CheckOrderManager;
 import com.zhurzh.node.bot.branches.order.OrderManager;
+import com.zhurzh.node.bot.branches.pricelist.PriceListManager;
 import com.zhurzh.node.bot.branches.start.StartManager;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @AllArgsConstructor
 @Log4j
 public class MainMenu implements Branches {
     private final CommandsManager commandsManager;
-    private StartManager startManager;
-    private CheckOrderManager checkOrderManager;
-    private OrderManager orderManager;
+
+    @Autowired
+    private ApplicationContext applicationContext;
+    @NonNull
+    private List<ConnectionClass> connectionClasses;
 
 
     @Override
@@ -51,6 +60,13 @@ public class MainMenu implements Branches {
         }
     }
 
+    @PostConstruct
+    private void init(){
+        connectionClasses = new ArrayList<>();
+        Map<String, ConnectionClass> beansOfType = applicationContext.getBeansOfType(ConnectionClass.class);
+        connectionClasses.addAll(beansOfType.values());
+    }
+
     /**
      * Создание основного меню
      */
@@ -68,19 +84,14 @@ public class MainMenu implements Branches {
     }
 
     private void addButtons(List<List<InlineKeyboardButton>> list, Update update){
-        var response = orderManager.isActive(update);
-        var callbackPath = orderManager.getCallbackPath();
-        var body = response.getBody();
-        if (response.getStatusCode().is2xxSuccessful()) {
-            commandsManager.addButtonToList(list, body, callbackPath);
-        }
-        response = checkOrderManager.isActive(update);
-        callbackPath = checkOrderManager.getCallbackPath();
-        body = response.getBody();
-        if (response.getStatusCode().is2xxSuccessful()) {
-            commandsManager.addButtonToList(list, body, callbackPath);
+        for (var con : connectionClasses){
+            if (con instanceof StartManager) continue;
+            var response = con.isActive(update);
+            var callbackPath = con.getCallbackPath();
+            var body = response.getBody();
+            if (response.getStatusCode().is2xxSuccessful()) {
+                commandsManager.addButtonToList(list, body, callbackPath);
+            }
         }
     }
-
-
 }

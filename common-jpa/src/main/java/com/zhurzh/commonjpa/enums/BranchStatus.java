@@ -5,5 +5,6 @@ public enum BranchStatus {
     START,
     ORDER,
     CHECK_ORDER,
+    PRICE_LIST,
     
 }

@@ -44,7 +44,8 @@ public class CommandsManager {
     public void sendAnswerEdit(AppUser appUser, Update update, @NotNull String text, List<List<InlineKeyboardButton>> list) {
         sendAnswerEdit(appUser, update, text, new InlineKeyboardMarkup(list));
     }
-    public void sendAnswerEdit(@NotNull Update update, @NotNull String text, @NotNull List<List<InlineKeyboardButton>> list){
+
+    public void sendAnswerEdit(@NotNull Update update, @NotNull String text, @NotNull List<List<InlineKeyboardButton>> list) {
         var appUser = findOrSaveAppUser(update);
         sendAnswerEdit(appUser, update, text, list);
     }
@@ -115,7 +116,7 @@ public class CommandsManager {
 //        userToDefault(appUser);
         List<List<InlineKeyboardButton>> list = new ArrayList<>();
 //        addButtonToListAsURL(list, tech());
-        addButtonToMainManu(list);
+        addButtonToMainMenu(list);
         sendAnswerEdit(appUser, update, text, list);
     }
 
@@ -213,10 +214,11 @@ public class CommandsManager {
         }
     }
 
-    public void addButtonToMainManu(List<List<InlineKeyboardButton>> list) {
+    private void addButtonToMainMenu(List<List<InlineKeyboardButton>> list) {
         list.add(buttonMainMenu("eng"));
     }
-    public void addButtonToMainManu(List<List<InlineKeyboardButton>> list, AppUser appUser) {
+
+    public void addButtonToMainMenu(List<List<InlineKeyboardButton>> list, AppUser appUser) {
         list.add(buttonMainMenu(appUser.getLanguage()));
     }
 
@@ -283,13 +285,14 @@ public class CommandsManager {
         addButtonToRow(row, buttonText, String.valueOf(callbackMessageLong));
     }
 
-    //    public void addButtonToRowAsURL(List<InlineKeyboardButton> row, AppUser appUser){
-//        var button = new InlineKeyboardButton();
-//        button.setText(String.format("%s %s", appUser.getFirstName(), appUser.getLastName()));
-//        button.setUrl(TELEGRAM_LINK + appUser.getTelegramUserName());
-//        row.add(button);
-//    }
-//    public AppUser tech(){
+    public void addButtonToRowAsURL(List<InlineKeyboardButton> row, String text, String url) {
+        var button = new InlineKeyboardButton();
+        button.setText(text);
+        button.setUrl(url);
+        row.add(button);
+    }
+
+    //    public AppUser tech(){
 //        return AppUser.builder()
 //                .firstName("Ян")
 //                .lastName("Дербиков")

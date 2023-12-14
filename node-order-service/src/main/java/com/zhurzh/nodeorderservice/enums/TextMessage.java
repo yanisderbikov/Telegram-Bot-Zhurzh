@@ -6,9 +6,7 @@ public enum TextMessage {
     CORRECT_ORDER("We need to add some correction to your order", "Нам нужно внести несколько изменений в твою заявку"),
     CORRECT_ORDER_FORSED("Firstly we need to fill fully our order", "Сначала нам нужно завершить заявку, чтобы можно было узначть цену"),
     START("Welcome message", "Сейчас я задам тебе несколько вопросов, чтобы узнать, какую картину от Журжа ты хочешь. Только давай договоримся - строго по пунктам!\n" +
-                  "Я - вопрос, а ты - ответ.\n" +
-                  "Итак, начнем с количества персонажей.\n" +
-                  "Сколько их будет на арте?"),
+                  "Я - вопрос, а ты - ответ.\n"),
     START_VERY_BEGIN_BUTTON("Start over", "Начать с самого начала"),
     START_HAS_NOT_FINISHED("You have not finished order.", "У тебя есть незавершенная заяка"),
     ACTIVATION_BUTTON("Make an order", "Оформить заявку на заказ"),

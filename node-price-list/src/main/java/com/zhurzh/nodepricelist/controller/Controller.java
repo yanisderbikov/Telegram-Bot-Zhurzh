@@ -1,7 +1,9 @@
-package com.zhurzh.nodestartservice.controller;
+package com.zhurzh.nodepricelist.controller;
 
+import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.commonutils.model.Branches;
-import com.zhurzh.nodestartservice.service.MainNodeStartService;
+import com.zhurzh.nodepricelist.enums.TextMessage;
+import com.zhurzh.nodepricelist.service.PriceListService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
@@ -11,19 +13,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-
 @RestController
 @Log4j
 @AllArgsConstructor
 public class Controller implements Branches {
 
-    MainNodeStartService mainNodeStartService;
-
+    private CommandsManager cm;
+    private PriceListService priceListService;
     @Override
     @PostMapping
     public ResponseEntity<String> isActive(@RequestBody Update update){
-        var out = "The branch 'start service' is online";
-        log.debug("update come is active: " + update);
+        var appUser = cm.findOrSaveAppUser(update);
+        var out = TextMessage.ACTIVATION_BUTTON.getMessage(appUser.getLanguage());
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
 
@@ -31,9 +32,8 @@ public class Controller implements Branches {
     @PostMapping("/callback")
     public ResponseEntity<String> manageCallBack(@RequestBody Update update){
         try {
-            log.debug("update come callback manage: " + update);
-            mainNodeStartService.manageCallBack(update);
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+            priceListService.manage(update);
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -43,10 +43,8 @@ public class Controller implements Branches {
     @PostMapping("/text")
     public ResponseEntity<String> manageText(@RequestBody Update update){
         try {
-            var out = "text";
-            log.debug("update come text manage: " + update);
-            mainNodeStartService.manageText(update);
-            return ResponseEntity.ok(out);
+            priceListService.manage(update);
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

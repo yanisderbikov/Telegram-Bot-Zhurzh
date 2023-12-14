@@ -39,6 +39,7 @@
         <module>node-order-service</module>
         <module>node-check-order-service</module>
         <module>node-start-service</module>
+        <module>node-price-list</module>
 <!--        <module>demo</module>-->
     </modules>
 
