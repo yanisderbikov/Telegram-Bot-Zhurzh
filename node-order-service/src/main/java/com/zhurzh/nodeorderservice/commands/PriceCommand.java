@@ -89,8 +89,8 @@ public class PriceCommand implements Command, HasUserState {
                     return true;
                 }
                 var out = TextMessage.PRICE_START.getMessage(appUser.getLanguage())
-                        + calculatePrice(cc.findActiveOrder(appUser), appUser)
-                        + TextMessage.PRICE_PAYMENTS.getMessage(appUser.getLanguage());
+                        + calculatePrice(cc.findActiveOrder(appUser), appUser);
+//                        + TextMessage.PRICE_PAYMENTS.getMessage(appUser.getLanguage());
                 cm.sendAnswerEdit(appUser, update, out);
                 return true;
             }
@@ -104,7 +104,7 @@ public class PriceCommand implements Command, HasUserState {
             if (update.hasMessage() && update.getMessage().hasText()) {
                 var input = update.getMessage().getText();
                 var order = cc.findActiveOrder(appUser);
-                order.setPrice(input);
+                order.setPrice(input + (appUser.getLanguage().equals("eng") ? " USD" : " Руб"));
                 orderDAO.save(order);
                 var out = TextMessage.PRICE_END.getMessage(appUser.getLanguage());
                 List<InlineKeyboardButton> row = new ArrayList<>();

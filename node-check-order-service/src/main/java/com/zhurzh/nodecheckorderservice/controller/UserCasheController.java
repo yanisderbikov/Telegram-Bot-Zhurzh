@@ -34,8 +34,21 @@ public class UserCasheController {
     private void init(){
         userStateMap = new HashMap<>();
         commandMap = new HashMap<>();
-        commandMap.put(applicationContext.getBean(ChooseOrderCommand.class).getUserState(), applicationContext.getBean(ChooseOrderCommand.class));
-        commandMap.put(applicationContext.getBean(ViewOrderCommand.class).getUserState(), applicationContext.getBean(ViewOrderCommand.class));
+
+        Map<String, Command> commandBeansMap = applicationContext.getBeansOfType(Command.class);
+        Map<String, HasUserState> userStateBeansMap = applicationContext.getBeansOfType(HasUserState.class);
+
+        for (Map.Entry<String, Command> entry : commandBeansMap.entrySet()) {
+            String beanName = entry.getKey();
+            Command command = entry.getValue();
+
+            // Проверяем, реализует ли бин также AnotherInterface
+            if (userStateBeansMap.containsKey(beanName)) {
+                var state = userStateBeansMap.get(beanName);
+                commandMap.put(state.getUserState(), command);
+            }
+
+        }
         if (!commandMap.isEmpty()){
             log.debug("All was initialized");
         }else {

@@ -1,9 +1,6 @@
 package com.zhurzh.commonjpa.entity;
 
-import com.zhurzh.commonjpa.enums.BackgroundOfIllustration;
-import com.zhurzh.commonjpa.enums.CountOfPersons;
-import com.zhurzh.commonjpa.enums.DetalizationOfIllustration;
-import com.zhurzh.commonjpa.enums.FormatOfIllustration;
+import com.zhurzh.commonjpa.enums.*;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,6 +24,8 @@ public class Order {
     private AppUser owner;
     @Builder.Default
     private Boolean isFinished = false;
+    @Builder.Default
+    private StatusZhurzh statusZhurzh = StatusZhurzh.UNSEEN;
     @Enumerated(EnumType.STRING)
     private CountOfPersons countOfPersons;
     private String reference;
@@ -50,7 +49,8 @@ public class Order {
                 "\ndetalizationOfIllustration=" +   (isNull(detalizationOfIllustration) ? unfilled() : detalizationOfIllustration.getMessage(owner.getLanguage()))+
                 "\nbackgroundOfIllustration=" +     (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(owner.getLanguage())  )+
                 "\ncommentToArt='" + commentToArt + '\'' +
-                "\nyours set price is = " + price;
+                "\nyours set price is = " + price +
+                "\nstatus = " + statusZhurzh.getMessage(len);
     }
     private boolean isNull(Object o){
         return o == null;

@@ -41,7 +41,7 @@ public class MainNodeStartService {
         var appUser = cm.findOrSaveAppUser(update);
         map.putIfAbsent(appUser, "start");
         switch (map.get(appUser)){
-            case WelcomeFunc -> welcomeMessage(update);
+            case WelcomeFunc -> pickLanguageAndRules(update);
             case ToMainMenu -> toMainMenu(update);
             default -> start(update);
         }
@@ -64,7 +64,7 @@ public class MainNodeStartService {
         map.put(appUser, WelcomeFunc);
     }
 
-    private void welcomeMessage(Update update){
+    private void pickLanguageAndRules(Update update){
         // manage last message for switch language
         var appUser = cm.findOrSaveAppUser(update);
         if (update.getCallbackQuery().getData().equals(RU)){
@@ -86,9 +86,11 @@ public class MainNodeStartService {
         appUser.setBranchStatus(BranchStatus.MENU);
         appUserDAO.save(appUser);
         var out = TextMessage.RULES.getMessage(appUser.getLanguage());
+        cm.sendAnswerEdit(appUser, update, out);
         List<List<InlineKeyboardButton>> lists = new ArrayList<>();
         cm.addButtonToList(lists, TextMessage.MAIN_MENU_BUTTON.getMessage(appUser.getLanguage()), BranchStatus.MENU.name());
-        cm.sendAnswerEdit(appUser, update, out, lists);
+        out = TextMessage.MAIN_MENU_TEXT.getMessage(appUser.getLanguage());
+        cm.sendAnswerEdit(appUser, null, out, lists);
         map.remove(appUser);
     }
 

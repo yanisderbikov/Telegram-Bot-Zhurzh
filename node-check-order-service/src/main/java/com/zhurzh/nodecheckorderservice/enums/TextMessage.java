@@ -6,7 +6,19 @@ public enum TextMessage {
             "Выбери какой заказ ты хочешь проверить "),
     FAIL_FIND_ORDER("I think you do not have any order now. You can do it",
             "У тебя нет сейчас заказов, но ты можешь его сделать"),
-    CHOOSE_ORDER_END("Ok, Let's check", "Отлично, давай проверим твой заказ");
+    CHOOSE_ORDER_END("Ok, Let's check", "Отлично, давай проверим твой заказ"),
+
+    DELETE_ORDER_START("Choose the order that you want to delete",
+            "Выбери заказ, который хочешь удалить"),
+    DELETE_ORDER_CHECK("Are you sure that you want to continue?",
+            "Ты уверен, что хочешь продолжить?"),
+    DELETE_ORDER_DELETED("Your order is deleted", "Твой заказ был удален"),
+    DELETE_ORDER_NOT_DELETED("Usshh, I was a little bit terrified :)", "Уфф, я немго даже испугался"),
+    BUTTON_BACK("Back", "Вернуться"),
+    BUTTON_YES("Yes", "Да"),
+    BUTTON_NO("No", "Нет")
+
+    ;
 
     private final String englishMessage;
     private final String russianMessage;

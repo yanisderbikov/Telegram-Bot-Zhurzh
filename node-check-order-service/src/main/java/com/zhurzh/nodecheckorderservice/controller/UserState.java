@@ -8,6 +8,7 @@ package com.zhurzh.nodecheckorderservice.controller;
  *
  */
 public enum UserState {
+    DELETE_ORDER("Delete order", "Удалить заказ", "/delete_order_command"),
     CHOOSE_ORDER("Choose order", "Выбрать заказ", "/checkorderservice"),
     VIEW_ORDER("View order", "Посмотреть", "/view_order_command"),
     MAIN_MENU("Menu", "Меню", "/menu");

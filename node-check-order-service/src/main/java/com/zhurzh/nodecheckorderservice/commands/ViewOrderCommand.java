@@ -1,6 +1,7 @@
 package com.zhurzh.nodecheckorderservice.commands;
 
 import com.zhurzh.commonjpa.entity.AppUser;
+import com.zhurzh.commonjpa.enums.StatusZhurzh;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.commonutils.exception.CommandException;
 import com.zhurzh.commonutils.model.Command;
@@ -49,6 +50,11 @@ public class ViewOrderCommand implements Command, HasUserState {
             var out = order.toString();
             List<InlineKeyboardButton> row = new ArrayList<>();
             cc.addButtonToNextStep(row, appUser, userState);
+            if (order.getStatusZhurzh() == StatusZhurzh.UNSEEN) {
+                cm.addButtonToRow(row,
+                        DeleteOrderCommand.userState.getMessage(appUser.getLanguage()),
+                        DeleteOrderCommand.userState.getPath());
+            }
             cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
             return true;
         }

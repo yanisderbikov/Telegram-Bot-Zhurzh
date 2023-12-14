@@ -81,11 +81,12 @@ public class CommonCommands {
         } else {
             nextState = fff(appUser);
         }
-        cm.addButtonToRow(row, nextState.getMessage(appUser.getLanguage()),
+        cm.addButtonToRow(row,
+                nextState.getMessage(appUser.getLanguage()),
                 nextState.getPath());
-        if (nextState != CorrectOrderCommand.userState) {
-            addCorrectButtonToRow(row, appUser);
-        }
+//        if (nextState != CorrectOrderCommand.userState) {
+//            addCorrectButtonToRow(row, appUser);
+//        }
     }
 
     private UserState fff(AppUser appUser) {

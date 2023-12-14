@@ -4,6 +4,7 @@ import com.zhurzh.commonjpa.dao.OrderDAO;
 import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.nodecheckorderservice.controller.UserState;
+import com.zhurzh.nodecheckorderservice.enums.TextMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;
@@ -34,5 +35,8 @@ public class CommonCommands {
                 nextState.getPath());
 
     }
+//    public void addButtonToMenuCheckOrderService(List<InlineKeyboardButton> row, AppUser appUser){
+//        TextMessage.BU
+//    }
 
 }

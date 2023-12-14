@@ -27,7 +27,7 @@ public class ChooseOrderCommand implements Command, HasUserState {
     private OrderDAO orderDAO;
     private OrderCasheController os;
     @NonNull
-    private final UserState userState = UserState.CHOOSE_ORDER;
+    public static final UserState userState = UserState.CHOOSE_ORDER;
     @Override
     public UserState getUserState() {
         return userState;
@@ -68,14 +68,6 @@ public class ChooseOrderCommand implements Command, HasUserState {
             return true;
         }
         return false;
-    }
-
-    private void cleanAllNullsOrdersName(AppUser appUser) {
-        var list = orderDAO.findByOwner(appUser)
-                .stream()
-                .filter(e -> e.getIsFinished() == null)
-                .toList();
-        orderDAO.deleteAll(list);
     }
 
     private boolean endCommand(AppUser appUser, Update update) {

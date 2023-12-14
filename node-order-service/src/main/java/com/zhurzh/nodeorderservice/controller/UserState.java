@@ -8,6 +8,7 @@ package com.zhurzh.nodeorderservice.controller;
  *
  */
 public enum UserState {
+    ADDITIONAL_MESSANGER("Add", "Добавить", "/add_additional_messanger"),
     CORRECT_ORDER("Correction", "Исправить", "/correct_order_command"),
     START("Start over", "Начать с начала", "/orderservice"),
     COUNT_PERSONS("Count of persons", "Количество персонажей", "/count_persons_command"),

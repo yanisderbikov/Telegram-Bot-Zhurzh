@@ -32,22 +32,39 @@ public class UserStateController {
     private void init(){
         userStateMap = new HashMap<>();
         commandMap = new HashMap<>();
-        commandMap.put(applicationContext.getBean(BackgroundOfIllustrationCommand.class).getUserState(), applicationContext.getBean(BackgroundOfIllustrationCommand.class));
-        commandMap.put(applicationContext.getBean(CommentToArtCommand.class).getUserState(), applicationContext.getBean(CommentToArtCommand.class));
-        commandMap.put(applicationContext.getBean(CorrectOrderCommand.class).getUserState(), applicationContext.getBean(CorrectOrderCommand.class));
-        commandMap.put(applicationContext.getBean(DetalizationOfIllustrationCommand.class).getUserState(), applicationContext.getBean(DetalizationOfIllustrationCommand.class));
-        commandMap.put(applicationContext.getBean(FinalizeCommand.class).getUserState(), applicationContext.getBean(FinalizeCommand.class));
-        commandMap.put(applicationContext.getBean(FormatIllustrationCommand.class).getUserState(), applicationContext.getBean(FormatIllustrationCommand.class));
-        commandMap.put(applicationContext.getBean(NameCreationCommand.class).getUserState(), applicationContext.getBean(NameCreationCommand.class));
-        commandMap.put(applicationContext.getBean(PriceCommand.class).getUserState(), applicationContext.getBean(PriceCommand.class));
-        commandMap.put(applicationContext.getBean(ReferencesCommand.class).getUserState(), applicationContext.getBean(ReferencesCommand.class));
-        commandMap.put(applicationContext.getBean(StartCommand.class).getUserState(), applicationContext.getBean(StartCommand.class));
-        commandMap.put(applicationContext.getBean(CountPersonsCommand.class).getUserState(), applicationContext.getBean(CountPersonsCommand.class));
-//        if (UserState.values().length != commandMap.size()) throw new RuntimeException("Not All User State Was Used");
+
+        Map<String, Command> commandBeansMap = applicationContext.getBeansOfType(Command.class);
+        Map<String, HasUserState> userStateBeansMap = applicationContext.getBeansOfType(HasUserState.class);
+
+        for (Map.Entry<String, Command> entry : commandBeansMap.entrySet()) {
+            String beanName = entry.getKey();
+            Command command = entry.getValue();
+
+            // Проверяем, реализует ли бин также AnotherInterface
+            if (userStateBeansMap.containsKey(beanName)) {
+                var state = userStateBeansMap.get(beanName);
+                commandMap.put(state.getUserState(), command);
+            }
+
+        }
+
+//        commandMap.put(applicationContext.getBean(BackgroundOfIllustrationCommand.class).getUserState(), applicationContext.getBean(BackgroundOfIllustrationCommand.class));
+//        commandMap.put(applicationContext.getBean(CommentToArtCommand.class).getUserState(), applicationContext.getBean(CommentToArtCommand.class));
+//        commandMap.put(applicationContext.getBean(CorrectOrderCommand.class).getUserState(), applicationContext.getBean(CorrectOrderCommand.class));
+//        commandMap.put(applicationContext.getBean(DetalizationOfIllustrationCommand.class).getUserState(), applicationContext.getBean(DetalizationOfIllustrationCommand.class));
+//        commandMap.put(applicationContext.getBean(FinalizeCommand.class).getUserState(), applicationContext.getBean(FinalizeCommand.class));
+//        commandMap.put(applicationContext.getBean(FormatIllustrationCommand.class).getUserState(), applicationContext.getBean(FormatIllustrationCommand.class));
+//        commandMap.put(applicationContext.getBean(NameCreationCommand.class).getUserState(), applicationContext.getBean(NameCreationCommand.class));
+//        commandMap.put(applicationContext.getBean(PriceCommand.class).getUserState(), applicationContext.getBean(PriceCommand.class));
+//        commandMap.put(applicationContext.getBean(ReferencesCommand.class).getUserState(), applicationContext.getBean(ReferencesCommand.class));
+//        commandMap.put(applicationContext.getBean(StartCommand.class).getUserState(), applicationContext.getBean(StartCommand.class));
+//        commandMap.put(applicationContext.getBean(CountPersonsCommand.class).getUserState(), applicationContext.getBean(CountPersonsCommand.class));
+////        if (UserState.values().length != commandMap.size()) throw new RuntimeException("Not All User State Was Used");
         if (!commandMap.isEmpty()){
             log.debug("All was initialized");
         }else {
             log.error("No initialization of beans Command");
+            throw new RuntimeException("No initialization of beans Command");
         }
     }
 

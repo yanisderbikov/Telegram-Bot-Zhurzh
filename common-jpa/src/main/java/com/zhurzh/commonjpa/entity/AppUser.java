@@ -29,6 +29,7 @@ public class AppUser {
     @CreationTimestamp
     private LocalDateTime firstLoginDate;
     private String telegramUserName;
+    private String additionalMessenger;
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private BranchStatus branchStatus = BranchStatus.START;

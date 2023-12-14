@@ -5,7 +5,8 @@ public enum TextMessage {
             "Привет я Марципан, тополя ля ля, почитай правила."),
     RULES("This is a rule message", "Тут текст правил"),
     RULES_BUTTON("Rules", "Правила"),
-    MAIN_MENU_BUTTON("Got it!", "Все понятно");
+    MAIN_MENU_TEXT("Got it?", "Понял принял?"),
+    MAIN_MENU_BUTTON("Got it!", "Ага");
 
     private final String englishMessage;
     private final String russianMessage;

@@ -39,12 +39,13 @@ public class CorrectOrderCommand implements Command, HasUserState {
         throw new CommandException(Thread.currentThread().getStackTrace());
 
     }
+
     @Override
     public boolean isExecuted(AppUser appUser) {
         return true;
     }
 
-    private boolean startCommand(AppUser appUser, Update update){
+    private boolean startCommand(AppUser appUser, Update update) {
         if (update.hasCallbackQuery()) {
             if (!update.getCallbackQuery().getData().equals(userState.getPath())) return false;
             var out = TextMessage.CORRECT_ORDER.getMessage(appUser.getLanguage());
@@ -55,69 +56,58 @@ public class CorrectOrderCommand implements Command, HasUserState {
         return false;
     }
 
-    private List<List<InlineKeyboardButton>> addButtonsToAll(AppUser appUser){
+    private List<List<InlineKeyboardButton>> addButtonsToAll(AppUser appUser) {
         List<List<InlineKeyboardButton>> lists = new ArrayList<>();
         var order = cc.findActiveOrder(appUser);
         var filled = order.isAllFilled();
-        if (!filled){
+        if (!filled) {
             List<InlineKeyboardButton> row = new ArrayList<>();
             cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
             return new ArrayList<>(List.of(row));
         }
-        if (filled || order.getCountOfPersons() == null) {
-            cm.addButtonToList(lists,
-                    CountPersonsCommand.userState.getMessage(appUser.getLanguage()),
-                    CountPersonsCommand.userState.getPath());
-        }
-        if (filled || order.getReference() == null) {
-            cm.addButtonToList(lists,
-                    ReferencesCommand.userState.getMessage(appUser.getLanguage()),
-                    ReferencesCommand.userState.getPath());
-        }
 
-        if (filled || order.getFormatOfIllustration() == null) {
-            cm.addButtonToList(lists,
-                    FormatIllustrationCommand.userState.getMessage(appUser.getLanguage()),
-                    FormatIllustrationCommand.userState.getPath());
-        }
+        cm.addButtonToList(lists,
+                CountPersonsCommand.userState.getMessage(appUser.getLanguage()),
+                CountPersonsCommand.userState.getPath());
 
-        if (filled || order.getDetalizationOfIllustration() == null) {
-            cm.addButtonToList(lists,
-                    DetalizationOfIllustrationCommand.userState.getMessage(appUser.getLanguage()),
-                    DetalizationOfIllustrationCommand.userState.getPath());
-        }
+        cm.addButtonToList(lists,
+                ReferencesCommand.userState.getMessage(appUser.getLanguage()),
+                ReferencesCommand.userState.getPath());
 
-        if (filled || order.getBackgroundOfIllustration() == null) {
-            cm.addButtonToList(lists,
-                    BackgroundOfIllustrationCommand.userState.getMessage(appUser.getLanguage()),
-                    BackgroundOfIllustrationCommand.userState.getPath());
-        }
+        cm.addButtonToList(lists,
+                FormatIllustrationCommand.userState.getMessage(appUser.getLanguage()),
+                FormatIllustrationCommand.userState.getPath());
 
-        if (filled || order.getName() == null) {
-            cm.addButtonToList(lists,
-                    NameCreationCommand.userState.getMessage(appUser.getLanguage()),
-                    NameCreationCommand.userState.getPath());
-        }
+        cm.addButtonToList(lists,
+                DetalizationOfIllustrationCommand.userState.getMessage(appUser.getLanguage()),
+                DetalizationOfIllustrationCommand.userState.getPath());
 
+        cm.addButtonToList(lists,
+                BackgroundOfIllustrationCommand.userState.getMessage(appUser.getLanguage()),
+                BackgroundOfIllustrationCommand.userState.getPath());
 
-        if (filled || order.getCommentToArt() == null) {
-            cm.addButtonToList(lists,
-                    CommentToArtCommand.userState.getMessage(appUser.getLanguage()),
-                    CommentToArtCommand.userState.getPath());
-        }
+        cm.addButtonToList(lists,
+                NameCreationCommand.userState.getMessage(appUser.getLanguage()),
+                NameCreationCommand.userState.getPath());
 
-        if (filled || (order.getPrice() == null && lists.isEmpty())) {
-            cm.addButtonToList(lists,
-                    PriceCommand.userState.getMessage(appUser.getLanguage()),
-                    PriceCommand.userState.getPath());
-        }
+        cm.addButtonToList(lists,
+                CommentToArtCommand.userState.getMessage(appUser.getLanguage()),
+                CommentToArtCommand.userState.getPath());
 
-        // выход
-        if (filled) {
-            cm.addButtonToList(lists,
-                    FinalizeCommand.userState.getMessage(appUser.getLanguage()),
-                    FinalizeCommand.userState.getPath());
-        }
+        cm.addButtonToList(lists,
+                PriceCommand.userState.getMessage(appUser.getLanguage()),
+                PriceCommand.userState.getPath());
+
+        List<InlineKeyboardButton> row = new ArrayList<>();
+
+        cm.addButtonToRow(row,
+                FinalizeCommand.userState.getMessage(appUser.getLanguage()),
+                FinalizeCommand.userState.getPath());
+
+        cm.addButtonToRow(row,
+                TextMessage.START_VERY_BEGIN_BUTTON.getMessage(appUser.getLanguage()),
+                StartCommand.veryBegin);
+        lists.add(row);
 
         return lists;
     }
