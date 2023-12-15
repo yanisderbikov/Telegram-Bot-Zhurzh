@@ -27,21 +27,9 @@ public class Controller implements Branches {
         var out = TextMessage.ACTIVATION_BUTTON.getMessage(appUser.getLanguage());
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
-
     @Override
-    @PostMapping("/callback")
-    public ResponseEntity<String> manageCallBack(@RequestBody Update update){
-        try {
-            priceListService.manage(update);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception e){
-            log.error(e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-    @Override
-    @PostMapping("/text")
-    public ResponseEntity<String> manageText(@RequestBody Update update){
+    @PostMapping("/execute")
+    public ResponseEntity<String> execute(@RequestBody Update update){
         try {
             priceListService.manage(update);
             return new ResponseEntity<>(HttpStatus.OK);

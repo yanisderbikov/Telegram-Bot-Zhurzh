@@ -6,5 +6,5 @@ public enum BranchStatus {
     ORDER,
     CHECK_ORDER,
     PRICE_LIST,
-    
+    FAQ,
 }

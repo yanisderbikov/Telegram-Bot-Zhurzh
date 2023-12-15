@@ -1,0 +1,121 @@
+package com.zhurzh.nodefaqservice.commands;
+
+import com.zhurzh.commonjpa.dao.FAQRepository;
+import com.zhurzh.commonjpa.entity.AppUser;
+import com.zhurzh.commonjpa.entity.FAQ;
+import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
+import com.zhurzh.commonutils.exception.CommandException;
+import com.zhurzh.commonutils.model.Command;
+import com.zhurzh.nodefaqservice.controller.HasUserState;
+import com.zhurzh.nodefaqservice.controller.UserState;
+import com.zhurzh.nodefaqservice.enums.TextMessage;
+import com.zhurzh.nodefaqservice.service.FAQService;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.extern.log4j.Log4j;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Component
+@AllArgsConstructor
+@Log4j
+public class AnswerCommand implements Command, HasUserState {
+    private CommandsManager cm;
+    private FAQService faqService;
+
+    public static UserState userState = UserState.FAQ;
+//    @NonNull
+//    private final String NEXT_QUESTION = "/next_question";
+//    @NonNull
+//    private final Map<AppUser, FAQ> map = new HashMap<>();
+
+    @Override
+    public UserState getUserState() {
+        return userState;
+    }
+
+    @Override
+    public boolean isExecuted(AppUser appUser) {
+        return true;
+    }
+
+    @Override
+    public void execute(Update update) throws CommandException {
+        var appUser = cm.findOrSaveAppUser(update);
+        if (startCommand(appUser, update)) return;
+        if (nextQuestion(appUser, update)) return;
+        if (endCommand(appUser, update)) return;
+        throw new CommandException(this.getClass().getName());
+    }
+
+    private boolean startCommand(AppUser appUser, Update update){
+        if (update.hasCallbackQuery() && update.getCallbackQuery().getData().equals(userState.getPath())){
+            var out = TextMessage.FAQ_START_MESSAGE.getMessage(appUser.getLanguage());
+            var faqList = faqService.getFAQsSortedByPopularity(11, appUser.getLanguage());
+            List<List<InlineKeyboardButton>> lists = new ArrayList<>();
+            for (var faq : faqList){
+                cm.addButtonToList(lists, faq.getQuestion(), faq.getId());
+            }
+            cm.addButtonToMainMenu(lists, appUser);
+            cm.sendAnswerEdit(appUser, update, out, lists);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean endCommand(AppUser appUser, Update update){
+        if (update.hasCallbackQuery()){
+            FAQ faq;
+            try {
+                var faqOPT = faqService.findById(Long.parseLong(update.getCallbackQuery().getData()), appUser);
+                if (faqOPT.isEmpty()) return false;
+                faq = faqOPT.get();
+            }catch (Exception e){
+                log.error(e);
+                return false;
+            }
+            var out = build(appUser, faq);
+            List<InlineKeyboardButton> row = cm.buttonMainMenu(appUser.getLanguage());
+            cm.addButtonToRow(row,
+                    TextMessage.NEXT_BUTTON.getMessage(appUser.getLanguage()),
+                    TextMessage.NEXT_BUTTON.name());
+//            map.put(appUser, faq);
+            cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+            return true;
+        }
+        return false;
+    }
+
+    private boolean nextQuestion(AppUser appUser, Update update){
+        if (update.hasCallbackQuery()){
+            if (!update.getCallbackQuery().getData().equals(TextMessage.NEXT_BUTTON.name())) return false;
+//            var lastFaq = map.get(appUser);
+            var opt = faqService.getNextPopularFAQ(appUser);
+            var callBackQ = update.getCallbackQuery();
+            if (opt.isEmpty()) {
+                callBackQ.setData(userState.getPath());
+                update.setCallbackQuery(callBackQ);
+                return startCommand(appUser, update);
+            }
+            callBackQ.setData(String.valueOf(opt.get().getId()));
+            update.setCallbackQuery(callBackQ);
+            return endCommand(appUser, update);
+        }
+        return false;
+    }
+
+    private String build(AppUser appUser, FAQ faq){
+        var QUESTION = appUser.getLanguage().equals("eng") ? "Question: " : "Вопрос: ";
+        var ANSWER = appUser.getLanguage().equals("eng") ? "Answer: " : "Ответ: ";
+
+        var out = QUESTION + faq.getQuestion() + "\n\n" +
+                ANSWER + faq.getAnswer();
+        return out;
+    }
+}

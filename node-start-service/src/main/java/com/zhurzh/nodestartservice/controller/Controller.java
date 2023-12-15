@@ -23,30 +23,16 @@ public class Controller implements Branches {
     @PostMapping
     public ResponseEntity<String> isActive(@RequestBody Update update){
         var out = "The branch 'start service' is online";
-        log.debug("update come is active: " + update);
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
 
     @Override
-    @PostMapping("/callback")
-    public ResponseEntity<String> manageCallBack(@RequestBody Update update){
+    @PostMapping("/execute")
+    public ResponseEntity<String> execute(@RequestBody Update update){
         try {
-            log.debug("update come callback manage: " + update);
-            mainNodeStartService.manageCallBack(update);
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            log.error(e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-    @Override
-    @PostMapping("/text")
-    public ResponseEntity<String> manageText(@RequestBody Update update){
-        try {
-            var out = "text";
             log.debug("update come text manage: " + update);
-            mainNodeStartService.manageText(update);
-            return ResponseEntity.ok(out);
+            mainNodeStartService.execute(update);
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

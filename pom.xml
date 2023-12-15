@@ -12,8 +12,6 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <!-- Убрано явное указание версии Spring Boot -->
-        <!-- <java.version>17</java.version> -->
         <telegrambot.starter.version>6.1.0</telegrambot.starter.version>
         <hibernate-types.version>2.2.2</hibernate-types.version>
         <postgresql.version>42.2.18</postgresql.version>
@@ -32,15 +30,13 @@
         <module>node</module>
         <module>common-jpa</module>
         <module>common-utils</module>
-<!--        <module>api-service</module>-->
-<!--        <module>scheduler-service</module>-->
         <module>common-rabbitmq</module>
         <module>common-node-service</module>
         <module>node-order-service</module>
         <module>node-check-order-service</module>
         <module>node-start-service</module>
         <module>node-price-list</module>
-<!--        <module>demo</module>-->
+        <module>node-faq-service</module>
     </modules>
 
     <dependencies>

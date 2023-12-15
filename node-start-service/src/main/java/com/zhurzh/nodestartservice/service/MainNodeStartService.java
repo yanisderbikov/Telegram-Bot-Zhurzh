@@ -36,8 +36,8 @@ public class MainNodeStartService {
 //    }
 
 
-    public void manageCallBack(Update update){
-        var text = update.getCallbackQuery().getMessage().getText();
+    public void execute(Update update){
+//        var text = update.getCallbackQuery().getMessage().getText();
         var appUser = cm.findOrSaveAppUser(update);
         map.putIfAbsent(appUser, "start");
         switch (map.get(appUser)){
@@ -46,10 +46,6 @@ public class MainNodeStartService {
             default -> start(update);
         }
 
-    }
-
-    public void manageText(Update update){
-        start(update);
     }
     private void start(Update update){
         // switch case ru/eng

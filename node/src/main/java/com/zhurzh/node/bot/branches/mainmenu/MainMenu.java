@@ -41,17 +41,7 @@ public class MainMenu implements Branches {
     }
 
     @Override
-    public ResponseEntity<String> manageCallBack(Update update) {
-        try {
-            manager(update);
-            return ResponseEntity.ok("ok");
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @Override
-    public ResponseEntity<String> manageText(Update update) {
+    public ResponseEntity<String> execute(Update update) {
         try {
             manager(update);
             return ResponseEntity.ok("ok");

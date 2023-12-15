@@ -1,6 +1,6 @@
 #!/bin/bash
 
-jps -l | grep -v 66065 | grep ".jar" | awk '{print $1}' | xargs kill
+jps -l | grep -v 18893 | grep ".jar" | awk '{print $1}' | xargs kill
 
 
 

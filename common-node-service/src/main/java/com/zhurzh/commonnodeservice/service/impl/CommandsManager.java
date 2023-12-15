@@ -222,6 +222,8 @@ public class CommandsManager {
         list.add(buttonMainMenu(appUser.getLanguage()));
     }
 
+
+
     public void addButtonToList(List<List<InlineKeyboardButton>> list, String buttonText, String callbackMessage) {
         var button = new InlineKeyboardButton();
         button.setText(buttonText);

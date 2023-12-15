@@ -37,21 +37,15 @@ public class ConnectionClass implements Branches {
 
 
     @Override
-    public ResponseEntity<String> manageText(Update update) {
+    public ResponseEntity<String> execute(Update update) {
         log.debug("manage Text now");
-        String path = "/text";
+        String path = "/execute";
         var response =  sendRequest(update, path);
         log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
         return response;
     }
 
-    @Override
-    public ResponseEntity<String> manageCallBack(Update update) {
-        String path = "/callback";
-        var response =  sendRequest(update, path);
-        log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
-        return response;
-    }
+
 
     private ResponseEntity<String> sendRequest(Update update, String path) {
         try {
