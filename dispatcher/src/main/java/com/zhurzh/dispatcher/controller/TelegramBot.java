@@ -88,6 +88,7 @@ public class TelegramBot extends TelegramWebhookBot {
     public void sendAnswerMessage(SendMessage message) {
         if (message != null) {
             try {
+                message.setParseMode("HTML");
                 execute(message);
             } catch (TelegramApiException e) {
                 log.error(e);
@@ -97,6 +98,7 @@ public class TelegramBot extends TelegramWebhookBot {
     public void sendCallBack(EditMessageText editMessageText){
         if (editMessageText != null){
             try {
+                editMessageText.setParseMode("HTML");
                 execute(editMessageText);
             }catch (TelegramApiException e) {
                 log.error(e);

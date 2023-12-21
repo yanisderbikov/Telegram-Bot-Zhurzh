@@ -22,14 +22,18 @@ public class FAQ {
     @Column(nullable = false)
     private String question;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String answer;
 
     @Column(nullable = false)
     private String language;
-    private Integer popularityScore;
+    @Builder.Default
+    private Integer popularityScore = 0;
 
-    private Integer viewCount;
+    @Column(nullable = false)
+    private Long fromUserId;
+    @Builder.Default
+    private Integer viewCount = 0;
 
     @CreationTimestamp
     private LocalDate creationDate;

@@ -62,7 +62,11 @@ public class AnswerCommand implements Command, HasUserState {
             for (var faq : faqList){
                 cm.addButtonToList(lists, faq.getQuestion(), faq.getId());
             }
-            cm.addButtonToMainMenu(lists, appUser);
+            var row = cm.buttonMainMenu(appUser.getLanguage());
+            cm.addButtonToRow(row,
+                    AddNewQuestionCommand.userState.getMessage(appUser.getLanguage()),
+                    AddNewQuestionCommand.userState.getPath());
+            lists.add(row);
             cm.sendAnswerEdit(appUser, update, out, lists);
             return true;
         }

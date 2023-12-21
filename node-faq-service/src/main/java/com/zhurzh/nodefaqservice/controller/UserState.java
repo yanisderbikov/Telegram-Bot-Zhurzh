@@ -9,7 +9,7 @@ package com.zhurzh.nodefaqservice.controller;
  */
 public enum UserState {
     FAQ("FAQ", "FAQ", "/faqservice"),
-    ADD_OWN_QUESTION("Add own question", "Добавить свой вопрос", "/add_own_question_command"),
+    ADD_NEW_QUESTION("Add question", "Добавить вопрос", "/add_own_question_command"),
 
     MAIN_MENU("Menu", "Меню", "/menu");
 

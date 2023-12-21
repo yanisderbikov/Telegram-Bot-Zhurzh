@@ -5,8 +5,10 @@ public enum TextMessage {
     BUTTON_YES("Yes", "Да"),
     BUTTON_NO("No", "Нет"),
     FAQ_START_MESSAGE("List of questions", "Список вопросов"),
-    NEXT_BUTTON("Next question", "Следующий вопрос")
-
+    NEXT_BUTTON("Next question", "Следующий вопрос"),
+    ADD_NEW_QUESTION_START("Write down your question", "Напиши свой вопрос"),
+    ADD_NEW_QUESTION_END("Thank you for your interest. You will get an notification when you will get an answer on ypur question.\nThank you again for ypur question.",
+            "Спасибо за оставленный вопрос. Когда Журж ответит на него, ты получишь уведомление.")
     ;
 
     private final String englishMessage;

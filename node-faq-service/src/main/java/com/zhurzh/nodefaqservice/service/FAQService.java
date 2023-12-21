@@ -5,6 +5,7 @@ import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonjpa.entity.FAQ;
 import com.zhurzh.nodefaqservice.controller.FAQCachController;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -19,7 +20,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
-@Slf4j
+//@Slf4j
+@Log4j
 @AllArgsConstructor
 public class FAQService {
     private final FAQRepository faqRepository;
@@ -81,10 +83,10 @@ public class FAQService {
             faq.setPopularityScore(calculatePopularityScore(faq));
             var got = cash.updateLastViewedFAQ(userId, faqId);
             faqRepository.save(faq);
-            log.debug("Click registered; user: {}; faq: {}", userId, faqId);
+            log.debug(String.format("Click registered; user: %s; faq: %s", userId, faqId));
             return true;
         }
-        log.debug("Click NOT registered; user: {}; faq: {}", userId, faqId);
+        log.debug(String.format("Click NOT registered (not unique); user: %s; faq: %s", userId, faqId));
         return false;
     }
 
