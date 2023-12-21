@@ -46,10 +46,10 @@ public class RabbitConfiguration {
     public Queue answerPhotoQueue() {
         return new Queue(RabbitQueue.ANSWER_PHOTO_MESSAGE);
     }
-    @Bean
-    public Queue editPhotoQueue() {
-        return new Queue(RabbitQueue.EDIT_PHOTO_MESSAGE);
-    }
+//    @Bean
+//    public Queue editPhotoQueue() {
+//        return new Queue(RabbitQueue.EDIT_PHOTO_MESSAGE);
+//    }
     @Bean
     public Queue deleteMessageQueue() {
         return new Queue(RabbitQueue.DELETE_MESSAGE_ANSWER);

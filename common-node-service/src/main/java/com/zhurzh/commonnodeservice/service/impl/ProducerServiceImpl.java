@@ -34,10 +34,10 @@ public class ProducerServiceImpl implements ProducerService {
     public void producerAnswer(EditMessageText sendMessage) {
         rabbitTemplate.convertAndSend(ANSWER_CALLBACK, sendMessage);
     }
-    @Override
-    public void producerAnswer(EditMessageMedia sendMessage) {
-        rabbitTemplate.convertAndSend(EDIT_PHOTO_MESSAGE, sendMessage);
-    }
+//    @Override
+//    public void producerAnswer(EditMessageMedia sendMessage) {
+//        rabbitTemplate.convertAndSend(EDIT_PHOTO_MESSAGE, sendMessage);
+//    }
     @Override
     public void producerAnswer(DeleteMessage sendMessage) {
         rabbitTemplate.convertAndSend(DELETE_MESSAGE_ANSWER, sendMessage);

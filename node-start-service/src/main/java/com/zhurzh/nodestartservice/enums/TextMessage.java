@@ -4,7 +4,7 @@ public enum TextMessage {
     WELCOME("Hello, My name is Mrarzypan and...\nBefore we start learn more about rules",
             "Привет я Марципан, тополя ля ля, почитай правила."),
     RULES("This is a rule message",
-            "<b>Жирный текст</b>, <i>курсив</i>, <u>подчеркнутый текст</u>, <s>зачеркнутый текст</s>, <code>моноширинный текст</code>, <pre>моноширинный блок</pre>, <a href=\"https://www.furaffinity.net/view/48332248\">ссылка</a>"),
+            "Ещь, пей, веселись, а то завтра <b>умрешь</b>. Один раз <b>живешь</b>"),
     RULES_BUTTON("Rules", "Правила"),
     MAIN_MENU_TEXT("Got it?", "Понял принял?"),
     MAIN_MENU_BUTTON("Got it!", "Ага");

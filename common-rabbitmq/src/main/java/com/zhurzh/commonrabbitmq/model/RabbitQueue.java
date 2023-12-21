@@ -8,7 +8,7 @@ public class RabbitQueue {
     public static final String ANSWER_CALLBACK = "answer_callback";
     public static final String CALLBACK_MESSAGE_UPDATE = "callback_message_update";
     public static final String ANSWER_PHOTO_MESSAGE = "answer_photo_message";
-    public static final String EDIT_PHOTO_MESSAGE = "edit_photo_message";
+//    public static final String EDIT_PHOTO_MESSAGE = "edit_photo_message";
     public static final String DELETE_MESSAGE_ANSWER = "delete_message_answer";
 
 }

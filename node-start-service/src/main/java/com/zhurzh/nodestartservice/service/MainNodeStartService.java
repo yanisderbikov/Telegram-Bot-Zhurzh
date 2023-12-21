@@ -28,7 +28,8 @@ public class MainNodeStartService {
     private final String RULES = "/rules";
     private final String WelcomeFunc = "welcomeMessage";
     private final String ToMainMenu = "toMainMenu";
-    private Map<AppUser, String> map = new HashMap<>();
+
+    private final String IMAGE = "/start";
 
 //    public MainNodeService(CommandsManager commandsManager, AppUserDAO appUserDAO){
 //        this.appUserDAO = appUserDAO;
@@ -39,55 +40,68 @@ public class MainNodeStartService {
     public void execute(Update update){
 //        var text = update.getCallbackQuery().getMessage().getText();
         var appUser = cm.findOrSaveAppUser(update);
-        map.putIfAbsent(appUser, "start");
-        switch (map.get(appUser)){
-            case WelcomeFunc -> pickLanguageAndRules(update);
-            case ToMainMenu -> toMainMenu(update);
-            default -> start(update);
-        }
+        if (pickLanguageAndRules(update)) return;;
+        if (toMainMenu(update)) return;
+        start(update);
 
     }
-    private void start(Update update){
+    private boolean start(Update update){
         // switch case ru/eng
-        var out = TextMessage.HELLO.getMessage("eng") + "/" + TextMessage.HELLO.getMessage("ru");
-        List<List<InlineKeyboardButton>> lists = new ArrayList<>();
-        List<InlineKeyboardButton> row = new ArrayList<>();
-        cm.addButtonToRow(row, "ENG", ENG);
-        cm.addButtonToRow(row, "RU", RU);
-        lists.add(row);
-        cm.sendAnswerEdit(update, out, lists);
-        var appUser = cm.findOrSaveAppUser(update);
-        map.put(appUser, WelcomeFunc);
-    }
-
-    private void pickLanguageAndRules(Update update){
-        // manage last message for switch language
-        var appUser = cm.findOrSaveAppUser(update);
-        if (update.getCallbackQuery().getData().equals(RU)){
-            appUser.setLanguage("ru");
-        }else {
-            appUser.setLanguage("eng");
+        if (update.hasMessage()) {
+            var out = TextMessage.HELLO.getMessage("eng") + "/" + TextMessage.HELLO.getMessage("ru");
+            List<List<InlineKeyboardButton>> lists = new ArrayList<>();
+            List<InlineKeyboardButton> row = new ArrayList<>();
+            cm.addButtonToRow(row, "ENG", ENG);
+            cm.addButtonToRow(row, "RU", RU);
+            lists.add(row);
+            cm.sendAnswerEdit(update, out, lists);
+            var appUser = cm.findOrSaveAppUser(update);
+            return true;
         }
-        appUserDAO.save(appUser);
-        var out = TextMessage.WELCOME.getMessage(appUser.getLanguage());
-        List<List<InlineKeyboardButton>> lists = new ArrayList<>();
-        cm.addButtonToList(lists, TextMessage.RULES_BUTTON.getMessage(appUser.getLanguage()), RULES);
-        cm.sendAnswerEdit(appUser, update, out, lists);
-        map.put(appUser, ToMainMenu);
+        return false;
     }
 
-    private void toMainMenu(Update update){
-        // manage message with rules
-        var appUser = cm.findOrSaveAppUser(update);
-        appUser.setBranchStatus(BranchStatus.MENU);
-        appUserDAO.save(appUser);
-        var out = TextMessage.RULES.getMessage(appUser.getLanguage());
-        cm.sendAnswerEdit(appUser, update, out);
-        List<List<InlineKeyboardButton>> lists = new ArrayList<>();
-        cm.addButtonToList(lists, TextMessage.MAIN_MENU_BUTTON.getMessage(appUser.getLanguage()), BranchStatus.MENU.name());
-        out = TextMessage.MAIN_MENU_TEXT.getMessage(appUser.getLanguage());
-        cm.sendAnswerEdit(appUser, null, out, lists);
-        map.remove(appUser);
+    private boolean pickLanguageAndRules(Update update){
+        if (update.hasCallbackQuery() && (update.getCallbackQuery().getData().equals(RU) || update.getCallbackQuery().getData().equals(ENG))) {
+            // manage last message for switch language
+            var appUser = cm.findOrSaveAppUser(update);
+            if (update.getCallbackQuery().getData().equals(RU)) {
+                appUser.setLanguage("ru");
+            } else {
+                appUser.setLanguage("eng");
+            }
+            appUserDAO.save(appUser);
+            var out = TextMessage.WELCOME.getMessage(appUser.getLanguage());
+            List<List<InlineKeyboardButton>> lists = new ArrayList<>();
+            cm.addButtonToList(lists, TextMessage.RULES_BUTTON.getMessage(appUser.getLanguage()), RULES);
+
+            var imagePath = IMAGE + "/hello.PNG";
+            if (cm.sendPhoto(appUser, update, out, imagePath, lists)) {
+                log.debug(String.format("File executed %s", imagePath));
+            } else {
+                log.error(String.format("File NOT executed %s", imagePath));
+                cm.sendAnswerEdit(appUser, update, out, lists);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private boolean toMainMenu(Update update){
+        if (update.hasCallbackQuery() && update.getCallbackQuery().getData().equals(RULES)) {
+            // manage message with rules
+            var appUser = cm.findOrSaveAppUser(update);
+            appUser.setBranchStatus(BranchStatus.MENU);
+            appUserDAO.save(appUser);
+            var out = TextMessage.RULES.getMessage(appUser.getLanguage());
+            cm.sendAnswerEdit(appUser, update, out);
+            List<List<InlineKeyboardButton>> lists = new ArrayList<>();
+            cm.addButtonToList(lists, TextMessage.MAIN_MENU_BUTTON.getMessage(appUser.getLanguage()), BranchStatus.MENU.name());
+            out = TextMessage.MAIN_MENU_TEXT.getMessage(appUser.getLanguage());
+            cm.sendAnswerEdit(appUser, null, out, lists);
+            return true;
+        }
+        return false;
     }
 
 }

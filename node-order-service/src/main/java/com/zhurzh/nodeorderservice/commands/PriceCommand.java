@@ -35,31 +35,7 @@ public class PriceCommand implements Command, HasUserState {
         return userState;
     }
 
-    /**
-     *
-     * @param order should be filled all main positions
-     * @param appUser to know a language
-     * @return calculated string on right lan
-     * @throws RuntimeException
-     */
-    public String calculatePrice(Order order, AppUser appUser) throws RuntimeException{
-        double price = 1;
-        try {
-            // TODO: 09/12/23 Исправить по актуалочке
-            price += (order.getBackgroundOfIllustration().ordinal() + 1) * 5;
-            price += (order.getDetalizationOfIllustration().ordinal() + 1) * 10;
-            price += (order.getCountOfPersons().ordinal() + 1) * 0.2 * price;
-            price += (order.getFormatOfIllustration().ordinal() + 1) * 4;
 
-            if (appUser.getLanguage().equals("eng")){
-                return String.format("\nAround price is %s$", price);
-            }else {
-                return String.format("\nПримерная цена %s руб", price * 90);
-            }
-        }catch (Exception e){
-            throw new RuntimeException("Fail to calculate : " + e.getCause().getMessage());
-        }
-    }
     @Override
     public void execute(Update update) throws CommandException {
         var appUser = cm.findOrSaveAppUser(update);

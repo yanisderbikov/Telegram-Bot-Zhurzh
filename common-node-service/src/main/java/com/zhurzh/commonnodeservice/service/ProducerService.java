@@ -13,7 +13,7 @@ public interface ProducerService {
     void producerAnswer(SendMessage sendMessage);
     void producerAnswer(EditMessageText sendMessage);
     void producerAnswer(SendPhoto sendPhoto);
-    void producerAnswer(EditMessageMedia editMessageMedia);
+//    void producerAnswer(EditMessageMedia editMessageMedia);
     void producerAnswer(DeleteMessage editMessageMedia);
 
 }

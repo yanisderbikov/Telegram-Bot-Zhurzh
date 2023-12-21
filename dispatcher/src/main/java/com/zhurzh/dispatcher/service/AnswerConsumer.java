@@ -10,6 +10,6 @@ public interface AnswerConsumer {
     void consume(SendMessage sendMessage);
     void consume(EditMessageText editMessageText);
     void consume(SendPhoto sendPhoto);
-    void consume(EditMessageMedia editMessageMedia);
+//    void consume(EditMessageMedia editMessageMedia);
     void consume(DeleteMessage editMessageText);
 }

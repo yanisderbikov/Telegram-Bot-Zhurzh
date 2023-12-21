@@ -1,5 +1,6 @@
 package com.zhurzh.dispatcher.controller;
 
+import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -23,11 +24,11 @@ import static com.zhurzh.commonrabbitmq.model.RabbitQueue.*;
 
 @Component
 @Log4j
+@Getter
 public class UpdateProcessor {
     private TelegramBot telegramBot;
     private final MessageUtils messageUtils;
     private final UpdateProducer updateProducer;
-    private final static String IMAGES_PATH = "dispatcher/src/main/resources/static/images/ZM/";
 
 
     public UpdateProcessor(MessageUtils messageUtils, UpdateProducer updateProducer) {
@@ -92,14 +93,18 @@ public class UpdateProcessor {
     public void setPhoto(SendPhoto photo) {
 //        var imagePath = "hello.jpg";
         var name = photo.getPhoto().getAttachName().substring(9);
-        var path = IMAGES_PATH + name;
-        File f = new File(path);
-        if (!f.exists()) log.error("File doesnt found ["+path+"]");
+        var path = name;
+        File f = new File(path); // checking a file
+        if (!f.exists()) {
+            log.error("File doesnt found ["+path+"]");
+            return;
+        }
         InputFile inputFile = null;
         try {
-            inputFile = new InputFile(new FileInputStream(f), "helloMessage");
+            inputFile = new InputFile(new FileInputStream(f), path);
         } catch (FileNotFoundException e) {
-            log.error("doesn't found the image " + path + " EROOR is : " + e.getMessage());
+            log.error("doesn't found the image " + path + " ERROR is : " + e.getMessage());
+            return;
         }
         photo.setPhoto(inputFile);
         telegramBot.sendPhoto(photo);
@@ -123,13 +128,13 @@ public class UpdateProcessor {
         updateProducer.produce(CALLBACK_MESSAGE_UPDATE, update);
     }
 
-    public void setEditPhoto(EditMessageMedia editMessageMedia) {
-        var path = editMessageMedia.getMedia().getMedia();
-        InputMedia media = new InputMediaPhoto();
-        media.setMedia(new File(IMAGES_PATH + path), "testImage");
-        editMessageMedia.setMedia(media);
-        telegramBot.sendEditMessagePhoto(editMessageMedia);
-    }
+//    public void setEditPhoto(EditMessageMedia editMessageMedia) {
+//        var path = editMessageMedia.getMedia().getMedia();
+//        InputMedia media = new InputMediaPhoto();
+//        media.setMedia(new File(IMAGES_PATH + path), "testImage");
+//        editMessageMedia.setMedia(media);
+//        telegramBot.sendEditMessagePhoto(editMessageMedia);
+//    }
 
     public void setDeleteMessage(DeleteMessage deleteMessage) {
         telegramBot.sendDeleteMessage(deleteMessage);

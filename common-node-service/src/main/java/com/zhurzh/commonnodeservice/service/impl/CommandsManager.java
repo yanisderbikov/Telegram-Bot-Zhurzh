@@ -4,7 +4,10 @@ import com.zhurzh.commonjpa.dao.AppUserDAO;
 import com.zhurzh.commonjpa.enums.BranchStatus;
 import com.zhurzh.commonnodeservice.service.ProducerService;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.Value;
 import lombok.extern.log4j.Log4j;
+import net.bytebuddy.implementation.bind.annotation.Empty;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -37,7 +40,12 @@ import java.util.Optional;
 public class CommandsManager {
     private ProducerService producerService;
     private AppUserDAO appUserDAO;
-    private final String IMAGES_PATH = "dispatcher/src/main/resources/static/images/ZM/";
+
+    private ConnectionToDispatcherPhoto connectionToDispatcherPhoto;
+
+//    @Value("${file.path}")
+    private final String ABSOLUTE_PATH = "/Users/yanderbikovmail.ru/Documents/ProjectsIDE/Telegram/Telegram-Bot-Zhurzh";
+    private final String IMAGES_PATH = ABSOLUTE_PATH + "/common-utils/src/main/resources/static/images";
     private final String TELEGRAM_LINK = "http://t.me/";
 
 
@@ -51,20 +59,17 @@ public class CommandsManager {
     }
 
     public void sendAnswerEdit(AppUser appUser, Update update, String text) {
-        if (update == null || !update.hasCallbackQuery()) {
-            sendAnswer(text, appUser.getChatId());
-            return;
-        }
-        EditMessageText message = new EditMessageText(); // попробовать сразу засетить сюда строку
-        message.setChatId(appUser.getChatId());
-        message.setText(text);
-        message.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
-//        message.setReplyMarkup(markup);
-        sendAnswer(message);
+        sendAnswerEdit(appUser, update, text, (InlineKeyboardMarkup) null);
     }
 
     private void sendAnswerEdit(AppUser appUser, Update update, @NotNull String text, InlineKeyboardMarkup markup) {
         if (update == null || !update.hasCallbackQuery()) {
+            sendAnswer(appUser, text, markup);
+            return;
+        }
+        if (update.hasCallbackQuery() && update.getCallbackQuery().getMessage().hasPhoto()){
+            deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());
+            log.debug("Message was deleted");
             sendAnswer(appUser, text, markup);
             return;
         }
@@ -76,27 +81,7 @@ public class CommandsManager {
         sendAnswer(message);
     }
 
-    public void sendEditPhoto(AppUser appUser, Update update, String path, InlineKeyboardMarkup markup) {
-        EditMessageMedia editMessageMedia = new EditMessageMedia();
-        editMessageMedia.setChatId(appUser.getChatId());
-        editMessageMedia.setReplyMarkup(markup);
-        editMessageMedia.setMessageId(update.getUpdateId());
 
-        File f = new File(IMAGES_PATH + path);
-        if (!f.exists()) {
-            log.error("File doesnt found [" + path + "]");
-            return;
-        }
-        InputFile inputFile = null;
-        InputMediaPhoto photo = new InputMediaPhoto(path);
-        try {
-            inputFile = new InputFile(new FileInputStream(f), path);
-        } catch (FileNotFoundException e) {
-            log.error("doesn't found the image " + path + " ERROR is : " + e.getMessage());
-        }
-        editMessageMedia.setMedia(photo);
-        producerService.producerAnswer(editMessageMedia);
-    }
 
     public void deleteMessage(AppUser appUser, Integer messageId) {
         DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(appUser.getChatId()), messageId);
@@ -130,78 +115,33 @@ public class CommandsManager {
 //        sendAnswerEdit(tech(), null, builder.toString());
     }
 
-    public void sendPhoto(AppUser appUser, String imagePath, String caption) {
+    public boolean sendPhoto(AppUser appUser, Update update, String out, @NotNull String imagePath, List<List<InlineKeyboardButton>> list) {
         long chatId = appUser.getChatId();
         var path = IMAGES_PATH + imagePath;
         File f = new File(path);
         if (!f.exists()) {
             log.error("File doesnt found [" + path + "]");
-            return;
+            return false;
         }
         InputFile inputFile = null;
         try {
-            inputFile = new InputFile(new FileInputStream(f), imagePath);
+            inputFile = new InputFile(new FileInputStream(f), path);
         } catch (FileNotFoundException e) {
             log.error("doesn't found the image " + path + " ERROR is : " + e.getMessage());
+            return false;
         }
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setPhoto(inputFile);
         sendPhoto.setChatId(chatId);
-        sendPhoto.setCaption(caption);
-//        sendPhoto.setReplyMarkup(replyKeyboard);
-//        sendPhoto.setReplyToMessageId();
-        producerService.producerAnswer(sendPhoto);
-        for (long i = 0; i < 1000000000; i++) {
-        }
-        for (long i = 0; i < 1000000000; i++) {
-        }
-        for (long i = 0; i < 1000000000; i++) {
-        }
-        for (long i = 0; i < 1000000000; i++) {
-        }
+        sendPhoto.setCaption(out);
+        sendPhoto.setReplyMarkup(new InlineKeyboardMarkup(list));
 
+        if (update != null && update.hasMessage()){
+            deleteMessage(appUser, update.getMessage().getMessageId());
+        }
+        var responce = connectionToDispatcherPhoto.sendRequest(sendPhoto);
+        return responce.getStatusCode().is2xxSuccessful();
     }
-
-    public void sendPhoto(AppUser appUser, String imagePath, String caption, InlineKeyboardMarkup markup) {
-        long chatId = appUser.getChatId();
-        var path = IMAGES_PATH + imagePath;
-        File f = new File(path);
-        if (!f.exists()) {
-            log.error("File doesnt found [" + path + "]");
-            return;
-        }
-        InputFile inputFile = null;
-        try {
-            inputFile = new InputFile(new FileInputStream(f), imagePath);
-        } catch (FileNotFoundException e) {
-            log.error("doesn't found the image " + path + " ERROR is : " + e.getMessage());
-        }
-        SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setPhoto(inputFile);
-        sendPhoto.setChatId(chatId);
-        sendPhoto.setCaption(caption);
-        sendPhoto.setReplyMarkup(markup);
-//        sendPhoto.setReplyMarkup(replyKeyboard);
-//        sendPhoto.setReplyToMessageId();
-        producerService.producerAnswer(sendPhoto);
-        for (long i = 0; i < 1000000000; i++) {
-        }
-        for (long i = 0; i < 1000000000; i++) {
-        }
-        for (long i = 0; i < 1000000000; i++) {
-        }
-        for (long i = 0; i < 1000000000; i++) {
-        }
-
-    }
-
-    //    public void backToMenu(AppUser appUser, Update update, String message){
-//        appUser.setState(BASIC_STATE);
-//        appUserDAO.save(appUser);
-//        List<List<InlineKeyboardButton>> list = new ArrayList<>();
-//        list.add(buttonHelp());
-//        sendAnswerEdit(appUser, update, message, new InlineKeyboardMarkup(list));
-//    }
     public void deleteAllPreviousMessages(AppUser appUser, Update update) {
         Integer id;
         if (update.hasCallbackQuery()) {

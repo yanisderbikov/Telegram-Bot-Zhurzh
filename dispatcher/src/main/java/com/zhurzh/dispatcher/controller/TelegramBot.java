@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
+import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
@@ -39,15 +40,7 @@ public class TelegramBot extends TelegramWebhookBot {
     @PostConstruct
     public void init() { // 16 урок - исправление на webHook
         List<BotCommand> listOfCommands = new ArrayList<>();
-//        listOfCommands.add(new BotCommand("/start", "начать использовать бота"));
-//        listOfCommands.add(new BotCommand("/menu", "посмотреть список доступных команд"));
-//        listOfCommands.add(new BotCommand("/choose_days", "выбрать рабочие дни"));
-//        listOfCommands.add(new BotCommand("/my_work_days", "посмотреть свои рабочии дни"));
-//        listOfCommands.add(new BotCommand("/choose_location", "выбрать место работы"));
         listOfCommands.add(new BotCommand("/menu", "menu"));
-//        listOfCommands.add(new BotCommand("/begin", "начать с начала"));
-//        listOfCommands.add(new BotCommand("/cancel", "отмена любого действия"));
-//        listOfCommands.add(new BotCommand("/clear", "отчистить историю"));
 
         listOfCommands.add(new BotCommand("/start", "very begin"));
         try {
@@ -122,14 +115,17 @@ public class TelegramBot extends TelegramWebhookBot {
         return null;
     }
 
-    public void sendPhoto(SendPhoto photo) {
+    public boolean sendPhoto(SendPhoto photo) {
         if (photo != null){
             try {
                 execute(photo);
+                return true;
             }catch (TelegramApiException e) {
                 log.error(e);
+                return false;
             }
         }
+        return false;
     }
 
     public void sendEditMessagePhoto(EditMessageMedia editMessageMedia) {
