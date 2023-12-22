@@ -69,7 +69,7 @@ public class MainMenu implements Branches {
         if (list.isEmpty()){
             commandsManager.sendAnswerEdit(appUser, update, TextMessage.NO_SERVICE_AVAILABLE.getMessage(appUser.getLanguage()));
         }else {
-            commandsManager.sendAnswerEdit(appUser, update, TextMessage.MENU.getMessage(len), list);
+            commandsManager.sendPhoto(appUser, update, null, "/menu/menu.png",list);
         }
     }
 

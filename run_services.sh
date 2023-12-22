@@ -8,7 +8,7 @@ java -jar dispatcher/target/dispatcher-1.0-SNAPSHOT.jar &
 java -jar node-start-service/target/node-start-service-0.0.1-SNAPSHOT.jar &
 
 # node
-java -jar node/target/node-1.0-SNAPSHOT.jar &
+#java -jar node/target/node-1.0-SNAPSHOT.jar &
 
 # order
 java -jar node-order-service/target/node-order-service-0.0.1-SNAPSHOT.jar &

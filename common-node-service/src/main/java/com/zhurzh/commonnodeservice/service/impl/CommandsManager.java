@@ -138,6 +138,8 @@ public class CommandsManager {
 
         if (update != null && update.hasMessage()){
             deleteMessage(appUser, update.getMessage().getMessageId());
+        } else if (update != null && update.hasCallbackQuery()) {
+            deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());
         }
         var responce = connectionToDispatcherPhoto.sendRequest(sendPhoto);
         return responce.getStatusCode().is2xxSuccessful();
