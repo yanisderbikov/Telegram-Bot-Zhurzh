@@ -6,13 +6,12 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
-import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.*;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
@@ -95,7 +94,6 @@ public class TelegramBot extends TelegramWebhookBot {
                 execute(editMessageText);
             }catch (TelegramApiException e) {
                 log.error(e);
-//                e.printStackTrace();
             }
         }
     }
@@ -122,6 +120,20 @@ public class TelegramBot extends TelegramWebhookBot {
                 return true;
             }catch (TelegramApiException e) {
                 log.error(e);
+                log.debug("URL : " + photo);
+                return false;
+            }
+        }
+        return false;
+    }
+    public boolean sendMedia(SendMediaGroup sendMediaGroup){
+        if (sendMediaGroup != null){
+            try {
+                execute(sendMediaGroup);
+                return true;
+            }catch (TelegramApiException e) {
+                log.error(e);
+                log.debug("URL : " + sendMediaGroup);
                 return false;
             }
         }

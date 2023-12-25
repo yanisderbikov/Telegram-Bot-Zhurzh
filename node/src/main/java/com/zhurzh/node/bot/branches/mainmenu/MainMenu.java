@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +25,16 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@AllArgsConstructor
 @Log4j
 public class MainMenu implements Branches {
-    private final CommandsManager commandsManager;
+    @Autowired
+    private CommandsManager commandsManager;
 
     @Autowired
     private ApplicationContext applicationContext;
-    @NonNull
     private List<ConnectionClass> connectionClasses;
+    @Value("${image.menu.url}")
+    private String link;
 
 
     @Override
@@ -69,7 +71,7 @@ public class MainMenu implements Branches {
         if (list.isEmpty()){
             commandsManager.sendAnswerEdit(appUser, update, TextMessage.NO_SERVICE_AVAILABLE.getMessage(appUser.getLanguage()));
         }else {
-            commandsManager.sendPhoto(appUser, update, null, "/menu/menu.png",list);
+            commandsManager.sendPhoto(appUser, update, null, link, list);
         }
     }
 

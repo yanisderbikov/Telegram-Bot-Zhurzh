@@ -7,6 +7,7 @@ import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.nodestartservice.enums.*;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -30,6 +31,9 @@ public class MainNodeStartService {
     private final String ToMainMenu = "toMainMenu";
 
     private final String IMAGE = "/start";
+
+    @Value("${image.hello.url}")
+    private String imageHello;
 
 //    public MainNodeService(CommandsManager commandsManager, AppUserDAO appUserDAO){
 //        this.appUserDAO = appUserDAO;
@@ -75,11 +79,10 @@ public class MainNodeStartService {
             List<List<InlineKeyboardButton>> lists = new ArrayList<>();
             cm.addButtonToList(lists, TextMessage.RULES_BUTTON.getMessage(appUser.getLanguage()), RULES);
 
-            var imagePath = IMAGE + "/hello.PNG";
-            if (cm.sendPhoto(appUser, update, out, imagePath, lists)) {
-                log.debug(String.format("File executed %s", imagePath));
+            if (cm.sendPhoto(appUser, update, out, imageHello, lists)) {
+                log.debug(String.format("File executed %s", imageHello));
             } else {
-                log.error(String.format("File NOT executed %s", imagePath));
+                log.error(String.format("File NOT executed %s", imageHello));
                 cm.sendAnswerEdit(appUser, update, out, lists);
             }
             return true;

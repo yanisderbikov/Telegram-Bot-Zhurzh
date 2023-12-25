@@ -9,14 +9,17 @@ import lombok.Value;
 import lombok.extern.log4j.Log4j;
 import net.bytebuddy.implementation.bind.annotation.Empty;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
@@ -105,33 +108,10 @@ public class CommandsManager {
         sendAnswerEdit(appUser, update, text, list);
     }
 
-    public void failMessage(AppUser appUser, Update update, Exception e) {
-        failMessage(appUser, update);
-        StringBuilder builder = new StringBuilder("EXCEPTION in " + appUser.toString() + ": \n\n");
-        for (var v : e.getStackTrace()) {
-            builder.append(v.toString()).append("\n");
-        }
-        log.error("Error at program\n", e);
-//        sendAnswerEdit(tech(), null, builder.toString());
-    }
-
     public boolean sendPhoto(AppUser appUser, Update update, String out, @NotNull String imagePath, List<List<InlineKeyboardButton>> list) {
         long chatId = appUser.getChatId();
-        var path = IMAGES_PATH + imagePath;
-        File f = new File(path);
-        if (!f.exists()) {
-            log.error("File doesnt found [" + path + "]");
-            return false;
-        }
-        InputFile inputFile = null;
-        try {
-            inputFile = new InputFile(new FileInputStream(f), path);
-        } catch (FileNotFoundException e) {
-            log.error("doesn't found the image " + path + " ERROR is : " + e.getMessage());
-            return false;
-        }
         SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setPhoto(inputFile);
+        sendPhoto.setPhoto(new InputFile(imagePath));
         sendPhoto.setChatId(chatId);
         sendPhoto.setCaption(out);
         sendPhoto.setReplyMarkup(new InlineKeyboardMarkup(list));
@@ -142,6 +122,17 @@ public class CommandsManager {
             deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());
         }
         var responce = connectionToDispatcherPhoto.sendRequest(sendPhoto);
+        return responce.getStatusCode().is2xxSuccessful();
+    }
+
+    public boolean sendMedia(AppUser appUser, @NotNull List<InputMedia> medias){
+
+        // Проверяем, есть ли что отправлять
+        if (medias.isEmpty()) throw new RuntimeException("Media is empty") ;
+        SendMediaGroup sendMediaGroup = new SendMediaGroup();
+        sendMediaGroup.setMedias(medias);
+        sendMediaGroup.setChatId(appUser.getChatId());
+        var responce = connectionToDispatcherPhoto.sendMedia(sendMediaGroup);
         return responce.getStatusCode().is2xxSuccessful();
     }
     public void deleteAllPreviousMessages(AppUser appUser, Update update) {

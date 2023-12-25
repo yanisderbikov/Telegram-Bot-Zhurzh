@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -27,6 +28,7 @@ public class ConnectionToDispatcherPhoto {
             // Создание URL
             var url = buildUri("/photo");
             log.debug("URI: " + url);
+            log.debug("SendPhoto: " + sendPhoto);
 
             // Создание HTTP-заголовков
             HttpHeaders headers = new HttpHeaders();
@@ -34,6 +36,39 @@ public class ConnectionToDispatcherPhoto {
 
             // Создание HTTP-сущности с объектом Update и заголовками
             HttpEntity<SendPhoto> requestEntity = new HttpEntity<>(sendPhoto, headers);
+
+            // Создание RestTemplate
+            RestTemplate restTemplate = new RestTemplate();
+
+            // Отправка HTTP POST-запроса на контроллер микросервиса
+            ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+
+            // Обработка ответа, если необходимо
+            if (response.getStatusCode().is2xxSuccessful()) {
+                // Успешный ответ
+                log.debug("sendPhoto sent successfully");
+            } else {
+                // Обработка ошибки
+                log.debug("Error sending sendPhoto");
+            }
+            return response;
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    public ResponseEntity<String> sendMedia(SendMediaGroup sendPhoto) {
+        try {
+            // Создание URL
+            var url = buildUri("/media");
+            log.debug("URI: " + url);
+
+            // Создание HTTP-заголовков
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            // Создание HTTP-сущности с объектом Update и заголовками
+            HttpEntity<SendMediaGroup> requestEntity = new HttpEntity<>(sendPhoto, headers);
 
             // Создание RestTemplate
             RestTemplate restTemplate = new RestTemplate();

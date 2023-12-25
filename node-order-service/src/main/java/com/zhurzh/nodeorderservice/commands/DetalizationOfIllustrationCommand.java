@@ -12,10 +12,14 @@ import com.zhurzh.nodeorderservice.enums.TextMessage;
 import com.zhurzh.nodeorderservice.service.CommonCommands;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
+import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +31,19 @@ public class DetalizationOfIllustrationCommand implements Command, HasUserState 
     private CommonCommands cc;
     @NonNull
     public static final UserState userState = UserState.DETALIZATION;
+    @NonNull
+    @Value("${image.gallery.detalization}")
+    private List<String> images;
+    @NonNull
+    private List<InputMedia> listOfImages = new ArrayList<>();
+
+    @PostConstruct
+    private void init() {
+        for (String imageUrl : images) {
+            listOfImages.add(new InputMediaPhoto(imageUrl));
+        }
+        if (listOfImages.isEmpty()) throw new RuntimeException("image.gallery.detalization is empty");
+    }
 
     @Override
     public UserState getUserState() {
@@ -53,7 +70,9 @@ public class DetalizationOfIllustrationCommand implements Command, HasUserState 
             var out = TextMessage.DETALIZATION_START.getMessage(appUser.getLanguage());
             List<List<InlineKeyboardButton>> lists = new ArrayList<>();
             cc.addAllButtons(appUser, DetalizationOfIllustration.class, lists);
-            cm.sendAnswerEdit(appUser, update, out, lists);
+            cm.deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());
+            cm.sendMedia(appUser, listOfImages);
+            cm.sendAnswerEdit(appUser, null, out, lists);
             return true;
         }
         return false;
@@ -67,6 +86,10 @@ public class DetalizationOfIllustrationCommand implements Command, HasUserState 
             order.setDetalizationOfIllustration(detalization);
             orderDAO.save(order);
 
+            for (int i = 1; i <= listOfImages.size(); i++) {
+                cm.deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId() - i);
+            }
+
             List<InlineKeyboardButton> row = new ArrayList<>();
             cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
             var out = TextMessage.DETALIZATION_END.getMessage(appUser.getLanguage());
@@ -75,4 +98,5 @@ public class DetalizationOfIllustrationCommand implements Command, HasUserState 
         }
         return false;
     }
+
 }

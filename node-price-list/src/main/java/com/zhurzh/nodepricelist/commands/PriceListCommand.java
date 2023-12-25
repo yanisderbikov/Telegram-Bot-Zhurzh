@@ -8,6 +8,9 @@ import com.zhurzh.nodepricelist.enums.TextMessage;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
+import org.hibernate.procedure.internal.PostgresCallableStatementSupport;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -16,26 +19,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
 @Log4j
 public class PriceListCommand implements Command {
 
+    @Autowired
     private CommandsManager cm;
-    @NonNull
     private final String FA = "https://www.furaffinity.net/user/zhurzh";
 
-    @NonNull
     private final String DA = "https://www.deviantart.com/zhurzh-art";
 
-    @NonNull
     private final String VK = "https://vk.com/art_by_zhurzh";
 
-    @NonNull
     private final String PA = "https://www.patreon.com/ZHURZHDragonartist";
-    @NonNull
     private final String BO = "https://boosty.to/zhurzh";
-    @NonNull
     private final String TW = "https://twitter.com/zhurzh_art";
+
+    @Value("${image.pricelist.url}")
+    private String urlPriceList;
 
 
 
@@ -70,7 +70,7 @@ public class PriceListCommand implements Command {
             }
             list.add(row);
             cm.addButtonToMainMenu(list, appUser);
-            cm.sendAnswerEdit(appUser, update, out, list);
+            cm.sendPhoto(appUser, update, out, urlPriceList, list);
             return true;
         }
         return false;
