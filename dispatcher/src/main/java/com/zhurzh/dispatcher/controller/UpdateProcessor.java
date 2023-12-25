@@ -32,25 +32,25 @@ public class UpdateProcessor {
 
 
     public UpdateProcessor(MessageUtils messageUtils, UpdateProducer updateProducer) {
-	    this.messageUtils = messageUtils;
-	    this.updateProducer = updateProducer;
+        this.messageUtils = messageUtils;
+        this.updateProducer = updateProducer;
     }
 
     public void registerBot(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
     }
-    
+
     public void processUpdate(Update update) {
         if (update == null) {
             log.error("Received update is null");
             return;
-	    }
-        
+        }
+
         if (update.hasMessage() || update.hasCallbackQuery()) {
             distributeMessagesByType(update);
-	    } else {
+        } else {
             log.error("Unsupported message type is received: " + update);
-	    }
+        }
     }
 
     private void distributeMessagesByType(Update update) {
@@ -62,41 +62,43 @@ public class UpdateProcessor {
 
         if (message.hasText()) {
             processTextMessage(update);
-	    } else if (message.hasDocument()) {
+        } else if (message.hasDocument()) {
             processDocMessage(update);
-	    } else if (message.hasPhoto()) {
+        } else if (message.hasPhoto()) {
             processPhotoMessage(update);
-	    } else {
+        } else {
             setUnsupportedMessageTypeView(update);
-	    }
+        }
     }
 
     private void setUnsupportedMessageTypeView(Update update) {
         var sendMessage = messageUtils.generateSendMessageWithText(update,
-			"Неподдерживаемый тип сообщения!");
+                "Неподдерживаемый тип сообщения!");
         setView(sendMessage);
     }
 
     private void setFileIsReceivedView(Update update) {
-	var sendMessage = messageUtils.generateSendMessageWithText(update,
-			"Файл получен! Обрабатывается...");
-	    setView(sendMessage);
+        var ru = update.getMessage().getFrom().getLanguageCode().equals("ru");
+        var sendMessage = messageUtils.generateSendMessageWithText(update,
+                ru ? "Файл получен! Обрабатывается..." : "file is loading... wait");
+        setView(sendMessage);
     }
 
     public void setView(SendMessage sendMessage) {
         telegramBot.sendAnswerMessage(sendMessage);
     }
 
-    public void setCallback(EditMessageText editMessageText){
+    public void setCallback(EditMessageText editMessageText) {
         telegramBot.sendCallBack(editMessageText);
     }
+
     public void setPhoto(SendPhoto photo) {
 //        var imagePath = "hello.jpg";
         var name = photo.getPhoto().getAttachName().substring(9);
         var path = name;
         File f = new File(path); // checking a file
         if (!f.exists()) {
-            log.error("File doesnt found ["+path+"]");
+            log.error("File doesnt found [" + path + "]");
             return;
         }
         InputFile inputFile = null;
@@ -111,30 +113,23 @@ public class UpdateProcessor {
     }
 
     private void processPhotoMessage(Update update) {
-        updateProducer.produce(PHOTO_MESSAGE_UPDATE, update);
-        setFileIsReceivedView(update);
+        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
+//        setFileIsReceivedView(update);
     }
 
     private void processDocMessage(Update update) {
-	    updateProducer.produce(DOC_MESSAGE_UPDATE, update);
-	    setFileIsReceivedView(update);
+        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
+//        setFileIsReceivedView(update);
     }
 
     private void processTextMessage(Update update) {
         updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
     }
 
-    private void processCallbackMessage(Update update){
+    private void processCallbackMessage(Update update) {
         updateProducer.produce(CALLBACK_MESSAGE_UPDATE, update);
     }
 
-//    public void setEditPhoto(EditMessageMedia editMessageMedia) {
-//        var path = editMessageMedia.getMedia().getMedia();
-//        InputMedia media = new InputMediaPhoto();
-//        media.setMedia(new File(IMAGES_PATH + path), "testImage");
-//        editMessageMedia.setMedia(media);
-//        telegramBot.sendEditMessagePhoto(editMessageMedia);
-//    }
 
     public void setDeleteMessage(DeleteMessage deleteMessage) {
         telegramBot.sendDeleteMessage(deleteMessage);

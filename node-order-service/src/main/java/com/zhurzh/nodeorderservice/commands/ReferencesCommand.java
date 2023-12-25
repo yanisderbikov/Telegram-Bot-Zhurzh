@@ -9,25 +9,40 @@ import com.zhurzh.nodeorderservice.controller.HasUserState;
 import com.zhurzh.nodeorderservice.controller.UserState;
 import com.zhurzh.nodeorderservice.enums.TextMessage;
 import com.zhurzh.nodeorderservice.service.CommonCommands;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.json.JSONObject;
 
 @Log4j
 @Component
-@AllArgsConstructor
+//@AllArgsConstructor
 public class ReferencesCommand implements Command, HasUserState {
+    @Autowired
     private CommandsManager cm;
+    @Autowired
     private CommonCommands cc;
+    @Autowired
     private OrderDAO orderDAO;
-    @NonNull
+
     public static final UserState userState = UserState.REFERENCES;
+    private static final String TELEGRAM_FILE_API_URL = "https://api.telegram.org/file/bot";
+    @Value("${bot.token}")
+    private String botToken; // Замените на токен вашего бота
+    private Map<AppUser, List<String>> userFiles = new HashMap<>();
 
     @Override
     public UserState getUserState() {
@@ -37,19 +52,23 @@ public class ReferencesCommand implements Command, HasUserState {
     public void execute(Update update) throws CommandException {
         var appUser = cm.findOrSaveAppUser(update);
         if (startCommand(appUser, update)) return;
+        if (catcherFilesCommand(appUser, update)) return;
         if (endCommand(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
 
     }
+
     @Override
     public boolean isExecuted(AppUser appUser) {
         var order = cc.findActiveOrder(appUser);
-        return order.getReference() != null;
+        var ref = order.getArtReference();
+        return !(ref != null && ref.isEmpty());
     }
 
     private boolean startCommand(AppUser appUser, Update update) {
         if (update.hasCallbackQuery()) {
             if (!update.getCallbackQuery().getData().equals(userState.getPath())) return false;
+            userFiles.put(appUser, new ArrayList<>());
             var out = TextMessage.REFERENCE_START.getMessage(appUser.getLanguage());
             cm.sendAnswerEdit(appUser, update, out);
             return true;
@@ -57,16 +76,57 @@ public class ReferencesCommand implements Command, HasUserState {
         return false;
     }
 
+    private boolean catcherFilesCommand(AppUser appUser, Update update) {
+        if (update.hasMessage()){
+            String fileId = null;
+            if (update.getMessage().hasPhoto()){
+                log.debug("photo");
+                var photo = update.getMessage().getPhoto().stream()
+                        .max(Comparator.comparing(PhotoSize::getFileSize))
+                        .orElse(null);
+                log.debug("Photo path:" + photo.getFilePath());
+                log.debug("photo ID: " + photo.getFileId());
+
+                fileId = photo.getFileId();
+            } else if (update.getMessage().hasDocument()) {
+                var doc = update.getMessage().getDocument();
+                fileId = doc.getFileId();
+                log.debug("doc");
+                log.debug("File ID:" + doc.getFileId());
+            } else if (update.getMessage().hasText()){
+                log.debug("text");
+            }
+
+            if (fileId != null) {
+                String fileUrl = generateFileDownloadUrl(fileId);
+                addUserFile(appUser, fileUrl);
+            }else {
+                addUserFile(appUser, update.getMessage().getText());
+            }
+
+            log.debug(update);
+            var out = TextMessage.REFERENCE_DONE_MES.getMessage(appUser.getLanguage());
+            List<InlineKeyboardButton> row = new ArrayList<>();
+            cm.addButtonToRow(row,
+                    TextMessage.REFERENCE_DONE_BUTTON.getMessage(appUser.getLanguage()),
+                    TextMessage.REFERENCE_DONE_BUTTON.name());
+            cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+
+            StringBuilder builder = new StringBuilder("OUT FOR " + appUser.getId());
+            for (var a : userFiles.get(appUser)){
+                builder.append("\n").append(a);
+            }
+            log.debug(builder.toString());
+            return true;
+        }
+        return false;
+    }
+
     private boolean endCommand(AppUser appUser, Update update) {
         try {
-            if (update.hasMessage() && update.getMessage().hasText()) {
-                var input = update.getMessage().getText();
-                if (!isLinkIsValid(input)) {
-                    // TODO: 08/12/23 Добавить реализацию проверки ссылки
-                    return false;
-                }
+            if (update.hasCallbackQuery() && update.getCallbackQuery().getData().equals(TextMessage.REFERENCE_DONE_BUTTON.name())) {
                 var order = cc.findActiveOrder(appUser);
-                order.setReference(input);
+                order.setArtReference(userFiles.get(appUser));
                 orderDAO.save(order);
 
                 List<InlineKeyboardButton> row = new ArrayList<>();
@@ -83,7 +143,55 @@ public class ReferencesCommand implements Command, HasUserState {
         return false;
     }
 
-    private boolean isLinkIsValid(String url){
-        return true;
+    private String generateFileDownloadUrl(String fileId) {
+        // Замените на логику получения filePath из Telegram Bot API
+//        String filePath = "path/to/file"; // Это должен быть реальный путь, полученный от Telegram
+        var filePath=  getFilePath(fileId);
+        return TELEGRAM_FILE_API_URL + botToken + "/" + filePath;
     }
+
+
+    // звпрос телеграму для получения ссылки
+
+    private String getFilePath(String fileId) {
+        String filePath = null;
+        String url = "https://api.telegram.org/bot" + botToken + "/getFile?file_id=" + fileId;
+
+        try {
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+
+            int responseCode = con.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) { // Успешный ответ
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                // Разбор ответа JSON и извлечение filePath
+                JSONObject jsonResponse = new JSONObject(response.toString());
+                if (jsonResponse.has("result") && jsonResponse.getJSONObject("result").has("file_path")) {
+                    filePath = jsonResponse.getJSONObject("result").getString("file_path");
+                }
+            } else {
+                System.out.println("GET запрос не работает");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return filePath;
+    }
+
+    private void addUserFile(AppUser user, String fileUrl) {
+        List<String> files = userFiles.getOrDefault(user, new ArrayList<>());
+        files.add(fileUrl);
+        userFiles.put(user, files);
+    }
+
+
 }

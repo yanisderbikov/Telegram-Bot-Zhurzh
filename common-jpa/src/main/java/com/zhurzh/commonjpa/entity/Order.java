@@ -4,7 +4,7 @@ import com.zhurzh.commonjpa.enums.*;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Map;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,7 +29,9 @@ public class Order {
     private StatusZhurzh statusZhurzh = StatusZhurzh.UNSEEN;
     @Enumerated(EnumType.STRING)
     private CountOfPersons countOfPersons;
-    private String reference;
+    @ElementCollection // Указывает, что это коллекция элементов
+//    @CollectionTable(name = "order_references", joinColumns = @JoinColumn(name = "order_id")) // Определяет имя таблицы и столбца соединения
+    private List<String> artReference;
     @Enumerated(EnumType.STRING)
     private FormatOfIllustration formatOfIllustration;
     @Enumerated(EnumType.STRING)
@@ -45,7 +47,7 @@ public class Order {
         return
                 "\nname='" + name + '\'' +
                 "\ncountOfPersons=" + (isNull(countOfPersons) ? unfilled() : countOfPersons.getMessage(owner.getLanguage())) +
-                "\nreference='" + reference + '\'' +
+                "\nreference='" + (artReference == null || artReference.isEmpty() ? unfilled() : "filled size " + artReference.size()) + '\'' +
                 "\nformatOfIllustration=" + (isNull(formatOfIllustration) ? unfilled() : formatOfIllustration.getMessage(owner.getLanguage())) +
                 "\ndetalizationOfIllustration=" +   (isNull(detalizationOfIllustration) ? unfilled() : detalizationOfIllustration.getMessage(owner.getLanguage()))+
                 "\nbackgroundOfIllustration=" +     (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(owner.getLanguage())  )+
@@ -72,7 +74,7 @@ public class Order {
                    ! isNull(name)
                 && ! isNull(owner)
                 && ! isNull(countOfPersons)
-                && ! isNull(reference)
+                && ! (artReference == null || artReference.isEmpty())
                 && ! isNull(formatOfIllustration)
                 && ! isNull(detalizationOfIllustration)
                 && ! isNull(backgroundOfIllustration)
