@@ -66,8 +66,8 @@ public class FormatIllustrationCommand implements Command, HasUserState {
         if (update.hasCallbackQuery()){
             var input = Integer.parseInt(update.getCallbackQuery().getData());
             var format = FormatOfIllustration.values()[input];
-            var out = TextMessage.FORMAT_ILLUSTRATION_END.getMessage(appUser.getLanguage())
-                    + format.getMessage(appUser.getLanguage());
+            var out = TextMessage.FORMAT_ILLUSTRATION_END.getMessage(appUser.getLanguage());
+//                    + format.getMessage(appUser.getLanguage());
             var order = cc.findActiveOrder(appUser);
             order.setFormatOfIllustration(format);
             orderDAO.save(order);

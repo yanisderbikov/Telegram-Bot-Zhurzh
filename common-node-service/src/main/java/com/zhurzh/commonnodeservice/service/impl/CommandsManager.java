@@ -65,7 +65,7 @@ public class CommandsManager {
         sendAnswerEdit(appUser, update, text, (InlineKeyboardMarkup) null);
     }
 
-    private void sendAnswerEdit(AppUser appUser, Update update, @NotNull String text, InlineKeyboardMarkup markup) {
+    public void sendAnswerEdit(AppUser appUser, Update update, @NotNull String text, InlineKeyboardMarkup markup) {
         if (update == null || !update.hasCallbackQuery()) {
             sendAnswer(appUser, text, markup);
             return;
@@ -117,6 +117,7 @@ public class CommandsManager {
         sendPhoto.setReplyMarkup(new InlineKeyboardMarkup(list));
 
         if (update != null && update.hasMessage()){
+            if (!update.getMessage().getText().equals("/start"))
             deleteMessage(appUser, update.getMessage().getMessageId());
         } else if (update != null && update.hasCallbackQuery()) {
             deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());

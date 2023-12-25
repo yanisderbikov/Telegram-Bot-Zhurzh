@@ -115,8 +115,8 @@ public class AnswerCommand implements Command, HasUserState {
     }
 
     private String build(AppUser appUser, FAQ faq){
-        var QUESTION = appUser.getLanguage().equals("eng") ? "Question: " : "Вопрос: ";
-        var ANSWER = appUser.getLanguage().equals("eng") ? "Answer: " : "Ответ: ";
+        var QUESTION = TextMessage.QUESTION_TITLE.getMessage(appUser.getLanguage());
+        var ANSWER = TextMessage.ANSWER_TITLE.getMessage(appUser.getLanguage());
 
         var out = QUESTION + faq.getQuestion() + "\n\n" +
                 ANSWER + faq.getAnswer();

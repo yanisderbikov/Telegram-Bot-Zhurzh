@@ -2,6 +2,9 @@ package com.zhurzh.nodefaqservice.enums;
 
 public enum TextMessage {
     ACTIVATION_BUTTON("FAQ", "FAQ"),
+    QUESTION_TITLE("<b>Question:</b> ", "<b>Вопрос: </b>"),
+    ANSWER_TITLE("<b>Answer:</b> ", "<b>Ответ: </b>"),
+
     BUTTON_YES("Yes", "Да"),
     BUTTON_NO("No", "Нет"),
     FAQ_START_MESSAGE("List of questions", "Список вопросов"),

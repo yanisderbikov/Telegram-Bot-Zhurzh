@@ -111,7 +111,7 @@ public class BranchesManager  implements BranchesManagerInterface{
     }
     private boolean isStartBranch(Update update, AppUser appUser){
         if (appUser.getBranchStatus() == null || (update.hasCallbackQuery() && update.getCallbackQuery().getData().equals("/start"))
-                || (update.hasMessage() && update.getMessage().hasText() && update.getMessage().getText().equals("/start"))){
+                || (update.hasMessage() && update.getMessage().hasText() && (update.getMessage().getText().equals("/start") || update.getMessage().getText().equals("/switch_language")))){
             appUser.setBranchStatus(BranchStatus.START);
             appUserDAO.save(appUser);
             return true;

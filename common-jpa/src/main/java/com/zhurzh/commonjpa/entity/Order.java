@@ -4,6 +4,7 @@ import com.zhurzh.commonjpa.enums.*;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -27,6 +28,8 @@ public class Order {
     private Boolean isFinished = false;
     @Builder.Default
     private StatusZhurzh statusZhurzh = StatusZhurzh.UNSEEN;
+
+    private Date deadLine;
     @Enumerated(EnumType.STRING)
     private CountOfPersons countOfPersons;
     @ElementCollection // Указывает, что это коллекция элементов
@@ -79,6 +82,7 @@ public class Order {
                 && ! isNull(detalizationOfIllustration)
                 && ! isNull(backgroundOfIllustration)
                 && ! isNull(commentToArt)
+                && ! isNull(deadLine)
                 ;
     }
     public String calculatePrice() {

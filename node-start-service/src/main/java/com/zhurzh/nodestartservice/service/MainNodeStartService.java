@@ -1,9 +1,9 @@
 package com.zhurzh.nodestartservice.service;
 
 import com.zhurzh.commonjpa.dao.AppUserDAO;
-import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonjpa.enums.BranchStatus;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
+import com.zhurzh.commonutils.exception.CommandException;
 import com.zhurzh.nodestartservice.enums.*;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Log4j
@@ -31,6 +29,7 @@ public class MainNodeStartService {
     private final String ToMainMenu = "toMainMenu";
 
     private final String IMAGE = "/start";
+    private final String SWITCH_LANGUAGE = "/switch_language";
 
     @Value("${image.hello.url}")
     private String imageHello;
@@ -41,18 +40,19 @@ public class MainNodeStartService {
 //    }
 
 
-    public void execute(Update update){
+    public void execute(Update update) throws CommandException {
 //        var text = update.getCallbackQuery().getMessage().getText();
         var appUser = cm.findOrSaveAppUser(update);
-        if (pickLanguageAndRules(update)) return;;
         if (toMainMenu(update)) return;
-        start(update);
+        if (start(update)) return;
+        if (pickLanguageAndRules(update)) return;
+        throw new CommandException(Thread.currentThread().getStackTrace());
 
     }
     private boolean start(Update update){
         // switch case ru/eng
-        if (update.hasMessage()) {
-            var out = TextMessage.HELLO.getMessage("eng") + "/" + TextMessage.HELLO.getMessage("ru");
+        if (update.hasMessage() && update.getMessage().hasText() && update.getMessage().getText().equals(SWITCH_LANGUAGE)) {
+            var out = TextMessage.SWITCH_LAN.getMessage("eng") + "/" + TextMessage.SWITCH_LAN.getMessage("ru");
             List<List<InlineKeyboardButton>> lists = new ArrayList<>();
             List<InlineKeyboardButton> row = new ArrayList<>();
             cm.addButtonToRow(row, "ENG", ENG);
@@ -66,13 +66,18 @@ public class MainNodeStartService {
     }
 
     private boolean pickLanguageAndRules(Update update){
-        if (update.hasCallbackQuery() && (update.getCallbackQuery().getData().equals(RU) || update.getCallbackQuery().getData().equals(ENG))) {
+        if (update.hasMessage() || update.hasCallbackQuery()) {
             // manage last message for switch language
             var appUser = cm.findOrSaveAppUser(update);
-            if (update.getCallbackQuery().getData().equals(RU)) {
-                appUser.setLanguage("ru");
-            } else {
-                appUser.setLanguage("eng");
+            if (update.hasCallbackQuery()) {
+                if (update.getCallbackQuery().getData().equals(RU)) {
+                    appUser.setLanguage("ru");
+                } else {
+                    appUser.setLanguage("eng");
+                }
+            }else {
+                var ru = update.getMessage().getFrom().getLanguageCode().equals("ru");
+                appUser.setLanguage(ru ? "ru" : "eng");
             }
             appUserDAO.save(appUser);
             var out = TextMessage.WELCOME.getMessage(appUser.getLanguage());

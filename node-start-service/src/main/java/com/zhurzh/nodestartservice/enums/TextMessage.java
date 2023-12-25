@@ -1,13 +1,19 @@
 package com.zhurzh.nodestartservice.enums;
 public enum TextMessage {
-    HELLO("Switch the <b>language</b>", "Выбери язык"),
-    WELCOME("Hello, My name is Mrarzypan and...\nBefore we start learn more about rules",
-            "Привет я Марципан, тополя ля ля, почитай правила."),
-    RULES("This is a rule message",
-            "Ещь, пей, веселись, а то завтра <b>умрешь</b>. Один раз <b>живешь</b>"),
+    SWITCH_LAN("Switch the <b>language</b>", "Выбери язык"),
+    WELCOME("Hello! My name is Marzipan! I am the most important assistant of the artist Zhurzh, her right paw, and the most beloved gecko in the world! I can tell you something about the author, help calculate the cost of an illustration, or take an order that I will personally deliver to Zhurzh a bit later.",
+
+            "Привет! Меня зовут Марципан! \n" +
+                    "Я - самый главный помощник художницы Журж, ее правая лапка и самый любимый геккон на свете! Я могу рассказать тебе что-то об авторе, помочь посчитать стоимость иллюстрации или оставить заявку на заказ, которую я отнесу лично Журжу чуть позже. "),
+    RULES("1. Zhurzh may refuse an application without explaining the reasons.\n" +
+            "2. Marzipan doesn't want to quarrel, so don't call him small.\n" +
+            "3. Smile.",
+            "1. Журж может отказаться от заявки без объяснения причин \n" +
+                    "2. Марципан не хочет ругаться, поэтому не обзывайте его маленьким \n" +
+                    "3. Улыбайтесь "),
     RULES_BUTTON("Rules", "Правила"),
-    MAIN_MENU_TEXT("Got it?", "Понял принял?"),
-    MAIN_MENU_BUTTON("Got it!", "Ага");
+    MAIN_MENU_TEXT("Got it?", "Хорошо?"),
+    MAIN_MENU_BUTTON("Got it!", "Да, все понятно");
 
     private final String englishMessage;
     private final String russianMessage;

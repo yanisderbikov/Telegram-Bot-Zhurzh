@@ -22,7 +22,7 @@ public class FAQ {
     @Column(nullable = false)
     private String question;
 
-//    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String answer;
 
     @Column(nullable = false)

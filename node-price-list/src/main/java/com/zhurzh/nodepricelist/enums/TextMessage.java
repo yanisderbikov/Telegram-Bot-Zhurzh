@@ -2,16 +2,11 @@ package com.zhurzh.nodepricelist.enums;
 
 
 public enum TextMessage {
-    ACTIVATION_BUTTON("Price list", "Прайс лист"),
+    ACTIVATION_BUTTON("Contact with Zhurzh", "Связаться с Журжем"),
 
-    PRICE_LIST_MESSAGE("Here are all the basic prices for Jurge's illustrations. Since she is a great artist, she draws a lot of things! " +
-            "Art, stickers, banners. Even dakimakura! Therefore, if you want to get acquainted in more detail, then I leave\n" +
-            "couple of links:",
+    PRICE_LIST_MESSAGE("I am always happy to help! But if necessary, you can directly contact Zhurzh in a way that's convenient for you:",
 
-            "Вот все основные расценки на иллюстрации Журжа. Так как она классная" +
-            "художница, она рисует много всякого! Арты, стикеры, баннеры. Даже" +
-            "дакимакуры! Поэтому, если хочешь ознакомиться подробнее, то я оставляю" +
-            "пару ссылок:"),
+            "Я всегда буду рад помочь! Но если это нужно, ты можешь напрямую связаться с Журжем удобным для тебя способом: "),
 
     TO_MAIN_MENU("To main menu", "На главное меню"),
 

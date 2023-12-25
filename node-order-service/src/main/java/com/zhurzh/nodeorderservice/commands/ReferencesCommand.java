@@ -135,6 +135,7 @@ public class ReferencesCommand implements Command, HasUserState {
                 lists.add(row);
                 var out = TextMessage.REFERENCE_END.getMessage(appUser.getLanguage());
                 cm.sendAnswerEdit(appUser, update, out, lists);
+                userFiles.remove(appUser);
                 return true;
             }
         }catch (Exception e){

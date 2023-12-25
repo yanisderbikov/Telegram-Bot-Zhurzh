@@ -42,6 +42,7 @@ public class TelegramBot extends TelegramWebhookBot {
         listOfCommands.add(new BotCommand("/menu", "menu"));
 
         listOfCommands.add(new BotCommand("/start", "very begin"));
+        listOfCommands.add(new BotCommand("/switch_language", "switch_language"));
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -81,6 +82,7 @@ public class TelegramBot extends TelegramWebhookBot {
         if (message != null) {
             try {
                 message.setParseMode("HTML");
+                message.setDisableWebPagePreview(true);
                 execute(message);
             } catch (TelegramApiException e) {
                 log.error(e);
@@ -91,6 +93,7 @@ public class TelegramBot extends TelegramWebhookBot {
         if (editMessageText != null){
             try {
                 editMessageText.setParseMode("HTML");
+                editMessageText.setDisableWebPagePreview(true);
                 execute(editMessageText);
             }catch (TelegramApiException e) {
                 log.error(e);

@@ -18,6 +18,7 @@ public enum UserState {
     BACKGROUND("Background", "Фон", "/background_command"),
     COMMENT_TO_ART("Comment", "Комментарий", "/comment_to_art_command"),
     NAME("Name", "Имя", "/name_command"),
+    DEADLINE("Deadline", "дедлайн", "/deadline_command"),
     PRICE("Price", "Цена", "/price_command"),
     FINALIZE("Review order", "Проверить заказ", "/review_order_command");
 
