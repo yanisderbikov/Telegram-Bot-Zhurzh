@@ -22,6 +22,9 @@ java -jar node-price-list/target/node-price-list-0.0.1-SNAPSHOT.jar &
 # FAQ
 java -jar node-faq-service/target/node-faq-service-0.0.1-SNAPSHOT.jar &
 
+# group node
+java -jar group-node/target/group-node-0.0.1-SNAPSHOT.jar &
+
 
 # Добавьте любое количество JAR-файлов и их запусков в нужной последовательности
 #java -Dserver.port=8998 -Dspring.profiles.active=prod -jar dispatcher/target/dispatcher-1.0-SNAPSHOT.jar

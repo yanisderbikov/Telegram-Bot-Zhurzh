@@ -37,6 +37,7 @@
         <module>node-start-service</module>
         <module>node-price-list</module>
         <module>node-faq-service</module>
+        <module>group-node</module>
     </modules>
 
     <dependencies>

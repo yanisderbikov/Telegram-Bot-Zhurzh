@@ -10,7 +10,6 @@ import com.zhurzh.dispatcher.service.UpdateProducer;
 @Log4j
 public class UpdateProducerImpl implements UpdateProducer {
     private final RabbitTemplate rabbitTemplate;
-    private static Update prevUpdate;
 
     public UpdateProducerImpl(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
