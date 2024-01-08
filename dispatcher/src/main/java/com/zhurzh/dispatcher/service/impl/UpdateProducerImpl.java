@@ -23,11 +23,11 @@ public class UpdateProducerImpl implements UpdateProducer {
 //            if (update.equals(prevUpdate)) return;
 //        }
 
-        if (update.hasCallbackQuery()){
-            log.debug(update.getCallbackQuery());
-        } else {
-            log.debug(update.getMessage().getText());
-        }
+//        if (update.hasCallbackQuery()){
+//            log.debug(update.getCallbackQuery());
+//        } else {
+//            log.debug(update.getMessage().getText());
+//        }
         rabbitTemplate.convertAndSend(rabbitQueue, update);
     }
 }
