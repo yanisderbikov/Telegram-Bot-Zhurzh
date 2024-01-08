@@ -27,11 +27,11 @@ public class AnswerConsumerImpl implements AnswerConsumer {
         updateProcessor.setView(sendMessage);
     }
 
-    @Override
-    @RabbitListener(queues = ANSWER_PHOTO_MESSAGE)
-    public void consume(SendPhoto photo) {
-        updateProcessor.setPhoto(photo);
-    }
+//    @Override
+//    @RabbitListener(queues = ANSWER_PHOTO_MESSAGE)
+//    public void consume(SendPhoto photo) {
+//        updateProcessor.setPhoto(photo);
+//    }
 
     @Override
     @RabbitListener(queues = ANSWER_CALLBACK)

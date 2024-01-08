@@ -20,15 +20,15 @@ public class RabbitConfiguration {
         return new Queue(RabbitQueue.TEXT_MESSAGE_UPDATE);
     }
 
-    @Bean
-    public Queue docMessageQueue() {
-        return new Queue(RabbitQueue.DOC_MESSAGE_UPDATE);
-    }
+//    @Bean
+//    public Queue docMessageQueue() {
+//        return new Queue(RabbitQueue.DOC_MESSAGE_UPDATE);
+//    }
 
-    @Bean
-    public Queue photoMessageQueue() {
-        return new Queue(RabbitQueue.PHOTO_MESSAGE_UPDATE);
-    }
+//    @Bean
+//    public Queue photoMessageQueue() {
+//        return new Queue(RabbitQueue.PHOTO_MESSAGE_UPDATE);
+//    }
 
     @Bean
     public Queue answerMessageQueue() {
@@ -42,10 +42,10 @@ public class RabbitConfiguration {
     public Queue dataCallbackQueue() {
         return new Queue(RabbitQueue.CALLBACK_MESSAGE_UPDATE);
     }
-    @Bean
-    public Queue answerPhotoQueue() {
-        return new Queue(RabbitQueue.ANSWER_PHOTO_MESSAGE);
-    }
+//    @Bean
+//    public Queue answerPhotoQueue() {
+//        return new Queue(RabbitQueue.ANSWER_PHOTO_MESSAGE);
+//    }
 //    @Bean
 //    public Queue editPhotoQueue() {
 //        return new Queue(RabbitQueue.EDIT_PHOTO_MESSAGE);
@@ -53,5 +53,9 @@ public class RabbitConfiguration {
     @Bean
     public Queue deleteMessageQueue() {
         return new Queue(RabbitQueue.DELETE_MESSAGE_ANSWER);
+    }
+    @Bean
+    public Queue groupTextMessage() {
+        return new Queue(RabbitQueue.GROUP_TEXT_MESSAGE_UPDATE);
     }
 }

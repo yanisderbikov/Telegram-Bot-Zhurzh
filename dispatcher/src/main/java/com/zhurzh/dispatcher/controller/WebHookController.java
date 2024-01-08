@@ -1,5 +1,6 @@
 package com.zhurzh.dispatcher.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +12,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @RestController
 @Log4j
+@AllArgsConstructor
 public class WebHookController {
     private final UpdateProcessor updateProcessor;
-
-    public WebHookController(UpdateProcessor updateProcessor) {
-        this.updateProcessor = updateProcessor;
-    }
+    private final UpdateProcessorGroup updateProcessorGroup;
 
     @RequestMapping(value = "/callback/update", method = RequestMethod.POST) // main
     public ResponseEntity<?> onUpdateReceived(@RequestBody Update update) {
@@ -27,6 +26,7 @@ public class WebHookController {
             return ResponseEntity.ok().build();
         }else {
             log.debug("GROUP MESSAGE : " + update);
+            updateProcessorGroup.processUpdate(update);
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }

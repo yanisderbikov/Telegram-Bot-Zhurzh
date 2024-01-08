@@ -46,11 +46,18 @@ public class CommandsManager {
 
     private ConnectionToDispatcherPhoto connectionToDispatcherPhoto;
 
-//    @Value("${file.path}")
+    //    @Value("${file.path}")
     private final String ABSOLUTE_PATH = "/Users/yanderbikovmail.ru/Documents/ProjectsIDE/Telegram/Telegram-Bot-Zhurzh";
     private final String IMAGES_PATH = ABSOLUTE_PATH + "/common-utils/src/main/resources/static/images";
     private final String TELEGRAM_LINK = "http://t.me/";
 
+
+    public void groupSendAnswer(@NonNull Update update, String out){
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setText(out);
+        sendMessage.setChatId(update.getMessage().getChatId());
+        sendAnswer(sendMessage);
+    }
 
     public void sendAnswerEdit(AppUser appUser, Update update, @NotNull String text, List<List<InlineKeyboardButton>> list) {
         sendAnswerEdit(appUser, update, text, new InlineKeyboardMarkup(list));
@@ -125,7 +132,6 @@ public class CommandsManager {
         var responce = connectionToDispatcherPhoto.sendRequest(sendPhoto);
         return responce.getStatusCode().is2xxSuccessful();
     }
-
     public boolean sendMedia(AppUser appUser, @NotNull List<InputMedia> medias){
 
         // Проверяем, есть ли что отправлять
@@ -136,6 +142,7 @@ public class CommandsManager {
         var responce = connectionToDispatcherPhoto.sendMedia(sendMediaGroup);
         return responce.getStatusCode().is2xxSuccessful();
     }
+
     public void deleteAllPreviousMessages(AppUser appUser, Update update) {
         Integer id;
         if (update.hasCallbackQuery()) {
@@ -227,7 +234,6 @@ public class CommandsManager {
         button.setUrl(url);
         row.add(button);
     }
-
     //    public AppUser tech(){
 //        return AppUser.builder()
 //                .firstName("Ян")
@@ -236,6 +242,7 @@ public class CommandsManager {
 //                .telegramUserName("yanderbikov")
 //                .build();
 //    }
+
     private void sendAnswer(SendMessage sendMessage) {
         producerService.producerAnswer(sendMessage);
     }
@@ -243,7 +250,6 @@ public class CommandsManager {
     private void sendAnswer(EditMessageText sendMessage) {
         producerService.producerAnswer(sendMessage);
     }
-
     private void sendAnswer(AppUser appUser, String text, ReplyKeyboard replyKeyboard) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(text);
