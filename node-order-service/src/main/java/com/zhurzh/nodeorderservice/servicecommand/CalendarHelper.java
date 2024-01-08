@@ -24,8 +24,9 @@ public class CalendarHelper {
         var a = Calendar.getInstance(new Locale("ru"));
         a.add(Calendar.MONTH, plusMo);
         int mo = (a.get(Calendar.MONTH) + 1);
-        var text = appUser.getLanguage().equals("ru") ? String.format("Выбор на %s месяц", mo) :
-                String.format("Choose for %s month", mo);
+        var text = formatOfDate(appUser.getLanguage(), a);
+//                appUser.getLanguage().equals("ru") ? String.format("Выбор на %s месяц", mo) :
+//                String.format("Choose for %s month", mo);
         cm.sendAnswerEdit(appUser, update, text, markupInLine);
     }
 
@@ -60,19 +61,32 @@ public class CalendarHelper {
 
         Calendar calendarHelperNow = Calendar.getInstance();
         calendarHelperNow.add(Calendar.MONTH, plusMonth);
-        if (plusMonth > 1){
+        if (plusMonth >= 1){
             calendarHelperNow.set(Calendar.DAY_OF_MONTH, 1);
         }
 
+        // Создаем объект Calendar для первого дня месяца
+        Calendar firstDayOfMonth = (Calendar) calendar.clone();
+        firstDayOfMonth.set(Calendar.DAY_OF_MONTH, 1);
+
+        // Создаем объект Calendar для последнего дня месяца
+        Calendar lastDayOfMonth = (Calendar) calendar.clone();
+        lastDayOfMonth.set(Calendar.DAY_OF_MONTH, lastDayOfMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        Calendar calendarNow = Calendar.getInstance(new Locale("ru"));
 
         // Выводим дни месяца
         boolean isLastWeek = false;
         while (calendar.get(Calendar.MONTH) == calendarHelperNow.get(Calendar.MONTH) || !isLastWeek) {
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             // для наставников
-            var button =
-                    dayOfMonth > calendarHelperNow.getActualMaximum(Calendar.DAY_OF_MONTH) || dayOfMonth < calendarHelperNow.get(Calendar.DAY_OF_MONTH)
-                    ? createButton() : createButton(dayOfMonth, dayOfMonth);
+//            var button =
+//                    dayOfMonth > calendarHelperNow.getActualMaximum(Calendar.DAY_OF_MONTH) || dayOfMonth < calendarHelperNow.get(Calendar.DAY_OF_MONTH)
+//                    ? createButton() : createButton(dayOfMonth, dayOfMonth);
+
+            boolean isOutOfRange = calendar.before(firstDayOfMonth) || calendar.after(lastDayOfMonth) || calendar.before(calendarNow);
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+            var button = isOutOfRange ? createButton() : createButton(dayOfMonth, dayOfMonth);
+
             currentWeek.add(button);
 
             calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -100,6 +114,12 @@ public class CalendarHelper {
         calendarList.add(row);
         return new InlineKeyboardMarkup(calendarList);
     }
+    /**
+     *
+     * @param text вид кнопки
+     * @param callback колбек кнопки
+     * @return число
+     */
 
     private InlineKeyboardButton createButton(String text, String callback) {
         var button = new InlineKeyboardButton(text);
@@ -107,6 +127,10 @@ public class CalendarHelper {
         return button;
     }
 
+    /**
+     *
+     * @return -- --
+     */
     private InlineKeyboardButton createButton() {
         var button = new InlineKeyboardButton("--");
         button.setCallbackData("--");
@@ -119,6 +143,12 @@ public class CalendarHelper {
         return button;
     }
 
+    /**
+     *
+     * @param text вид кнопки
+     * @param callback колбек кнопки
+     * @return число
+     */
     private InlineKeyboardButton createButton(int text, int callback) {
         return createButton(String.valueOf(text), String.valueOf(callback));
     }
@@ -130,5 +160,16 @@ public class CalendarHelper {
             list.add(createButton(a, "--"));
         }
         return list;
+    }
+    private String formatOfDate(String lan, Calendar calendar){
+        String out = "";
+        if (lan.equals("ru")){
+            out = String.format("Выбор на %s %s",
+                    MonthName.values()[calendar.get(Calendar.MONTH)].getMessage(lan), calendar.get(Calendar.YEAR));
+        }else {
+            out = String.format("Choose for %s of %s",
+                    MonthName.values()[calendar.get(Calendar.MONTH)].getMessage(lan), calendar.get(Calendar.YEAR));
+        }
+        return out;
     }
 }

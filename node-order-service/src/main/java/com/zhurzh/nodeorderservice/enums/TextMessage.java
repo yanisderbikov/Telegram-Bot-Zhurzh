@@ -70,7 +70,9 @@ public enum TextMessage {
             "А теперь, пожалуйста, укажи до какого числа актуален этот заказ. Имей ввиду, что после указанного тобой дедлайна, заявка  автоматически удалится , если Журж так и не успеет приступить к работе. "),
     DEADLINE_END("Fine", "Отлично"),
     PREV_MO("Prev", "Пред"),
-    NEXT_MO("Next", "След")
+    NEXT_MO("Next", "След"),
+    DEADLINE_CONFIRM_1("You've chosen ", "Ты выбрал "),
+    DEADLINE_CONFIRM_2("\nIs it correct?", "\nВсе правильно?"),
     ;
 
     private final String englishMessage;

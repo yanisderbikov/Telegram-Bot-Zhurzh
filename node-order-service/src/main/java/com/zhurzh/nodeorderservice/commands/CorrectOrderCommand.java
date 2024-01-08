@@ -95,6 +95,10 @@ public class CorrectOrderCommand implements Command, HasUserState {
                 CommentToArtCommand.userState.getPath());
 
         cm.addButtonToList(lists,
+                DeadLineCommand.userState.getMessage(appUser.getLanguage()),
+                DeadLineCommand.userState.getPath());
+
+        cm.addButtonToList(lists,
                 PriceCommand.userState.getMessage(appUser.getLanguage()),
                 PriceCommand.userState.getPath());
 

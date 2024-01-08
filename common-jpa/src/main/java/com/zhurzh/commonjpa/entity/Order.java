@@ -4,6 +4,7 @@ import com.zhurzh.commonjpa.enums.*;
 import lombok.*;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +57,8 @@ public class Order {
                 "\nbackgroundOfIllustration=" +     (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(owner.getLanguage())  )+
                 "\ncommentToArt='" + commentToArt + '\'' +
                 "\nyours set price is = " + price +
-                        "\ncalculated price " + calculatePrice() +
+                        calculatePrice() +
+                        "\ndeadline = " + new SimpleDateFormat("dd-MM-yyyy").format(deadLine) +
                 "\nstatus = " + statusZhurzh.getMessage(len);
     }
     private boolean isNull(Object o){
