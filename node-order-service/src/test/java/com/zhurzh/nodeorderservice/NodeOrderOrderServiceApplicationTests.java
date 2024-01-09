@@ -6,8 +6,10 @@ import com.zhurzh.nodeorderservice.service.CommonCommands;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootTest
+@ComponentScan(basePackages = {"com.zhurzh.commonnodeservice", "com.zhurzh.nodeorderservice"})
 class NodeOrderOrderServiceApplicationTests {
 //
 //    @Autowired

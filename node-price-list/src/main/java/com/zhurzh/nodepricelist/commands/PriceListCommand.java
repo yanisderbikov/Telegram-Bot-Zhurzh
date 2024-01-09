@@ -5,10 +5,7 @@ import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.commonutils.exception.CommandException;
 import com.zhurzh.commonutils.model.Command;
 import com.zhurzh.nodepricelist.enums.TextMessage;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
-import org.hibernate.procedure.internal.PostgresCallableStatementSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -34,8 +31,8 @@ public class PriceListCommand implements Command {
     private final String BO = "https://boosty.to/zhurzh";
     private final String TW = "https://twitter.com/zhurzh_art";
 
-    @Value("${image.pricelist.url}")
-    private String urlPriceList;
+    @Value("${image.path.menu}")
+    private String imagePathMenu;
 
 
 
@@ -70,7 +67,7 @@ public class PriceListCommand implements Command {
             }
             list.add(row);
             cm.addButtonToMainMenu(list, appUser);
-            cm.sendPhoto(appUser, update, out, urlPriceList, list);
+            cm.sendPhoto(appUser, update, out, imagePathMenu, list);
             return true;
         }
         return false;

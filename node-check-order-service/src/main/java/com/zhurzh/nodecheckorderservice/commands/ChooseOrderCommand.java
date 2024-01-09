@@ -12,6 +12,8 @@ import com.zhurzh.nodecheckorderservice.enums.TextMessage;
 import com.zhurzh.nodecheckorderservice.service.CommonCommands;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -20,12 +22,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
 public class ChooseOrderCommand implements Command, HasUserState {
+    @Autowired
     private CommandsManager cm;
+    @Autowired
     private CommonCommands cc;
+    @Autowired
     private OrderDAO orderDAO;
+    @Autowired
     private OrderCasheController os;
+    @Value("${image.path.empty.order}")
+    private String imagePathEmptyOrder;
+    @Value("${image.path.found.order}")
+    private String imagePathFoundOrder;
     @NonNull
     public static final UserState userState = UserState.CHOOSE_ORDER;
     @Override
@@ -57,14 +66,14 @@ public class ChooseOrderCommand implements Command, HasUserState {
             if (orders.isEmpty()){
                 var out = TextMessage.FAIL_FIND_ORDER.getMessage(appUser.getLanguage());
                 cm.addButtonToMainMenu(lists, appUser);
-                cm.sendAnswerEdit(appUser, update, out, lists);
+                cm.sendPhoto(appUser, update, out, imagePathEmptyOrder, lists);
                 return true;
             }
             var out = TextMessage.CHOOSE_ORDER_START.getMessage(appUser.getLanguage());
             for (var order : orders){
                 cm.addButtonToList(lists, order.getName(), order.getId());
             }
-            cm.sendAnswerEdit(appUser, update, out, lists);
+            cm.sendPhoto(appUser, update, out, imagePathFoundOrder, lists);
             return true;
         }
         return false;

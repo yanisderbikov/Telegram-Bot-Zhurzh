@@ -10,12 +10,13 @@ import com.zhurzh.nodeorderservice.controller.HasUserState;
 import com.zhurzh.nodeorderservice.controller.UserState;
 import com.zhurzh.nodeorderservice.enums.TextMessage;
 import com.zhurzh.nodeorderservice.service.CommonCommands;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+//import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,16 +24,25 @@ import java.util.NoSuchElementException;
 
 @Log4j
 @Component
-@AllArgsConstructor
+//@AllArgsConstructor
 public class StartCommand implements Command, HasUserState {
+    @Autowired
     private CommandsManager cm;
+    @Autowired
     private CommonCommands cc;
+    @Autowired
     private OrderDAO orderDAO;
-    @NonNull
+//    @NonNull
     public static final UserState userState = UserState.START;
-    @NonNull
+//    @NonNull
     public static final String veryBegin = "/very_begin";
+//    @NonNull
+    @Value("${image.path.unfinished.order}")
+    private String unfinishedImage;
 
+//    @NonNull
+    @Value("${image.path.initial.order}")
+    private String initialImage;
     @Override
     public UserState getUserState() {
         return userState;
@@ -68,7 +78,8 @@ public class StartCommand implements Command, HasUserState {
         var out = TextMessage.START.getMessage(appUser.getLanguage());
         List<InlineKeyboardButton> row = new ArrayList<>();
         cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
-        cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+//        cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+        cm.sendPhoto(appUser, update, out, initialImage, new ArrayList<>(List.of(row)));
         return true;
     }
 
@@ -87,7 +98,8 @@ public class StartCommand implements Command, HasUserState {
                         TextMessage.START_VERY_BEGIN_BUTTON.getMessage(appUser.getLanguage()),
                         veryBegin);
                 var out = TextMessage.START_HAS_NOT_FINISHED.getMessage(appUser.getLanguage());
-                cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+//                cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+                cm.sendPhoto(appUser, update, out, unfinishedImage, new ArrayList<>(List.of(row)));
                 return true;
             }catch (Exception e){
                 log.error(e);
