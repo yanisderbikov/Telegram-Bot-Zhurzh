@@ -1,6 +1,7 @@
 package com.zhurzh.commonjpa.entity;
 
 import com.zhurzh.commonjpa.enums.*;
+import com.zhurzh.commonjpa.service.CurrencyConverter;
 import lombok.*;
 
 import javax.persistence.*;
@@ -59,12 +60,12 @@ public class Order {
             table.add(new String[]{"Дедлайн", isNull(deadLine) ? unfilled() : new SimpleDateFormat("dd-MM-yyyy").format(deadLine)});
             table.add(null);
             table.add(new String[]{"Персонажи", (isNull(countOfPersons) ? unfilled() : countOfPersons.getMessage(lan))});
-            table.add(new String[]{"Референсы", (artReference == null || artReference.isEmpty() ? unfilled() : String.format("Количество фалов - %s", artReference.size()))});
+            table.add(new String[]{"Референсы", (artReference == null || artReference.isEmpty() ? unfilled() : String.format("Количество файлов - %s", artReference.size()))});
             table.add(new String[]{"Формат", (isNull(formatOfIllustration) ? unfilled() : formatOfIllustration.getMessage(lan))});
             table.add(new String[]{"Детализация", (isNull(detalizationOfIllustration) ? unfilled() : detalizationOfIllustration.getMessage(lan))});
             table.add(new String[]{"Фон", (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(lan))});
-            table.add(new String[]{"Рассчитанная стоимость", price});
-            table.add(new String[]{"Твоя стоимость", generate()});
+            table.add(new String[]{"Рассчитанная стоимость", generate() });
+            table.add(new String[]{"Твоя стоимость", isNull(price) ? unfilled() : price});
             table.add(new String[]{"Комментарий", commentToArt});
         }else {
             table.add(null);
@@ -77,8 +78,8 @@ public class Order {
             table.add(new String[]{"Format", (isNull(formatOfIllustration) ? unfilled() : formatOfIllustration.getMessage(lan))});
             table.add(new String[]{"Detalization", (isNull(detalizationOfIllustration) ? unfilled() : detalizationOfIllustration.getMessage(lan))});
             table.add(new String[]{"Background", (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(lan))});
-            table.add(new String[]{"Calculated price", price});
-            table.add(new String[]{"Your price", generate()});
+            table.add(new String[]{"Calculated price", generate()});
+            table.add(new String[]{"Your price", isNull(price) ? unfilled() : price});
             table.add(new String[]{"Comment", commentToArt});
         }
 
@@ -128,9 +129,9 @@ public class Order {
         if (isAllFilledExceptPrice()) {
             try {
                 if (owner.getLanguage().equals("eng")) {
-                    return String.format("\nAround price is %s$", generate());
+                    return String.format("\nAround price is %s", generate());
                 } else {
-                    return String.format("\nПримерная цена %s руб", generate());
+                    return String.format("\nПримерная цена %s", generate());
                 }
             } catch (Exception e) {
                 throw new RuntimeException("Fail to calculate : " + e.getCause().getMessage());
@@ -140,8 +141,8 @@ public class Order {
         }
     }
     private String generate(){
-        int min = 0;
-        int max = 0;
+        double min = 1;
+        double max = 1;
         switch (detalizationOfIllustration){
             case DETAILED -> {
                 switch (formatOfIllustration){
@@ -193,20 +194,23 @@ public class Order {
                 min += 50;
             }
         }
-        if (owner.getLanguage().equals("ru")) {
-            int cur = 90; // курс
-            min *= cur;
-            max += cur;
+        var isRu = owner.getLanguage().equals("ru");
+        if (isRu) {
+            double cur = CurrencyConverter.getUsdToRubRate(); // курс
+            min = Math.ceil(min * cur / 1000) * 1000;
+            max = Math.ceil(max * cur / 1000) * 1000;;
         }
 
         int minRound = (int) Math.ceil(min);
         int maxRound = (int) Math.ceil(max);
 
-
+        var out = "";
         if (min > max){
-            return String.format("%s", minRound);
+            out = String.format("%s", minRound);
         }else {
-            return String.format("%s-%s", minRound, maxRound);
+            out = String.format("%s-%s", minRound, maxRound);
         }
+        out += isRu ? " Руб" : " USD";
+        return out;
     }
 }

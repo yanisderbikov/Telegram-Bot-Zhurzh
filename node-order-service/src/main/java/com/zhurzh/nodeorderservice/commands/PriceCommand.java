@@ -64,8 +64,7 @@ public class PriceCommand implements Command, HasUserState {
                             new ArrayList<>(List.of(row)));
                     return true;
                 }
-                var out = TextMessage.PRICE_SRART_ROUNDPRICE.getMessage(appUser.getLanguage())
-                        + cc.findActiveOrder(appUser).calculatePrice()
+                var out = cc.findActiveOrder(appUser).calculatePrice()
                         + TextMessage.PRICE_START.getMessage(appUser.getLanguage());
 
                 cm.sendAnswerEdit(appUser, update, out);
@@ -80,18 +79,33 @@ public class PriceCommand implements Command, HasUserState {
         try {
             if (update.hasMessage() && update.getMessage().hasText()) {
                 var input = update.getMessage().getText();
-                var order = cc.findActiveOrder(appUser);
-                order.setPrice(input + (appUser.getLanguage().equals("eng") ? " USD" : " Руб"));
-                orderDAO.save(order);
-                var out = TextMessage.PRICE_END.getMessage(appUser.getLanguage());
-                List<InlineKeyboardButton> row = new ArrayList<>();
-                cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
-                cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+                if (isNumber(input)) {
+                    var order = cc.findActiveOrder(appUser);
+                    order.setPrice(input + (appUser.getLanguage().equals("eng") ? " USD" : " Руб"));
+                    orderDAO.save(order);
+                    var out = TextMessage.PRICE_END.getMessage(appUser.getLanguage());
+                    List<InlineKeyboardButton> row = new ArrayList<>();
+                    cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
+                    cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+                }else {
+                    var out = TextMessage.PRICE_INVALID_NUM.getMessage(appUser.getLanguage());
+                    cm.sendAnswerEdit(appUser, update, out);
+                }
                 return true;
             }
         }catch (Exception e){
             log.error(e);
         }
         return false;
+    }
+    private boolean isNumber(String str){
+        if (str == null || str.isEmpty()) return false;
+        try {
+            Integer.parseInt(str);
+        }catch (Exception e){
+            log.warn("IMPUTED PRICE: " + str);
+            return false;
+        }
+        return true;
     }
 }

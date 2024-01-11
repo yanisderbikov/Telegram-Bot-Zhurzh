@@ -33,23 +33,21 @@ public enum TextMessage {
     "Напиши свои мысли, касаемо идеи арта. Эмоции, оттенки, другие детали, которые ты считаешь важными. Так Журж сможет погрузиться в атмосферу работы и сделать действительно классный арт! Сюда же можешь прикрепить ссылки на понравившиеся  арт-примеры или референсы. \n" +
             "\n" +
             "Если что, этот комментарий необязателен. "),
-    COMMENT_TO_ART_END("The final touch is needed:", "Требуется последний штрих: "),
-    PRICE_SRART_ROUNDPRICE("The approximate cost of the art = ",
-            "Примерная стоимость арта = "),
+    COMMENT_TO_ART_END("Ok next one:", "Хорошо, далее: "),
     PRICE_START("\nZhurzh will be very, very happy if you write below the price you're willing to pay for the commission. It might greatly motivate her!\n" +
             "\n" +
             "If you want to make any changes to the application, you'll be able to do so later, and I'll gladly prepare a recalculation.",
     "\nЖурж будет очень-очень рада, если ты напишешь ниже ту стоимость заказа, которую ты будешь готов оплатить. Возможно, это сильно замотивирует ее!  \n" +
             "\n" +
             "Если ты хочешь что-то исправить в заявке, ты сможешь сделать это дальше, а я с радостью подготовлю перерасчет. "),
-
+    PRICE_INVALID_NUM("I can't understand. Write down just a simple number", "Я не очень понял. Напиши пожалуйста просто цифру."),
     PRICE_END("Let's check to make sure:", "Давай проверим, чтоб наверняка: "),
     NAME_START("Please write a short title for your application. This will make it easier for both me and Zhurzh to navigate and find it among others in the list.",
             "Пожалуйста, напиши короткое название своей заявки. Так и мне, и Журжу будет легче сориентироваться и найти ее среди других в списке. "),
-    NAME_END("Thank you! We're finished, and now I can provide an approximate cost for this interesting work!",
-            "Благодарю! Мы закончили и теперь я могу назвать примерную стоимость этой интересной работы! "),
+    NAME_END("Fine. Now we need to set a deadline for which your order will be relevant. A week before the deadline, I will write to you and we will determine whether it is relevant for you or not :)",
+            "Хорошо. Сейчас нам нужно установить дедлайн, до которого твоя завка будет актуальна. За неделю до указанного дедлайна я тебе напишу и мы определим актульна она для тебя или нет :) "),
     FINALIZE_START("Here is your commission. Looks nice\n", "Вот как выглядет твой заказ"),
-    ACCEPT("Alright, are you sure?", "Хорошо, это точно точно-точно?"),
+    ACCEPT("Alright", "Хорошо"),
     BUTTON_YES("Yes", "Да"),
     BUTTON_NO("No", "Нет"),
     FINALIZE_AFTER_NO("Ok, let's check again", "Хорошо, давай проверим еще раз"),
@@ -68,7 +66,8 @@ public enum TextMessage {
             "Хорошо, я сообщю Журжу, чтобы она связывалась через этот выбранный метод."),
     DEADLINE_START("Now, please specify the date until which this commission is valid. Keep in mind that after the deadline you set, the application will automatically be deleted if Zhurzh doesn't manage to start the work by then.",
             "А теперь, пожалуйста, укажи до какого числа актуален этот заказ. Имей ввиду, что после указанного тобой дедлайна, заявка  автоматически удалится , если Журж так и не успеет приступить к работе. "),
-    DEADLINE_END("Fine", "Отлично"),
+    DEADLINE_END("Thank you! We're finished, and now I can provide an approximate cost for this interesting work!",
+            "Благодарю! Мы закончили и теперь я могу назвать примерную стоимость этой интересной работы! "),
     PREV_MO("Prev", "Пред"),
     NEXT_MO("Next", "След"),
     DEADLINE_CONFIRM_1("You've chosen ", "Ты выбрал "),
