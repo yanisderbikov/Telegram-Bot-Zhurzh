@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -42,25 +44,60 @@ public class Order {
     private DetalizationOfIllustration detalizationOfIllustration;
     @Enumerated(EnumType.STRING)
     private BackgroundOfIllustration backgroundOfIllustration;
+    @Column(columnDefinition = "TEXT")
     private String commentToArt;
     private String price;
 
     @Override
-    public String toString() {
-        var len = owner.getLanguage();
-        return
-                "\nname='" + name + '\'' +
-                "\ncountOfPersons=" + (isNull(countOfPersons) ? unfilled() : countOfPersons.getMessage(owner.getLanguage())) +
-                "\nreference='" + (artReference == null || artReference.isEmpty() ? unfilled() : "filled size " + artReference.size()) + '\'' +
-                "\nformatOfIllustration=" + (isNull(formatOfIllustration) ? unfilled() : formatOfIllustration.getMessage(owner.getLanguage())) +
-                "\ndetalizationOfIllustration=" +   (isNull(detalizationOfIllustration) ? unfilled() : detalizationOfIllustration.getMessage(owner.getLanguage()))+
-                "\nbackgroundOfIllustration=" +     (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(owner.getLanguage())  )+
-                "\ncommentToArt='" + commentToArt + '\'' +
-                "\nyours set price is = " + price +
-                        calculatePrice() +
-                        "\ndeadline = " + new SimpleDateFormat("dd-MM-yyyy").format(deadLine) +
-                "\nstatus = " + statusZhurzh.getMessage(len);
+    public String toString(){
+        List<String[]> table = new ArrayList<>();
+        var lan = owner.getLanguage();
+        if (lan.equals("ru")) {
+            table.add(null);
+            table.add(new String[]{"Имя", name});
+            table.add(new String[]{"Статус", statusZhurzh.getMessage(lan)});
+            table.add(new String[]{"Дедлайн", isNull(deadLine) ? unfilled() : new SimpleDateFormat("dd-MM-yyyy").format(deadLine)});
+            table.add(null);
+            table.add(new String[]{"Персонажи", (isNull(countOfPersons) ? unfilled() : countOfPersons.getMessage(lan))});
+            table.add(new String[]{"Референсы", (artReference == null || artReference.isEmpty() ? unfilled() : String.format("Количество фалов - %s", artReference.size()))});
+            table.add(new String[]{"Формат", (isNull(formatOfIllustration) ? unfilled() : formatOfIllustration.getMessage(lan))});
+            table.add(new String[]{"Детализация", (isNull(detalizationOfIllustration) ? unfilled() : detalizationOfIllustration.getMessage(lan))});
+            table.add(new String[]{"Фон", (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(lan))});
+            table.add(new String[]{"Рассчитанная стоимость", price});
+            table.add(new String[]{"Твоя стоимость", generate()});
+            table.add(new String[]{"Комментарий", commentToArt});
+        }else {
+            table.add(null);
+            table.add(new String[]{"Name", name});
+            table.add(new String[]{"Status", statusZhurzh.getMessage(lan)});
+            table.add(new String[]{"Deadline", isNull(deadLine) ? unfilled() : new SimpleDateFormat("MM-dd-yyyy").format(deadLine)});
+            table.add(null);
+            table.add(new String[]{"Persons", (isNull(countOfPersons) ? unfilled() : countOfPersons.getMessage(lan))});
+            table.add(new String[]{"Reference", (artReference == null || artReference.isEmpty() ? unfilled() : String.format("Uploaded files - %s ", artReference.size()))});
+            table.add(new String[]{"Format", (isNull(formatOfIllustration) ? unfilled() : formatOfIllustration.getMessage(lan))});
+            table.add(new String[]{"Detalization", (isNull(detalizationOfIllustration) ? unfilled() : detalizationOfIllustration.getMessage(lan))});
+            table.add(new String[]{"Background", (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(lan))});
+            table.add(new String[]{"Calculated price", price});
+            table.add(new String[]{"Your price", generate()});
+            table.add(new String[]{"Comment", commentToArt});
+        }
+
+        return convertToTelegramFormat2(table);
     }
+
+    private static String convertToTelegramFormat2(List<String[]> table) {
+        StringBuilder sb = new StringBuilder();
+        for (String[] strings : table) {
+            if (strings == null) {
+                sb.append("\n");
+                continue;
+            }
+            sb.append(String.format("%n<b>%s:</b> %s", strings[0], strings[1]));
+        }
+        return sb.toString();
+    }
+
+
     private boolean isNull(Object o){
         return o == null;
     }

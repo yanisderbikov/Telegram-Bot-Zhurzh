@@ -2,11 +2,11 @@ package com.zhurzh.nodeorderservice.enums;
 
 
 public enum TextMessage {
-    ACTIVATION_BUTTON("Calculate order", "Рассчитать стоимость"),
+    ACTIVATION_BUTTON("Calculate commission", "Рассчитать стоимость"),
     TO_MAIN_MENU("To main menu", "На главное меню"),
-    CORRECT_ORDER("We need to add some correction to your order",
+    CORRECT_ORDER("We need to add some correction to your commission",
             "Нам нужно внести несколько изменений в твою заявку"),
-    CORRECT_ORDER_FORSED("Firstly we need to fill fully our order",
+    CORRECT_ORDER_FORSED("Firstly we need to fill fully our commission",
             "Сначала нам нужно завершить заявку, чтобы можно было узначть цену"),
     START("I'm going to ask you a few questions to find out what kind of illustration you want. Let's agree to answer strictly point by point. I ask the question, you give the answer. Don't worry, any item can be adjusted at the end.",
             "Сейчас я задам тебе несколько вопросов, чтобы узнать, какую иллюстрацию ты хочешь. Только давай договоримся отвечать строго по пунктам. Я - вопрос, ты - ответ. Не волнуйся, любой пункт можно будет исправить в конце.  "),
@@ -36,7 +36,7 @@ public enum TextMessage {
     COMMENT_TO_ART_END("The final touch is needed:", "Требуется последний штрих: "),
     PRICE_SRART_ROUNDPRICE("The approximate cost of the art = ",
             "Примерная стоимость арта = "),
-    PRICE_START("\nZhurzh will be very, very happy if you write below the price you're willing to pay for the order. It might greatly motivate her!\n" +
+    PRICE_START("\nZhurzh will be very, very happy if you write below the price you're willing to pay for the commission. It might greatly motivate her!\n" +
             "\n" +
             "If you want to make any changes to the application, you'll be able to do so later, and I'll gladly prepare a recalculation.",
     "\nЖурж будет очень-очень рада, если ты напишешь ниже ту стоимость заказа, которую ты будешь готов оплатить. Возможно, это сильно замотивирует ее!  \n" +
@@ -48,13 +48,13 @@ public enum TextMessage {
             "Пожалуйста, напиши короткое название своей заявки. Так и мне, и Журжу будет легче сориентироваться и найти ее среди других в списке. "),
     NAME_END("Thank you! We're finished, and now I can provide an approximate cost for this interesting work!",
             "Благодарю! Мы закончили и теперь я могу назвать примерную стоимость этой интересной работы! "),
-    FINALIZE_START("Here is your order. Looks nice\n", "Вот как выглядет твой заказ"),
+    FINALIZE_START("Here is your commission. Looks nice\n", "Вот как выглядет твой заказ"),
     ACCEPT("Alright, are you sure?", "Хорошо, это точно точно-точно?"),
     BUTTON_YES("Yes", "Да"),
     BUTTON_NO("No", "Нет"),
     FINALIZE_AFTER_NO("Ok, let's check again", "Хорошо, давай проверим еще раз"),
     FINALIZE_AGAIN_CHECK("Ok, let's check again, are you sure?", "Отлично, ты уверен на стопудова?"),
-    FINALIZE_FINAL_ORDER("Your order is accepted, wait whan zhurzh will connect with you!",
+    FINALIZE_FINAL_ORDER("Your commission is accepted, wait whan zhurzh will connect with you!",
             "Твой заказ принят, ожидай пока журж с тобой свяжется"),
     COUNT_OF_PERSONS_START("How many characters will be in your artwork?",
             "Сколько персонажей будет на твоем арте? "),
@@ -66,7 +66,7 @@ public enum TextMessage {
     ADDITIONAL_MESSANGER_IS_CORRECT("Is it correct?", "Все правильно?"),
     ADDITIONAL_MESSANGER_SAVE("Ok, I will say Zhurzh to contact to you via this link",
             "Хорошо, я сообщю Журжу, чтобы она связывалась через этот выбранный метод."),
-    DEADLINE_START("Now, please specify the date until which this order is valid. Keep in mind that after the deadline you set, the application will automatically be deleted if Zhurzh doesn't manage to start the work by then.",
+    DEADLINE_START("Now, please specify the date until which this commission is valid. Keep in mind that after the deadline you set, the application will automatically be deleted if Zhurzh doesn't manage to start the work by then.",
             "А теперь, пожалуйста, укажи до какого числа актуален этот заказ. Имей ввиду, что после указанного тобой дедлайна, заявка  автоматически удалится , если Журж так и не успеет приступить к работе. "),
     DEADLINE_END("Fine", "Отлично"),
     PREV_MO("Prev", "Пред"),

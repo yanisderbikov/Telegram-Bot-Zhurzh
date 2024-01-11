@@ -35,6 +35,8 @@ public class ChooseOrderCommand implements Command, HasUserState {
     private String imagePathEmptyOrder;
     @Value("${image.path.found.order}")
     private String imagePathFoundOrder;
+    @Value("${image.path.found.order.confirm}")
+    private String imageFoundOrderConfirm;
     @NonNull
     public static final UserState userState = UserState.CHOOSE_ORDER;
     @Override
@@ -88,7 +90,7 @@ public class ChooseOrderCommand implements Command, HasUserState {
             List<InlineKeyboardButton> row = new ArrayList<>();
             cc.addButtonToNextStep(row, appUser, userState);
             var out = TextMessage.CHOOSE_ORDER_END.getMessage(appUser.getLanguage());
-            cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+            cm.sendPhoto(appUser, update, out, imageFoundOrderConfirm, new ArrayList<>(List.of(row)));
             return true;
         }
         return false;
