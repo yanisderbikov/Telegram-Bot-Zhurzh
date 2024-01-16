@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @Log4j
@@ -37,18 +39,34 @@ public class PhotoController {
 
     private TelegramBot telegramBot;
 
+    @Async
     @PostMapping("/photo")
-    ResponseEntity<String> sendPhoto(@RequestBody SendPhoto photo) {
-        var send = telegramBot.sendPhoto(photo);
-        if (send) return new ResponseEntity<>("Message send", HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+    CompletableFuture<ResponseEntity<String>> sendPhoto(@RequestBody SendPhoto photo) {
+        return CompletableFuture.supplyAsync(() -> {
+
+            try {
+                Thread.sleep(10000);
+                log.debug("FIRST RUN");
+                Thread.sleep(10000);
+                log.debug("SECOND RUN");
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            var send = telegramBot.sendPhoto(photo);
+            if (send) return new ResponseEntity<>("Message send", HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        });
     }
 
+    @Async
     @PostMapping("/media")
-    ResponseEntity<String> sendPhoto(@RequestBody SendMediaGroup sendMediaGroup) {
-        var send = telegramBot.sendMedia(sendMediaGroup);
-        if (send) return new ResponseEntity<>("Message send", HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+    CompletableFuture<ResponseEntity<String>> sendMedia(@RequestBody SendMediaGroup sendMediaGroup) {
+        return CompletableFuture.supplyAsync(() -> {
+            var send = telegramBot.sendMedia(sendMediaGroup);
+            if (send) return new ResponseEntity<>("Message send", HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        });
     }
 
 }

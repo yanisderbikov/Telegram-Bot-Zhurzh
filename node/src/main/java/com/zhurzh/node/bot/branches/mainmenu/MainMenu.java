@@ -3,12 +3,7 @@ package com.zhurzh.node.bot.branches.mainmenu;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.commonutils.model.Branches;
 import com.zhurzh.node.bot.branches.ConnectionClass;
-import com.zhurzh.node.bot.branches.order.CheckOrderManager;
-import com.zhurzh.node.bot.branches.order.OrderManager;
-import com.zhurzh.node.bot.branches.pricelist.PriceListManager;
 import com.zhurzh.node.bot.branches.start.StartManager;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +18,7 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @Log4j
@@ -33,8 +29,10 @@ public class MainMenu implements Branches {
     @Autowired
     private ApplicationContext applicationContext;
     private List<ConnectionClass> connectionClasses;
-    @Value("${image.menu.url}")
-    private String link;
+    @Value("${image.menu.url.ru}")
+    private String linkRu;
+    @Value("${image.menu.url.eng}")
+    private String linkEng;
 
 
     @Override
@@ -43,13 +41,15 @@ public class MainMenu implements Branches {
     }
 
     @Override
-    public ResponseEntity<String> execute(Update update) {
-        try {
-            manager(update);
-            return ResponseEntity.ok("ok");
-        }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public CompletableFuture<ResponseEntity<String>> execute(Update update) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                manager(update);
+                return ResponseEntity.ok("ok");
+            }catch (Exception e){
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        });
     }
 
     @PostConstruct
@@ -65,13 +65,13 @@ public class MainMenu implements Branches {
     private void manager(Update update){
         List<List<InlineKeyboardButton>> list = new ArrayList<>();
         var appUser = commandsManager.findOrSaveAppUser(update);
-        var len = appUser.getLanguage();
-        if (len == null) throw new RuntimeException("No language for user : " + commandsManager.findOrSaveAppUser(update));
+        var lan = appUser.getLanguage();
+        if (lan == null) throw new RuntimeException("No language for user : " + commandsManager.findOrSaveAppUser(update));
         addButtons(list, update);
         if (list.isEmpty()){
             commandsManager.sendAnswerEdit(appUser, update, TextMessage.NO_SERVICE_AVAILABLE.getMessage(appUser.getLanguage()));
         }else {
-            commandsManager.sendPhoto(appUser, update, null, link, list);
+            commandsManager.sendPhoto(appUser, update, null, lan.equals("ru") ? linkRu : linkEng, list);
         }
     }
 

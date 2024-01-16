@@ -14,6 +14,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import com.zhurzh.commonutils.model.Branches;
 
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @Log4j
 @AllArgsConstructor
@@ -31,13 +33,15 @@ public class Controller implements Branches {
     }
     @Override
     @PostMapping("/execute")
-    public ResponseEntity<String> execute(@RequestBody Update update){
-        try {
-            orderService.text(update);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception e){
-            log.error(e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public CompletableFuture<ResponseEntity<String>> execute(@RequestBody Update update){
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                orderService.text(update);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (Exception e) {
+                log.error(e);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        });
     }
 }

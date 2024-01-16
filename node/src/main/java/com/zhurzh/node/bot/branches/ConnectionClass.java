@@ -5,10 +5,13 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,12 +40,15 @@ public class ConnectionClass implements Branches {
 
 
     @Override
-    public ResponseEntity<String> execute(Update update) {
-        log.debug("manage Text now");
-        String path = "/execute";
-        var response =  sendRequest(update, path);
-        log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
-        return response;
+//    @Async
+    public CompletableFuture<ResponseEntity<String>> execute(Update update) {
+        return CompletableFuture.supplyAsync(() -> {
+            log.debug("manage Text now");
+            String path = "/execute";
+            var response =  sendRequest(update, path);
+            log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
+            return response;
+        });
     }
 
 
