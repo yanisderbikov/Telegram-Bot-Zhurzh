@@ -10,7 +10,6 @@ import com.zhurzh.nodecheckorderservice.controller.OrderCasheController;
 import com.zhurzh.nodecheckorderservice.controller.UserState;
 import com.zhurzh.nodecheckorderservice.enums.TextMessage;
 import com.zhurzh.nodecheckorderservice.service.CommonCommands;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,10 +32,12 @@ public class ChooseOrderCommand implements Command, HasUserState {
     private OrderCasheController os;
     @Value("${image.path.empty.order}")
     private String imagePathEmptyOrder;
-    @Value("${image.path.found.order}")
-    private String imagePathFoundOrder;
-    @Value("${image.path.found.order.confirm}")
-    private String imageFoundOrderConfirm;
+//    @Value("${image.path.found.order}")
+//    private String imagePathFoundOrder;
+    @Value("${image.path.found.order.confirm.ru}")
+    private String imageFoundOrderConfirmRu;
+    @Value("${image.path.found.order.confirm.eng}")
+    private String imageFoundOrderConfirmEng;
     @NonNull
     public static final UserState userState = UserState.CHOOSE_ORDER;
     @Override
@@ -75,7 +76,7 @@ public class ChooseOrderCommand implements Command, HasUserState {
             for (var order : orders){
                 cm.addButtonToList(lists, order.getName(), order.getId());
             }
-            cm.sendPhoto(appUser, update, out, imagePathFoundOrder, lists);
+            cm.sendAnswerEdit(appUser, update, out, lists);
             return true;
         }
         return false;
@@ -90,7 +91,9 @@ public class ChooseOrderCommand implements Command, HasUserState {
             List<InlineKeyboardButton> row = new ArrayList<>();
             cc.addButtonToNextStep(row, appUser, userState);
             var out = TextMessage.CHOOSE_ORDER_END.getMessage(appUser.getLanguage());
-            cm.sendPhoto(appUser, update, out, imageFoundOrderConfirm, new ArrayList<>(List.of(row)));
+            cm.sendPhoto(appUser, update, out,
+                    appUser.getLanguage().equals("ru") ? imageFoundOrderConfirmRu : imageFoundOrderConfirmEng,
+                    new ArrayList<>(List.of(row)));
             return true;
         }
         return false;

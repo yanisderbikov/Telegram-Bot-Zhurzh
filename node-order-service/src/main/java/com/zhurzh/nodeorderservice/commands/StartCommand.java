@@ -41,8 +41,10 @@ public class StartCommand implements Command, HasUserState {
     private String unfinishedImage;
 
 //    @NonNull
-    @Value("${image.path.initial.order}")
-    private String initialImage;
+    @Value("${image.path.initial.order.ru}")
+    private String initialImageRu;
+    @Value("${image.path.initial.order.eng}")
+    private String initialImageEng;
     @Override
     public UserState getUserState() {
         return userState;
@@ -79,7 +81,9 @@ public class StartCommand implements Command, HasUserState {
         List<InlineKeyboardButton> row = new ArrayList<>();
         cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
 //        cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
-        cm.sendPhoto(appUser, update, out, initialImage, new ArrayList<>(List.of(row)));
+        cm.sendPhoto(appUser, update, out,
+                appUser.getLanguage().equals("ru") ? initialImageRu : initialImageEng,
+                new ArrayList<>(List.of(row)));
         return true;
     }
 

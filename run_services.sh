@@ -3,7 +3,7 @@
 source ./run_killer.sh
 
 # dispatcher
-java -jar dispatcher/target/dispatcher-1.0-SNAPSHOT.jar &
+#java -jar dispatcher/target/dispatcher-1.0-SNAPSHOT.jar &
 # start
 java -jar node-start-service/target/node-start-service-0.0.1-SNAPSHOT.jar &
 
