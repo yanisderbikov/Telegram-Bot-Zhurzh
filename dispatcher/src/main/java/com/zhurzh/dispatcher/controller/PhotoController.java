@@ -39,16 +39,12 @@ public class PhotoController {
 
     @PostMapping("/photo")
     ResponseEntity<String> sendPhoto(@RequestBody SendPhoto photo) {
-        var send = telegramBot.sendPhoto(photo);
-        if (send) return new ResponseEntity<>("Message send", HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        return telegramBot.sendPhoto(photo);
     }
 
     @PostMapping("/media")
     ResponseEntity<String> sendPhoto(@RequestBody SendMediaGroup sendMediaGroup) {
-        var send = telegramBot.sendMedia(sendMediaGroup);
-        if (send) return new ResponseEntity<>("Message send", HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        return telegramBot.sendMedia(sendMediaGroup);
     }
 
 }

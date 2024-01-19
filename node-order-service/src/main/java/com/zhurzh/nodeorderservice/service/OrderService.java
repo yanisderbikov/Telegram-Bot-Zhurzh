@@ -52,7 +52,9 @@ public class OrderService {
         cm.addButtonToList(lists,
                 appUser.getLanguage().equals("eng") ? "Menu" : "Меню"
                 , "/menu");
-        cm.sendAnswerEdit(appUser, update, e.getMessage(), lists);
+        cm.sendAnswerEdit(appUser, update,
+                appUser.getLanguage().equals("ru") ? "Что-то пошло не так" : "Something happened wrong",
+                lists);
     }
     private String getMessage(Exception e){
         StringBuilder builder = new StringBuilder();

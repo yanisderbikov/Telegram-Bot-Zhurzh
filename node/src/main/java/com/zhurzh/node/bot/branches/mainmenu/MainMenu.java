@@ -33,8 +33,11 @@ public class MainMenu implements Branches {
     @Autowired
     private ApplicationContext applicationContext;
     private List<ConnectionClass> connectionClasses;
-    @Value("${image.menu.url}")
-    private String link;
+
+    @Value("${image.menu.url.ru}")
+    private String linkRu;
+    @Value("${image.menu.url.eng}")
+    private String linkEng;
 
 
     @Override
@@ -65,13 +68,13 @@ public class MainMenu implements Branches {
     private void manager(Update update){
         List<List<InlineKeyboardButton>> list = new ArrayList<>();
         var appUser = commandsManager.findOrSaveAppUser(update);
-        var len = appUser.getLanguage();
-        if (len == null) throw new RuntimeException("No language for user : " + commandsManager.findOrSaveAppUser(update));
+        var lan = appUser.getLanguage();
+        if (lan == null) throw new RuntimeException("No language for user : " + commandsManager.findOrSaveAppUser(update));
         addButtons(list, update);
         if (list.isEmpty()){
             commandsManager.sendAnswerEdit(appUser, update, TextMessage.NO_SERVICE_AVAILABLE.getMessage(appUser.getLanguage()));
         }else {
-            commandsManager.sendPhoto(appUser, update, null, link, list);
+            commandsManager.sendPhoto(appUser, update, null, lan.equals("ru") ? linkRu : linkEng, list);
         }
     }
 

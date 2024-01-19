@@ -2,6 +2,8 @@ package com.zhurzh.dispatcher.controller;
 
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -116,31 +118,39 @@ public class TelegramBot extends TelegramWebhookBot {
         return null;
     }
 
-    public boolean sendPhoto(SendPhoto photo) {
+    public ResponseEntity<String> sendPhoto(SendPhoto photo) {
         if (photo != null){
             try {
                 execute(photo);
-                return true;
+                return new ResponseEntity<>("Successful send photo", HttpStatus.OK);
             }catch (TelegramApiException e) {
                 log.error(e);
                 log.debug("URL : " + photo);
-                return false;
+                return new ResponseEntity<>(
+                        String.format("Error message: %s\nUnsuccessful send photo %s", e.getMessage(), photo.getPhoto()),
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                );
             }
         }
-        return false;
+        return new ResponseEntity<>("SendPhoto is null", HttpStatus.BAD_REQUEST);
     }
-    public boolean sendMedia(SendMediaGroup sendMediaGroup){
+    public ResponseEntity<String> sendMedia(SendMediaGroup sendMediaGroup){
         if (sendMediaGroup != null){
             try {
                 execute(sendMediaGroup);
-                return true;
+                return new ResponseEntity<>("Successful send sendMediaGroup", HttpStatus.OK);
             }catch (TelegramApiException e) {
                 log.error(e);
                 log.debug("URL : " + sendMediaGroup);
-                return false;
+                StringBuilder builder = new StringBuilder("Files:");
+                sendMediaGroup.getMedias().forEach(e1 -> builder.append("\n").append(e1 != null ? e1.getMedia() : "null"));
+                return new ResponseEntity<>(
+                        String.format("Error message: %s\nUnsuccessful send sendMediaGroup %s", e.getMessage(), builder),
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                );
             }
         }
-        return false;
+        return new ResponseEntity<>("SendPhoto is null", HttpStatus.BAD_REQUEST);
     }
 
     public void sendEditMessagePhoto(EditMessageMedia editMessageMedia) {

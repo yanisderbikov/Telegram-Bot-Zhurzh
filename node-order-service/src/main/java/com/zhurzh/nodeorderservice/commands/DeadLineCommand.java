@@ -48,6 +48,7 @@ public class DeadLineCommand implements Command, HasUserState {
         // может приходить /orderservice
         var appUser = cm.findOrSaveAppUser(update);
         if (startCommand(appUser, update)) return;
+        if (doesntMatter(appUser, update)) return;
         if (isChangeMonth(appUser, update)) return;
         if (chosenDay(appUser, update)) return;
         if (handlerYesNo(appUser, update)) return;
@@ -65,6 +66,17 @@ public class DeadLineCommand implements Command, HasUserState {
             map.putIfAbsent(appUser.getId(), 0);
             calendarHelper.chooseDays_cmd(appUser, update, map.get(appUser.getId()));
             return true;
+        }
+        return false;
+    }
+
+    private boolean doesntMatter(AppUser appUser, Update update) {
+        if (update.hasCallbackQuery() && update.getCallbackQuery().getData().equals(TextMessage.DOESNT_MATTER.name())){
+            Calendar calendar = Calendar.getInstance(new Locale("ru"));
+            calendar.add(Calendar.YEAR, 1);
+            dateMap.put(appUser.getId(), calendar.getTime());
+            update.getCallbackQuery().setData(TextMessage.BUTTON_YES.name());
+            return handlerYesNo(appUser, update);
         }
         return false;
     }

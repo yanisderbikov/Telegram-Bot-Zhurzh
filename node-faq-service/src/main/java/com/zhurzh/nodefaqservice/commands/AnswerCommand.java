@@ -13,6 +13,8 @@ import com.zhurzh.nodefaqservice.service.FAQService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -23,12 +25,18 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@AllArgsConstructor
 @Log4j
 public class AnswerCommand implements Command, HasUserState {
+    @Autowired
     private CommandsManager cm;
+    @Autowired
     private FAQService faqService;
 
+    @Value("${image.path.faq.ru}")
+    private String imagePathRu;
+
+    @Value("${image.path.faq.eng}")
+    private String imagePathEng;
     public static UserState userState = UserState.FAQ;
 //    @NonNull
 //    private final String NEXT_QUESTION = "/next_question";
@@ -67,7 +75,9 @@ public class AnswerCommand implements Command, HasUserState {
                     AddNewQuestionCommand.userState.getMessage(appUser.getLanguage()),
                     AddNewQuestionCommand.userState.getPath());
             lists.add(row);
-            cm.sendAnswerEdit(appUser, update, out, lists);
+            cm.sendPhoto(appUser, update, out,
+                    appUser.getLanguage().equals("ru") ? imagePathRu : imagePathEng ,
+                    lists);
             return true;
         }
         return false;

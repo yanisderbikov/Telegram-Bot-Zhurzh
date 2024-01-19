@@ -3,9 +3,9 @@ package com.zhurzh.commonjpa.enums;
 public enum DetalizationOfIllustration implements Language{
     DETAILED("Detailed", "Детальная"),
     CLASSICAL("Classical", "Классическая"),
-    BLACK_AND_WHITE_SKETCH("B&W sketch", "Чернобелый эскиз"),
-    LINE_ART("Line art", "Лайнарт"),
-    LINE_ART_SHADING("LA + shading", "Лайн + Шейд");
+    LINE_ART_SHADING("LA + shading", "Лайн + Шейд"),
+    //    LINE_ART("Line art", "Лайнарт");
+    BLACK_AND_WHITE_SKETCH("B&W sketch", "Чернобелый эскиз");
 
     private final String englishMessage;
     private final String russianMessage;

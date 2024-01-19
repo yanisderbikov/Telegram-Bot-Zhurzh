@@ -5,8 +5,11 @@
     <parent>
         <artifactId>Telegram-Bot-Zhurzh</artifactId>
         <groupId>com.zhuzh</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
+
     </parent>
+    <version>1.0.0</version>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dispatcher</artifactId>
@@ -31,7 +34,8 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-rabbitmq</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
+
         </dependency>
 
         <dependency>

@@ -68,7 +68,10 @@ public class CommentToArtCommand implements Command, HasUserState {
             cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
             return true;
         }
-        return false;
+        // if photos or smth else
+        var out = TextMessage.COMMENT_TO_ART_ERROR.getMessage(appUser.getLanguage());
+        cm.sendAnswerEdit(appUser, update, out);
+        return true;
     }
 
 }

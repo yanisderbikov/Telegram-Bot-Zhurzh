@@ -32,17 +32,29 @@ public class DetalizationOfIllustrationCommand implements Command, HasUserState 
     @NonNull
     public static final UserState userState = UserState.DETALIZATION;
     @NonNull
-    @Value("${image.gallery.detalization}")
-    private List<String> images;
+    @Value("${image.path.detalization.ru}")
+    private List<String> imagesRu;
+
     @NonNull
-    private List<InputMedia> listOfImages = new ArrayList<>();
+    @Value("${image.path.detalization.eng}")
+    private List<String> imagesEng;
+    @NonNull
+    private List<InputMedia> listOfImagesRu = new ArrayList<>();
+    @NonNull
+    private List<InputMedia> listOfImagesEng = new ArrayList<>();
 
     @PostConstruct
     private void init() {
-        for (String imageUrl : images) {
-            listOfImages.add(new InputMediaPhoto(imageUrl));
+        for (String imageUrl : imagesRu) {
+            listOfImagesRu.add(new InputMediaPhoto(imageUrl));
         }
-        if (listOfImages.isEmpty()) throw new RuntimeException("image.gallery.detalization is empty");
+        if (listOfImagesRu.isEmpty()) throw new RuntimeException("image.path.detalization.ru is empty");
+
+        for (String imageUrl : imagesEng) {
+            listOfImagesEng.add(new InputMediaPhoto(imageUrl));
+        }
+        if (listOfImagesEng.isEmpty()) throw new RuntimeException("image.path.detalization.eng is empty");
+
     }
 
     @Override
@@ -71,7 +83,7 @@ public class DetalizationOfIllustrationCommand implements Command, HasUserState 
             List<List<InlineKeyboardButton>> lists = new ArrayList<>();
             cc.addAllButtons(appUser, DetalizationOfIllustration.class, lists);
             cm.deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());
-            cm.sendMedia(appUser, listOfImages);
+            cm.sendMedia(appUser, appUser.getLanguage().equals("ru") ? listOfImagesRu : listOfImagesEng);
             cm.sendAnswerEdit(appUser, null, out, lists);
             return true;
         }
@@ -86,7 +98,7 @@ public class DetalizationOfIllustrationCommand implements Command, HasUserState 
             order.setDetalizationOfIllustration(detalization);
             orderDAO.save(order);
 
-            for (int i = 1; i <= listOfImages.size(); i++) {
+            for (int i = 1; i <= (appUser.getLanguage().equals("ru") ? listOfImagesRu.size() : listOfImagesEng.size()); i++) {
                 cm.deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId() - i);
             }
 

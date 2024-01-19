@@ -31,10 +31,11 @@ public class PriceListCommand implements Command {
     private final String BO = "https://boosty.to/zhurzh";
     private final String TW = "https://twitter.com/zhurzh_art";
 
-    @Value("${image.path.menu}")
-    private String imagePathMenu;
+    @Value("${image.path.menu.ru}")
+    private String imagePathMenuRu;
 
-
+    @Value("${image.path.menu.eng}")
+    private String imagePathMenuEng;
 
     @Override
     public void execute(Update update) throws CommandException {
@@ -67,7 +68,8 @@ public class PriceListCommand implements Command {
             }
             list.add(row);
             cm.addButtonToMainMenu(list, appUser);
-            cm.sendPhoto(appUser, update, out, imagePathMenu, list);
+            cm.sendPhoto(appUser, update, out,
+                    appUser.getLanguage().equals("ru") ? imagePathMenuRu : imagePathMenuEng, list);
             return true;
         }
         return false;

@@ -112,6 +112,9 @@ public class CalendarHelper {
                 TextMessage.NEXT_MO.getMessage(appUser.getLanguage()),
                 TextMessage.NEXT_MO.name());
         calendarList.add(row);
+        cm.addButtonToList(calendarList,
+                TextMessage.DOESNT_MATTER.getMessage(appUser.getLanguage()),
+                TextMessage.DOESNT_MATTER.name());
         return new InlineKeyboardMarkup(calendarList);
     }
     /**

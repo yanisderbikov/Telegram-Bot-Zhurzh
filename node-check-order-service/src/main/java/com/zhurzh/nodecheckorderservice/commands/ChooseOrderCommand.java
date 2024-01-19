@@ -33,10 +33,10 @@ public class ChooseOrderCommand implements Command, HasUserState {
     private OrderCasheController os;
     @Value("${image.path.empty.order}")
     private String imagePathEmptyOrder;
+
     @Value("${image.path.found.order}")
     private String imagePathFoundOrder;
-    @Value("${image.path.found.order.confirm}")
-    private String imageFoundOrderConfirm;
+
     @NonNull
     public static final UserState userState = UserState.CHOOSE_ORDER;
     @Override
@@ -63,7 +63,6 @@ public class ChooseOrderCommand implements Command, HasUserState {
             var orders = orderDAO.findByOwner(appUser).stream()
                     .filter(e -> e.getIsFinished() != null && e.getIsFinished())
                     .toList();
-//            cleanAllNullsOrdersName(appUser);
             List<List<InlineKeyboardButton>> lists = new ArrayList<>();
             if (orders.isEmpty()){
                 var out = TextMessage.FAIL_FIND_ORDER.getMessage(appUser.getLanguage());
@@ -90,7 +89,7 @@ public class ChooseOrderCommand implements Command, HasUserState {
             List<InlineKeyboardButton> row = new ArrayList<>();
             cc.addButtonToNextStep(row, appUser, userState);
             var out = TextMessage.CHOOSE_ORDER_END.getMessage(appUser.getLanguage());
-            cm.sendPhoto(appUser, update, out, imageFoundOrderConfirm, new ArrayList<>(List.of(row)));
+            cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
             return true;
         }
         return false;

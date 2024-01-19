@@ -5,11 +5,13 @@
     <parent>
         <groupId>com.zhuzh</groupId>
         <artifactId>Telegram-Bot-Zhurzh</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
+
     </parent>
+    <version>1.0.0</version>
+
     <groupId>com.zhurzh</groupId>
     <artifactId>common-node-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>common-node-service</name>
     <description>common-node-service</description>
     <properties>
@@ -31,7 +33,8 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-jpa</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
+
         </dependency>
 
         <dependency>
@@ -49,7 +52,8 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-rabbitmq</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
+
         </dependency>
 
         <dependency>
@@ -59,7 +63,8 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-utils</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
+
         </dependency>
     </dependencies>
 

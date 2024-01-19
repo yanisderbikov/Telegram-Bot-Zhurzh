@@ -92,26 +92,6 @@ public class UpdateProcessor {
         telegramBot.sendCallBack(editMessageText);
     }
 
-    public void setPhoto(SendPhoto photo) {
-//        var imagePath = "hello.jpg";
-        var name = photo.getPhoto().getAttachName().substring(9);
-        var path = name;
-        File f = new File(path); // checking a file
-        if (!f.exists()) {
-            log.error("File doesnt found [" + path + "]");
-            return;
-        }
-        InputFile inputFile = null;
-        try {
-            inputFile = new InputFile(new FileInputStream(f), path);
-        } catch (FileNotFoundException e) {
-            log.error("doesn't found the image " + path + " ERROR is : " + e.getMessage());
-            return;
-        }
-        photo.setPhoto(inputFile);
-        telegramBot.sendPhoto(photo);
-    }
-
     private void processPhotoMessage(Update update) {
         updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
 //        setFileIsReceivedView(update);

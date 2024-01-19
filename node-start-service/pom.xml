@@ -5,11 +5,11 @@
     <parent>
         <artifactId>Telegram-Bot-Zhurzh</artifactId>
         <groupId>com.zhuzh</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <groupId>com.zhurzh</groupId>
     <artifactId>node-start-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>node-start-service</name>
     <description>node-start-service</description>
     <properties>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.zhurzh</groupId>
             <artifactId>common-node-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-utils</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

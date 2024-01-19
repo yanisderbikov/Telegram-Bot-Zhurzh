@@ -130,6 +130,10 @@ public class CommandsManager {
             deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());
         }
         var responce = connectionToDispatcherPhoto.sendRequest(sendPhoto);
+        if (!responce.getStatusCode().is2xxSuccessful()){
+            log.error(responce);
+            sendAnswerEdit(appUser, update, out, list);
+        }
         return responce.getStatusCode().is2xxSuccessful();
     }
     public boolean sendMedia(AppUser appUser, @NotNull List<InputMedia> medias){

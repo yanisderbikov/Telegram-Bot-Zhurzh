@@ -33,6 +33,9 @@ public enum TextMessage {
     "Напиши свои мысли, касаемо идеи арта. Эмоции, оттенки, другие детали, которые ты считаешь важными. Так Журж сможет погрузиться в атмосферу работы и сделать действительно классный арт! Сюда же можешь прикрепить ссылки на понравившиеся  арт-примеры или референсы. \n" +
             "\n" +
             "Если что, этот комментарий необязателен. "),
+    COMMENT_TO_ART_ERROR("Write in text, please.\n" +
+            "If you want to send photos, attach them to the <b>references</b> item. If you can do this after completing the application.",
+            "Напиши текстом, пожалуйста.\nЕсли хочешь отправить фотографии, прикрепи к пункту <b>референсы</b>. Если что ты сможешь это сделать по завершению заявки. "),
     COMMENT_TO_ART_END("Ok next one:", "Хорошо, далее: "),
     PRICE_START("\nZhurzh will be very, very happy if you write below the price you're willing to pay for the commission. It might greatly motivate her!\n" +
             "\n" +
@@ -70,6 +73,7 @@ public enum TextMessage {
             "Благодарю! Мы закончили и теперь я могу назвать примерную стоимость этой интересной работы! "),
     PREV_MO("Prev", "Пред"),
     NEXT_MO("Next", "След"),
+    DOESNT_MATTER("Doesn't matter", "Не важно"),
     DEADLINE_CONFIRM_1("You've chosen ", "Ты выбрал "),
     DEADLINE_CONFIRM_2("\nIs it correct?", "\nВсе правильно?"),
     ;

@@ -151,13 +151,13 @@ public class Order {
                     case FULL_BODY -> min = 250;
                 }
             }
-            case LINE_ART -> {
-                switch (formatOfIllustration){
-                    case PORTRAIT -> min = 100;
-                    case HALF_BODY -> min = 130;
-                    case FULL_BODY -> min = 185;
-                }
-            }
+//            case LINE_ART -> {
+//                switch (formatOfIllustration){
+//                    case PORTRAIT -> min = 100;
+//                    case HALF_BODY -> min = 130;
+//                    case FULL_BODY -> min = 185;
+//                }
+//            }
             case LINE_ART_SHADING -> {
                 switch (formatOfIllustration){
                     case PORTRAIT -> min = 100;

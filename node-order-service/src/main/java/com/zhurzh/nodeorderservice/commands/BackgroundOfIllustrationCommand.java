@@ -12,6 +12,8 @@ import com.zhurzh.commonutils.exception.CommandException;
 import com.zhurzh.nodeorderservice.service.CommonCommands;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -20,15 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@AllArgsConstructor
 public class BackgroundOfIllustrationCommand implements Command, HasUserState {
+    @Autowired
     private CommandsManager cm;
+    @Autowired
     private OrderDAO orderDAO;
-//    private UserStateController us;
+    //    private UserStateController us;
+    @Autowired
     private CommonCommands cc;
 
-    @NonNull
     public static final UserState userState = UserState.BACKGROUND;
+    @Value("${image.path.background.eng}")
+    private String pathImageBackgroundEng;
+    @Value("${image.path.background.ru}")
+    private String pathImageBackgroundRu;
 
     @Override
     public UserState getUserState() {
@@ -55,7 +62,8 @@ public class BackgroundOfIllustrationCommand implements Command, HasUserState {
             var out = TextMessage.BACKGROUND_START.getMessage(appUser.getLanguage());
             List<List<InlineKeyboardButton>> list = new ArrayList<>();
             cc.addAllButtons(appUser, BackgroundOfIllustration.class, list);
-            cm.sendAnswerEdit(appUser, update, out, list);
+            cm.sendPhoto(appUser, update, out,
+                    appUser.getLanguage().equals("ru") ? pathImageBackgroundRu : pathImageBackgroundEng, list);
             return true;
         }
         return false;

@@ -3,7 +3,7 @@ package com.zhurzh.commonjpa.enums;
 public enum BackgroundOfIllustration implements Language{
     BLURRED("Blurred", "Размытый"),// бесплатныц
     SIMPLE_WITH_ELEMENTS_OF_BLUR("Simple", "Простой"), // +10 от стоимости
-    DETAILED("Detailed", "Детализированный"); //
+    DETAILED("Detailed", "Детальный"); //
 
     private final String englishMessage;
     private final String russianMessage;
