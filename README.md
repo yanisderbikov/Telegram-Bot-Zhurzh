@@ -15,5 +15,5 @@ Jar файлы будут находиться в кажом модуле.
 `mvn clean install`  
 `mvn package`
 
-Затем запустите файл `run_services.sh`
+Затем запустите сначала dispatcher, чтобы он инициализировал rabbitMq и PostgreSQl, затем файл `run_services.sh`
 
