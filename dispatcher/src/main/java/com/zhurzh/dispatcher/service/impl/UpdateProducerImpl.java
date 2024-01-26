@@ -17,17 +17,6 @@ public class UpdateProducerImpl implements UpdateProducer {
 
     @Override
     public void produce(String rabbitQueue, Update update) {
-//        if (prevUpdate == null){
-//            prevUpdate = update;
-//        }else {
-//            if (update.equals(prevUpdate)) return;
-//        }
-
-//        if (update.hasCallbackQuery()){
-//            log.debug(update.getCallbackQuery());
-//        } else {
-//            log.debug(update.getMessage().getText());
-//        }
         rabbitTemplate.convertAndSend(rabbitQueue, update);
     }
 }

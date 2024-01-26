@@ -7,6 +7,7 @@ import com.zhurzh.commonutils.exception.CommandException;
 import com.zhurzh.commonutils.model.Command;
 import com.zhurzh.nodeorderservice.controller.HasUserState;
 import com.zhurzh.nodeorderservice.controller.UserState;
+import com.zhurzh.nodeorderservice.ehcache.MyCacheManager;
 import com.zhurzh.nodeorderservice.enums.TextMessage;
 import com.zhurzh.nodeorderservice.service.CommonCommands;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,8 @@ public class CommentToArtCommand implements Command, HasUserState {
     private CommandsManager cm;
     private OrderDAO orderDAO;
     private CommonCommands cc;
+
+    private MyCacheManager cacheManager;
 
     @NonNull
     public static final UserState userState = UserState.COMMENT_TO_ART;
@@ -66,6 +69,10 @@ public class CommentToArtCommand implements Command, HasUserState {
             List<InlineKeyboardButton> row = new ArrayList<>();
             cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
             cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+            return true;
+        }
+        if (update.hasMessage() && update.getMessage().getMediaGroupId() != null
+                && cacheManager.checkAndAdd(update.getMessage().getMediaGroupId())){
             return true;
         }
         // if photos or smth else

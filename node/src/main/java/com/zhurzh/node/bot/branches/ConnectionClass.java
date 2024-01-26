@@ -38,10 +38,11 @@ public class ConnectionClass implements Branches {
 
     @Override
     public ResponseEntity<String> execute(Update update) {
-        log.debug("manage Text now");
         String path = "/execute";
         var response =  sendRequest(update, path);
-        log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
+        if (!response.getStatusCode().is2xxSuccessful()) {
+            log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
+        }
         return response;
     }
 
@@ -51,7 +52,7 @@ public class ConnectionClass implements Branches {
         try {
             // Создание URL
             var url = buildUri(path);
-            log.debug("URI: " + url);
+//            log.debug("URI: " + url);
 
             // Создание HTTP-заголовков
             HttpHeaders headers = new HttpHeaders();
@@ -67,12 +68,9 @@ public class ConnectionClass implements Branches {
             ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
 
             // Обработка ответа, если необходимо
-            if (response.getStatusCode().is2xxSuccessful()) {
-                // Успешный ответ
-                log.debug("Update sent successfully");
-            } else {
-                // Обработка ошибки
-                log.debug("Error sending update");
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                log.debug(String.format("Error sending update with file url: %s\nresponce : %s; %s" ,
+                        url, response.getStatusCodeValue(), response.getBody()));
             }
             return response;
         } catch (Exception e) {

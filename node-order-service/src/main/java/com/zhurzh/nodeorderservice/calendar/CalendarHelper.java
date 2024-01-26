@@ -1,4 +1,4 @@
-package com.zhurzh.nodeorderservice.servicecommand;
+package com.zhurzh.nodeorderservice.calendar;
 
 import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;

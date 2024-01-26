@@ -79,7 +79,6 @@ public class CommandsManager {
         }
         if (update.hasCallbackQuery() && update.getCallbackQuery().getMessage().hasPhoto()){
             deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());
-            log.debug("Message was deleted");
             sendAnswer(appUser, text, markup);
             return;
         }
@@ -98,9 +97,6 @@ public class CommandsManager {
         producerService.producerAnswer(deleteMessage);
     }
 
-    public void failMessage(AppUser appUser, Update update) {
-        failMessage(appUser, update, "");
-    }
 
     public void failMessage(AppUser appUser, Update update, String message) {
 
@@ -147,17 +143,7 @@ public class CommandsManager {
         return responce.getStatusCode().is2xxSuccessful();
     }
 
-    public void deleteAllPreviousMessages(AppUser appUser, Update update) {
-        Integer id;
-        if (update.hasCallbackQuery()) {
-            id = update.getCallbackQuery().getMessage().getMessageId();
-        } else {
-            id = update.getMessage().getMessageId();
-        }
-        for (int i = 1; i < 30; i++) {
-            deleteMessage(appUser, id - i);
-        }
-    }
+
 
     private void addButtonToMainMenu(List<List<InlineKeyboardButton>> list) {
         list.add(buttonMainMenu("eng"));

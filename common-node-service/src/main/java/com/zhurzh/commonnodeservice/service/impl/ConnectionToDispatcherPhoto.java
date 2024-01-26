@@ -27,8 +27,6 @@ public class ConnectionToDispatcherPhoto {
         try {
             // Создание URL
             var url = buildUri("/photo");
-            log.debug("URI: " + url);
-            log.debug("SendPhoto: " + sendPhoto);
 
             // Создание HTTP-заголовков
             HttpHeaders headers = new HttpHeaders();
@@ -44,12 +42,9 @@ public class ConnectionToDispatcherPhoto {
             ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
 
             // Обработка ответа, если необходимо
-            if (response.getStatusCode().is2xxSuccessful()) {
-                // Успешный ответ
-                log.debug("sendPhoto sent successfully");
-            } else {
+            if (!response.getStatusCode().is2xxSuccessful()) {
                 // Обработка ошибки
-                log.debug("Error sending sendPhoto");
+                log.debug("Error sending sendPhoto \n responce body: " + response.getBody());
             }
             return response;
         } catch (Exception e) {

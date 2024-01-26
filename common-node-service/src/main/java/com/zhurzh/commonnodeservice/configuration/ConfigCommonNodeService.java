@@ -16,8 +16,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @PropertySource("classpath:common-node-service.properties")
 @EnableJpaRepositories(basePackages = "com.zhurzh.commonjpa.dao")
 @EntityScan(basePackages = "com.zhurzh.commonjpa.entity")
-@ComponentScan
-public class NodeConfiguration {// это как-то связывает со спрингом чтобы все заработало
+@ComponentScan(basePackages = "com.zhurzh.commonjpa")
+public class ConfigCommonNodeService {// это как-то связывает со спрингом чтобы все заработало
     @Value("${salt}")
     private String salt;
 

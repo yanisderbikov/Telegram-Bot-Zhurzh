@@ -7,6 +7,7 @@ import com.zhurzh.commonutils.exception.CommandException;
 import com.zhurzh.commonutils.model.Command;
 import com.zhurzh.nodeorderservice.controller.HasUserState;
 import com.zhurzh.nodeorderservice.controller.UserState;
+import com.zhurzh.nodeorderservice.ehcache.MyCacheManager;
 import com.zhurzh.nodeorderservice.enums.TextMessage;
 import com.zhurzh.nodeorderservice.service.CommonCommands;
 import lombok.extern.log4j.Log4j;
@@ -38,11 +39,13 @@ public class ReferencesCommand implements Command, HasUserState {
     @Autowired
     private OrderDAO orderDAO;
 
+    @Autowired
+    private MyCacheManager userCache;
+
     public static final UserState userState = UserState.REFERENCES;
     private static final String TELEGRAM_FILE_API_URL = "https://api.telegram.org/file/bot";
     @Value("${bot.token}")
     private String botToken; // Замените на токен вашего бота
-    private Map<AppUser, List<String>> userFiles = new HashMap<>();
 
     @Override
     public UserState getUserState() {
@@ -62,13 +65,12 @@ public class ReferencesCommand implements Command, HasUserState {
     public boolean isExecuted(AppUser appUser) {
         var order = cc.findActiveOrder(appUser);
         var ref = order.getArtReference();
-        return !(ref != null && ref.isEmpty());
+        return ref != null && !ref.isEmpty();
     }
 
     private boolean startCommand(AppUser appUser, Update update) {
         if (update.hasCallbackQuery()) {
             if (!update.getCallbackQuery().getData().equals(userState.getPath())) return false;
-            userFiles.put(appUser, new ArrayList<>());
             var out = TextMessage.REFERENCE_START.getMessage(appUser.getLanguage());
             cm.sendAnswerEdit(appUser, update, out);
             return true;
@@ -78,23 +80,22 @@ public class ReferencesCommand implements Command, HasUserState {
 
     private boolean catcherFilesCommand(AppUser appUser, Update update) {
         if (update.hasMessage()){
+            String mediaGroupId = update.getMessage().getMediaGroupId();
             String fileId = null;
+
             if (update.getMessage().hasPhoto()){
-                log.debug("photo");
                 var photo = update.getMessage().getPhoto().stream()
                         .max(Comparator.comparing(PhotoSize::getFileSize))
                         .orElse(null);
-                log.debug("Photo path:" + photo.getFilePath());
-                log.debug("photo ID: " + photo.getFileId());
-
                 fileId = photo.getFileId();
+            } else if (update.getMessage().hasVideo()) {
+                var video = update.getMessage().getVideo();
+                fileId = video.getFileId();
+
             } else if (update.getMessage().hasDocument()) {
                 var doc = update.getMessage().getDocument();
                 fileId = doc.getFileId();
-                log.debug("doc");
-                log.debug("File ID:" + doc.getFileId());
             } else if (update.getMessage().hasText()){
-                log.debug("text");
             }
 
             if (fileId != null) {
@@ -104,7 +105,12 @@ public class ReferencesCommand implements Command, HasUserState {
                 addUserFile(appUser, update.getMessage().getText());
             }
 
-            log.debug(update);
+            log.debug(String.format("OUT FOR user '%s' : %s",
+                    appUser.getTelegramUserName(), userCache.getReferenceCache(appUser)));
+
+            if (mediaGroupId != null && userCache.checkAndAdd(mediaGroupId)){
+                return true;
+            }
             var out = TextMessage.REFERENCE_DONE_MES.getMessage(appUser.getLanguage());
             List<InlineKeyboardButton> row = new ArrayList<>();
             cm.addButtonToRow(row,
@@ -112,11 +118,6 @@ public class ReferencesCommand implements Command, HasUserState {
                     TextMessage.REFERENCE_DONE_BUTTON.name());
             cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
 
-            StringBuilder builder = new StringBuilder("OUT FOR " + appUser.getId());
-            for (var a : userFiles.get(appUser)){
-                builder.append("\n").append(a);
-            }
-            log.debug(builder.toString());
             return true;
         }
         return false;
@@ -126,7 +127,7 @@ public class ReferencesCommand implements Command, HasUserState {
         try {
             if (update.hasCallbackQuery() && update.getCallbackQuery().getData().equals(TextMessage.REFERENCE_DONE_BUTTON.name())) {
                 var order = cc.findActiveOrder(appUser);
-                order.setArtReference(userFiles.get(appUser));
+                order.setArtReference(userCache.getReferenceCache(appUser));
                 orderDAO.save(order);
 
                 List<InlineKeyboardButton> row = new ArrayList<>();
@@ -135,7 +136,7 @@ public class ReferencesCommand implements Command, HasUserState {
                 lists.add(row);
                 var out = TextMessage.REFERENCE_END.getMessage(appUser.getLanguage());
                 cm.sendAnswerEdit(appUser, update, out, lists);
-                userFiles.remove(appUser);
+                userCache.clearReferenceCache(appUser);
                 return true;
             }
         }catch (Exception e){
@@ -145,8 +146,6 @@ public class ReferencesCommand implements Command, HasUserState {
     }
 
     private String generateFileDownloadUrl(String fileId) {
-        // Замените на логику получения filePath из Telegram Bot API
-//        String filePath = "path/to/file"; // Это должен быть реальный путь, полученный от Telegram
         var filePath=  getFilePath(fileId);
         return TELEGRAM_FILE_API_URL + botToken + "/" + filePath;
     }
@@ -189,9 +188,10 @@ public class ReferencesCommand implements Command, HasUserState {
     }
 
     private void addUserFile(AppUser user, String fileUrl) {
-        List<String> files = userFiles.getOrDefault(user, new ArrayList<>());
-        files.add(fileUrl);
-        userFiles.put(user, files);
+
+        var text = userCache.getReferenceCache(user);
+        userCache.setReferenceCache(user, text + "\n" + fileUrl);
+
     }
 
 

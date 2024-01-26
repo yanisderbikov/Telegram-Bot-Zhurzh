@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.zhurzh.commonnodeservice", "com.zhurzh.nodeorderservice"})
-//@EnableCaching
+@EnableCaching
 public class NodeOrderServiceApplication {
 
     public static void main(String[] args) {

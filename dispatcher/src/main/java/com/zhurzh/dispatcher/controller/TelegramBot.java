@@ -102,15 +102,6 @@ public class TelegramBot extends TelegramWebhookBot {
             }
         }
     }
-    public void sendEditMessage(EditMessageMedia editMessageMedia){
-        if (editMessageMedia != null){
-            try {
-                execute(editMessageMedia);
-            }catch (TelegramApiException e) {
-                log.error(e);
-            }
-        }
-    }
 
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
@@ -153,15 +144,6 @@ public class TelegramBot extends TelegramWebhookBot {
         return new ResponseEntity<>("SendPhoto is null", HttpStatus.BAD_REQUEST);
     }
 
-    public void sendEditMessagePhoto(EditMessageMedia editMessageMedia) {
-        if (editMessageMedia != null){
-            try {
-                execute(editMessageMedia);
-            }catch (TelegramApiException e) {
-                log.error(e);
-            }
-        }
-    }
 
     public void sendDeleteMessage(DeleteMessage deleteMessage) {
         if (deleteMessage != null){

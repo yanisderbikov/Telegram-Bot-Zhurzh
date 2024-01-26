@@ -4,6 +4,7 @@ import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.nodeorderservice.controller.UserState;
 import com.zhurzh.nodeorderservice.controller.UserStateController;
+import com.zhurzh.nodeorderservice.ehcache.MyCacheManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ public class OrderService {
 
     private UserStateController us;
     private CommandsManager cm;
+    private MyCacheManager cacheManager;
 
     public void callback(Update update) {
         log.debug(String.format("callback handler: \n%s", update));
@@ -36,7 +38,6 @@ public class OrderService {
 
     public void text(Update update) {
         try {
-            log.debug(String.format("text handler: \n%s", update));
             var appUser = cm.findOrSaveAppUser(update);
             var command = us.getCommand(appUser, update);
             command.execute(update);
@@ -48,7 +49,7 @@ public class OrderService {
     private void sendErrorMessage(Update update, Exception e){
         var appUser = cm.findOrSaveAppUser(update);
         List<List<InlineKeyboardButton>> lists = new ArrayList<>();
-        us.setUserState(cm.findOrSaveAppUser(update), UserState.START);
+        cacheManager.setDefaultState(appUser);
         cm.addButtonToList(lists,
                 appUser.getLanguage().equals("eng") ? "Menu" : "Меню"
                 , "/menu");

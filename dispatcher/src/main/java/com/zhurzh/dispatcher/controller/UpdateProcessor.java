@@ -58,31 +58,9 @@ public class UpdateProcessor {
             processCallbackMessage(update);
             return;
         }
-        var message = update.getMessage();
-
-        if (message.hasText()) {
-            processTextMessage(update);
-        } else if (message.hasDocument()) {
-            processDocMessage(update);
-        } else if (message.hasPhoto()) {
-            processPhotoMessage(update);
-        } else {
-            setUnsupportedMessageTypeView(update);
-        }
+        processTextMessage(update);
     }
 
-    private void setUnsupportedMessageTypeView(Update update) {
-        var sendMessage = messageUtils.generateSendMessageWithText(update,
-                "Неподдерживаемый тип сообщения!");
-        setView(sendMessage);
-    }
-
-    private void setFileIsReceivedView(Update update) {
-        var ru = update.getMessage().getFrom().getLanguageCode().equals("ru");
-        var sendMessage = messageUtils.generateSendMessageWithText(update,
-                ru ? "Файл получен! Обрабатывается..." : "file is loading... wait");
-        setView(sendMessage);
-    }
 
     public void setView(SendMessage sendMessage) {
         telegramBot.sendAnswerMessage(sendMessage);
@@ -90,16 +68,6 @@ public class UpdateProcessor {
 
     public void setCallback(EditMessageText editMessageText) {
         telegramBot.sendCallBack(editMessageText);
-    }
-
-    private void processPhotoMessage(Update update) {
-        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
-//        setFileIsReceivedView(update);
-    }
-
-    private void processDocMessage(Update update) {
-        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
-//        setFileIsReceivedView(update);
     }
 
     private void processTextMessage(Update update) {

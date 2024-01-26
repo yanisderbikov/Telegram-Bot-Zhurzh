@@ -71,7 +71,6 @@ public class CommonCommands {
 
     public void addButtonToNextStepAndCorrectionButton(List<InlineKeyboardButton> row, AppUser appUser,
                                                        UserState userState) throws RuntimeException {
-        // TODO: 12/12/23 Добавить как-то реализацию того, чтобы можно было проскакакивать шаги, которые уже пройдены
         var currentState = userState.ordinal();
         UserState nextState;
         if (currentState + 1 > UserState.values().length) {
@@ -84,9 +83,6 @@ public class CommonCommands {
         cm.addButtonToRow(row,
                 nextState.getMessage(appUser.getLanguage()),
                 nextState.getPath());
-//        if (nextState != CorrectOrderCommand.userState) {
-//            addCorrectButtonToRow(row, appUser);
-//        }
     }
 
     private UserState fff(AppUser appUser) {
