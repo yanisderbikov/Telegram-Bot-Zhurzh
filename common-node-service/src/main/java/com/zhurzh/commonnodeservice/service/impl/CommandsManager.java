@@ -46,12 +46,6 @@ public class CommandsManager {
 
     private ConnectionToDispatcherPhoto connectionToDispatcherPhoto;
 
-    //    @Value("${file.path}")
-    private final String ABSOLUTE_PATH = "/Users/yanderbikovmail.ru/Documents/ProjectsIDE/Telegram/Telegram-Bot-Zhurzh";
-    private final String IMAGES_PATH = ABSOLUTE_PATH + "/common-utils/src/main/resources/static/images";
-    private final String TELEGRAM_LINK = "http://t.me/";
-
-
     public void groupSendAnswer(@NonNull Update update, String out){
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(out);
@@ -97,20 +91,6 @@ public class CommandsManager {
         producerService.producerAnswer(deleteMessage);
     }
 
-
-    public void failMessage(AppUser appUser, Update update, String message) {
-
-        var text = "Произошла ошибка во время выполнения попробуйте выполнить команду заново. Или сообщите об этом разработчику";
-        if (message != null && !message.isEmpty()) {
-            text = message;
-        }
-//        userToDefault(appUser);
-        List<List<InlineKeyboardButton>> list = new ArrayList<>();
-//        addButtonToListAsURL(list, tech());
-        addButtonToMainMenu(list);
-        sendAnswerEdit(appUser, update, text, list);
-    }
-
     public boolean sendPhoto(AppUser appUser, Update update, String out, @NotNull String imagePath, List<List<InlineKeyboardButton>> list) {
         long chatId = appUser.getChatId();
         SendPhoto sendPhoto = new SendPhoto();
@@ -120,8 +100,9 @@ public class CommandsManager {
         sendPhoto.setReplyMarkup(new InlineKeyboardMarkup(list));
 
         if (update != null && update.hasMessage()){
-            if (!update.getMessage().getText().equals("/start"))
-            deleteMessage(appUser, update.getMessage().getMessageId());
+            if (!update.getMessage().getText().equals("/start")) {
+                deleteMessage(appUser, update.getMessage().getMessageId());
+            }
         } else if (update != null && update.hasCallbackQuery()) {
             deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());
         }
@@ -141,12 +122,6 @@ public class CommandsManager {
         sendMediaGroup.setChatId(appUser.getChatId());
         var responce = connectionToDispatcherPhoto.sendMedia(sendMediaGroup);
         return responce.getStatusCode().is2xxSuccessful();
-    }
-
-
-
-    private void addButtonToMainMenu(List<List<InlineKeyboardButton>> list) {
-        list.add(buttonMainMenu("eng"));
     }
 
     public void addButtonToMainMenu(List<List<InlineKeyboardButton>> list, AppUser appUser) {
@@ -172,36 +147,6 @@ public class CommandsManager {
         addButtonToList(list, buttonText, String.valueOf(callbackMessage));
     }
 
-    public void addButtonToListAsURL(List<List<InlineKeyboardButton>> list, AppUser appUser) {
-        var button = new InlineKeyboardButton();
-        button.setText("Yan Derbikov");
-        button.setUrl(TELEGRAM_LINK + appUser.getTelegramUserName());
-        list.add(new ArrayList<>() {{
-            add(button);
-        }});
-    }
-
-    public void addButtonToListAsURL(List<List<InlineKeyboardButton>> list, AppUser appUser, String changedName) {
-        if (appUser == null) {
-            log.error("AppUser is null" + appUser);
-            return;
-        }
-        var button = new InlineKeyboardButton();
-        button.setText(String.format(changedName));
-        button.setUrl(TELEGRAM_LINK + appUser.getTelegramUserName());
-        list.add(new ArrayList<>() {{
-            add(button);
-        }});
-    }
-
-    public void addButtonToListAsLink(List<List<InlineKeyboardButton>> list, String text, String url) {
-        var button = new InlineKeyboardButton();
-        button.setText(text);
-        button.setUrl(url);
-        list.add(new ArrayList<>() {{
-            add(button);
-        }});
-    }
 
     public void addButtonToRow(List<InlineKeyboardButton> row, String buttonText, String callbackMessage) {
         var button = new InlineKeyboardButton();
@@ -224,15 +169,6 @@ public class CommandsManager {
         button.setUrl(url);
         row.add(button);
     }
-    //    public AppUser tech(){
-//        return AppUser.builder()
-//                .firstName("Ян")
-//                .lastName("Дербиков")
-//                .chatId(331546982L)
-//                .telegramUserName("yanderbikov")
-//                .build();
-//    }
-
     private void sendAnswer(SendMessage sendMessage) {
         producerService.producerAnswer(sendMessage);
     }
@@ -248,12 +184,6 @@ public class CommandsManager {
         sendAnswer(sendMessage);
     }
 
-    private void sendAnswer(String output, Long chatId) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText(output);
-        producerService.producerAnswer(sendMessage);
-    }
 
     public List<InlineKeyboardButton> buttonMainMenu(String len) {
         List<InlineKeyboardButton> list = new ArrayList<>();
