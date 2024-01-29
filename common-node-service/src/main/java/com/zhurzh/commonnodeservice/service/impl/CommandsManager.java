@@ -2,34 +2,27 @@ package com.zhurzh.commonnodeservice.service.impl;
 
 import com.zhurzh.commonjpa.dao.AppUserDAO;
 import com.zhurzh.commonjpa.enums.BranchStatus;
+import com.zhurzh.commonnodeservice.cache.UserMessageCache;
 import com.zhurzh.commonnodeservice.service.ProducerService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import lombok.Value;
 import lombok.extern.log4j.Log4j;
-import net.bytebuddy.implementation.bind.annotation.Empty;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
-import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import com.zhurzh.commonjpa.entity.AppUser;
 
 import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +36,7 @@ import java.util.Optional;
 public class CommandsManager {
     private ProducerService producerService;
     private AppUserDAO appUserDAO;
+    private UserMessageCache userMessageCache;
 
     private ConnectionToDispatcherPhoto connectionToDispatcherPhoto;
 
@@ -67,6 +61,7 @@ public class CommandsManager {
     }
 
     public void sendAnswerEdit(AppUser appUser, Update update, @NotNull String text, InlineKeyboardMarkup markup) {
+//        if (checkIsLastMessageAndSave(appUser, update)) return;
         if (update == null || !update.hasCallbackQuery()) {
             sendAnswer(appUser, text, markup);
             return;
@@ -84,9 +79,30 @@ public class CommandsManager {
         sendAnswer(message);
     }
 
+    /**
+     *
+     * Данный метод позволяет определить если в update приходит сообщение, которое выше чем последнее актуальное, то метод возвращает true
+     * Если сообщение находятся после последнего актуального, то false, что позволяет все обработать в штатном режиме.
+     */
+    public boolean checkIsLastMessageAndSave(Update update) {
+        if (update == null) return false;
+        var appUser = findOrSaveAppUser(update);
+        var lastMessage = userMessageCache.getLastMessage(appUser);
+        Integer curMessage = null;
+        if (update.hasMessage()) {
+            curMessage = update.getMessage().getMessageId();
+        }
+        if (update.hasCallbackQuery() && update.getCallbackQuery().getMessage() != null) {
+            curMessage = update.getCallbackQuery().getMessage().getMessageId();
+        }
+        if (lastMessage != null && curMessage != null && lastMessage > curMessage){
+            return true;
+        }
+        if (curMessage != null) userMessageCache.setCache(appUser, curMessage);
+        return false;
+    }
 
-
-    public void deleteMessage(AppUser appUser, Integer messageId) {
+    public void deleteMessage(@NotNull AppUser appUser, @NotNull Integer messageId) {
         DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(appUser.getChatId()), messageId);
         producerService.producerAnswer(deleteMessage);
     }
@@ -97,6 +113,7 @@ public class CommandsManager {
         sendPhoto.setPhoto(new InputFile(imagePath));
         sendPhoto.setChatId(chatId);
         sendPhoto.setCaption(out);
+        sendPhoto.setProtectContent(true);
         sendPhoto.setReplyMarkup(new InlineKeyboardMarkup(list));
 
         if (update != null && update.hasMessage()){
@@ -113,12 +130,17 @@ public class CommandsManager {
         }
         return responce.getStatusCode().is2xxSuccessful();
     }
+
+    /**
+     * Либо отрпавляеет сообщение со всеми данными, либо полностью нет.
+     */
     public boolean sendMedia(AppUser appUser, @NotNull List<InputMedia> medias){
 
         // Проверяем, есть ли что отправлять
         if (medias.isEmpty()) throw new RuntimeException("Media is empty") ;
         SendMediaGroup sendMediaGroup = new SendMediaGroup();
         sendMediaGroup.setMedias(medias);
+        sendMediaGroup.setProtectContent(true);
         sendMediaGroup.setChatId(appUser.getChatId());
         var responce = connectionToDispatcherPhoto.sendMedia(sendMediaGroup);
         return responce.getStatusCode().is2xxSuccessful();
@@ -192,6 +214,15 @@ public class CommandsManager {
         button.setCallbackData("/menu");
         list.add(button);
         return list;
+    }
+    public void sendToMainMenu(Update update){
+        var appUser = findOrSaveAppUser(update);
+        List<List<InlineKeyboardButton>> lists = new ArrayList<>();
+        var isEng = appUser.getLanguage().equals("eng");
+        addButtonToList(lists,
+                isEng ? "Menu" : "Меню"
+                , "/menu");
+        sendAnswerEdit(appUser, update, isEng ? "Back to menu?" : "Что-то не так. Вернемся?", lists);
     }
 
     public AppUser findOrSaveAppUser(Update update) {

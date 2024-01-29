@@ -35,6 +35,7 @@ public class BranchesManager  implements BranchesManagerInterface{
 
 //    @Override
     public void consume(Update update) {
+        if (commandsManager.checkIsLastMessageAndSave(update)) return;
         findCurrentBranch(update).execute(update);
     }
 

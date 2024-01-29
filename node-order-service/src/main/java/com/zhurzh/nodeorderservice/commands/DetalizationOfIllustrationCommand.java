@@ -98,9 +98,9 @@ public class DetalizationOfIllustrationCommand implements Command, HasUserState 
             order.setDetalizationOfIllustration(detalization);
             orderDAO.save(order);
 
-            for (int i = 1; i <= (appUser.getLanguage().equals("ru") ? listOfImagesRu.size() : listOfImagesEng.size()); i++) {
-                cm.deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId() - i);
-            }
+//            for (int i = 1; i <= (appUser.getLanguage().equals("ru") ? listOfImagesRu.size() : listOfImagesEng.size()); i++) {
+//                cm.deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId() - i);
+//            }
 
             List<InlineKeyboardButton> row = new ArrayList<>();
             cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);

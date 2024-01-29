@@ -22,19 +22,6 @@ public class OrderService {
 
     private UserStateController us;
     private CommandsManager cm;
-    private MyCacheManager cacheManager;
-
-    public void callback(Update update) {
-        log.debug(String.format("callback handler: \n%s", update));
-        try {
-            var appUser = cm.findOrSaveAppUser(update);
-            var command = us.getCommand(appUser, update);
-            command.execute(update);
-        }catch (Exception e){
-            log.error(getMessage(e));
-            sendErrorMessage(update, e);
-        }
-    }
 
     public void text(Update update) {
         try {
@@ -42,25 +29,9 @@ public class OrderService {
             var command = us.getCommand(appUser, update);
             command.execute(update);
         }catch (Exception e){
-            log.error(getMessage(e));
-            sendErrorMessage(update, e);
+            log.error(e);
+            cm.sendToMainMenu(update);
         }
-    }
-    private void sendErrorMessage(Update update, Exception e){
-        var appUser = cm.findOrSaveAppUser(update);
-        List<List<InlineKeyboardButton>> lists = new ArrayList<>();
-        cacheManager.setDefaultState(appUser);
-        cm.addButtonToList(lists,
-                appUser.getLanguage().equals("eng") ? "Menu" : "Меню"
-                , "/menu");
-        cm.sendAnswerEdit(appUser, update,
-                appUser.getLanguage().equals("ru") ? "Что-то пошло не так" : "Something happened wrong",
-                lists);
-    }
-    private String getMessage(Exception e){
-        StringBuilder builder = new StringBuilder();
-        Arrays.stream(e.getStackTrace()).forEach(e1 -> builder.append(e1).append("\n"));
-        return builder.toString();
     }
 
 }

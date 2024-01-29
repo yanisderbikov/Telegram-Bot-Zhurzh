@@ -88,28 +88,28 @@ public class StartCommand implements Command, HasUserState {
 
     private boolean isThereNotFinished(AppUser appUser, Update update){
         // есть незаконченная заявка
-        if (update.hasCallbackQuery()){
-            if (!update.getCallbackQuery().getData().equals(userState.getPath())
-             || update.getCallbackQuery().getData().equals(veryBegin)) return false;
-            try {
-                var order = cc.findActiveOrder(appUser);
-                List<InlineKeyboardButton> row = new ArrayList<>();
-                cm.addButtonToRow(row,
-                        FinalizeCommand.userState.getMessage(appUser.getLanguage()),
-                        FinalizeCommand.userState.getPath());
-                cm.addButtonToRow(row,
-                        TextMessage.START_VERY_BEGIN_BUTTON.getMessage(appUser.getLanguage()),
-                        veryBegin);
-                var out = TextMessage.START_HAS_NOT_FINISHED.getMessage(appUser.getLanguage());
+
+        if (update.hasCallbackQuery() && (!update.getCallbackQuery().getData().equals(userState.getPath())
+                || update.getCallbackQuery().getData().equals(veryBegin))) return false;
+        try {
+            var order = cc.findActiveOrder(appUser);
+            List<InlineKeyboardButton> row = new ArrayList<>();
+            cm.addButtonToRow(row,
+                    FinalizeCommand.userState.getMessage(appUser.getLanguage()),
+                    FinalizeCommand.userState.getPath());
+            cm.addButtonToRow(row,
+                    TextMessage.START_VERY_BEGIN_BUTTON.getMessage(appUser.getLanguage()),
+                    veryBegin);
+            var out = TextMessage.START_HAS_NOT_FINISHED.getMessage(appUser.getLanguage());
 //                cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
-                cm.sendPhoto(appUser, update, out, unfinishedImage, new ArrayList<>(List.of(row)));
-                return true;
-            }catch (Exception e){
-                log.error(e);
-                return false;
-            }
+            cm.sendPhoto(appUser, update, out, unfinishedImage, new ArrayList<>(List.of(row)));
+            return true;
+        } catch (Exception e) {
+            log.warn(e);
+            return false;
         }
-        return false;
+
+
     }
 
 }

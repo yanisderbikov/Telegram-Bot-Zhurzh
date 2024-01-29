@@ -65,8 +65,7 @@ class NodeOrderOrderServiceApplicationTests {
         for (var order : orders){
             var name = order.getName();
             var ownerTelegram = order.getOwner().getTelegramUserName();
-            var files = new StringBuilder();
-            order.getArtReference();
+            var files = order.getArtReference();
             System.out.println("\n\nName : " + name);
             System.out.println("Owner : " + ownerTelegram);
             System.out.println("Files : " + files);

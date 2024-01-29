@@ -53,7 +53,7 @@ public class Order {
         var lan = owner.getLanguage();
         if (lan.equals("ru")) {
             table.add(null);
-            table.add(new String[]{"Имя", name});
+            table.add(new String[]{"Имя", isNull(name) ? unfilled() : name});
             table.add(new String[]{"Статус", statusZhurzh.getMessage(lan)});
             table.add(new String[]{"Дедлайн", isNull(deadLine) ? unfilled() : new SimpleDateFormat("dd-MM-yyyy").format(deadLine)});
             table.add(null);
@@ -64,10 +64,10 @@ public class Order {
             table.add(new String[]{"Фон", (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(lan))});
             table.add(new String[]{"Рассчитанная стоимость", calculatePrice() });
             table.add(new String[]{"Твоя стоимость", isNull(price) ? unfilled() : price});
-            table.add(new String[]{"Комментарий", commentToArt});
+            table.add(new String[]{"Комментарий", isNull(commentToArt) ? unfilled() : commentToArt});
         }else {
             table.add(null);
-            table.add(new String[]{"Name", name});
+            table.add(new String[]{"Name", isNull(name) ? unfilled() : name});
             table.add(new String[]{"Status", statusZhurzh.getMessage(lan)});
             table.add(new String[]{"Deadline", isNull(deadLine) ? unfilled() : new SimpleDateFormat("MM-dd-yyyy").format(deadLine)});
             table.add(null);
@@ -78,7 +78,7 @@ public class Order {
             table.add(new String[]{"Background", (isNull(backgroundOfIllustration) ? unfilled() : backgroundOfIllustration.getMessage(lan))});
             table.add(new String[]{"Calculated price", calculatePrice()});
             table.add(new String[]{"Your price", isNull(price) ? unfilled() : price});
-            table.add(new String[]{"Comment", commentToArt});
+            table.add(new String[]{"Comment", isNull(commentToArt) ? unfilled() : commentToArt});
         }
 
         return convertToTelegramFormat2(table);

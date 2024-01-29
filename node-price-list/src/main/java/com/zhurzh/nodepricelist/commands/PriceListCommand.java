@@ -54,8 +54,8 @@ public class PriceListCommand implements Command {
             var out = TextMessage.PRICE_LIST_MESSAGE.getMessage(appUser.getLanguage());
             List<InlineKeyboardButton> row = new ArrayList<>();
             List<List<InlineKeyboardButton>> list = new ArrayList<>();
-            cm.addButtonToRowAsURL(row, "Fur Affinity", FA);
-            cm.addButtonToRowAsURL(row, "Deviant Art", DA);
+            cm.addButtonToRowAsURL(row, "Furаffinity", FA);
+            cm.addButtonToRowAsURL(row, "Deviantаrt", DA);
             list.add(row);
             row = new ArrayList<>();
 
@@ -64,7 +64,7 @@ public class PriceListCommand implements Command {
                 cm.addButtonToRowAsURL(row, "Twitter", TW);
             }else {
                 cm.addButtonToRowAsURL(row, "Boosty", BO);
-                cm.addButtonToRowAsURL(row, "Vkontakte", VK);
+                cm.addButtonToRowAsURL(row, "VK", VK);
             }
             list.add(row);
             cm.addButtonToMainMenu(list, appUser);

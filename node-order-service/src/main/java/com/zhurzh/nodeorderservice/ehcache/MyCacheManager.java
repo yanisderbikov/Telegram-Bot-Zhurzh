@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.MessageId;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
@@ -18,7 +19,6 @@ public class MyCacheManager {
     private Cache<Long, UserState> stateCache;
 
     private Cache<Long, String> referenceCache;
-
     @Autowired
     private ApplicationContext applicationContext;
 

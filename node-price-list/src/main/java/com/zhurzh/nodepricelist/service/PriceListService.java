@@ -23,10 +23,7 @@ public class PriceListService {
             command.execute(update);
         }catch (Exception e){
             log.error(e);
-            List<List<InlineKeyboardButton>> list = new ArrayList<>();
-            var appUser = cm.findOrSaveAppUser(update);
-            cm.addButtonToMainMenu(list, appUser);
-            cm.sendAnswerEdit(update, "*_* Error", list);
+            cm.sendToMainMenu(update);
         }
     }
 }

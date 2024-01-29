@@ -101,7 +101,8 @@ public class PriceCommand implements Command, HasUserState {
     private boolean isNumber(String str){
         if (str == null || str.isEmpty()) return false;
         try {
-            Integer.parseInt(str);
+            var num = Integer.parseInt(str);
+            if (num <= 0) throw new RuntimeException("Less or equals zero");
         }catch (Exception e){
             log.warn("IMPUTED PRICE: " + str);
             return false;

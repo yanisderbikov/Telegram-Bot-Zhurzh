@@ -26,22 +26,9 @@ public class NodeFaqService {
             var command = us.getCommand(appUser, update);
             command.execute(update);
         }catch (Exception e){
-            log.error(getMessage(e));
-            sendErrorMessage(update, e);
+            log.error(e);
+            cm.sendToMainMenu(update);
         }
     }
-    private void sendErrorMessage(Update update, Exception e){
-        var appUser = cm.findOrSaveAppUser(update);
-        List<List<InlineKeyboardButton>> lists = new ArrayList<>();
-        us.setUserState(cm.findOrSaveAppUser(update), UserState.FAQ);
-        cm.addButtonToList(lists,
-                appUser.getLanguage().equals("eng") ? "Menu" : "Меню"
-                , "/menu");
-        cm.sendAnswerEdit(appUser, update, e.getMessage(), lists);
-    }
-    private String getMessage(Exception e){
-        StringBuilder builder = new StringBuilder();
-        Arrays.stream(e.getStackTrace()).forEach(e1 -> builder.append(e1).append("\n"));
-        return builder.toString();
-    }
+
 }
