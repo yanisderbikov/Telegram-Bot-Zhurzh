@@ -99,8 +99,12 @@ public class AnswerCommand implements Command, HasUserState {
             cm.addButtonToRow(row,
                     TextMessage.NEXT_BUTTON.getMessage(appUser.getLanguage()),
                     TextMessage.NEXT_BUTTON.name());
-//            map.put(appUser, faq);
-            cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+            List<List<InlineKeyboardButton>> lists = new ArrayList<>();
+            lists.add(row);
+            cm.addButtonToList(lists,
+                    TextMessage.BUTTON_BACK_TO_LIST_QUESTIONS.getMessage(appUser.getLanguage()),
+                    AnswerCommand.userState.getPath());
+            cm.sendAnswerEdit(appUser, update, out, lists);
             return true;
         }
         return false;

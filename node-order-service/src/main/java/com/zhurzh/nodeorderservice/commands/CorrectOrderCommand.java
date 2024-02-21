@@ -59,7 +59,7 @@ public class CorrectOrderCommand implements Command, HasUserState {
     private List<List<InlineKeyboardButton>> addButtonsToAll(AppUser appUser) {
         List<List<InlineKeyboardButton>> lists = new ArrayList<>();
         var order = cc.findActiveOrder(appUser);
-        var filled = order.isAllFilled();
+        var filled = order.isAllFilledExceptPrice();
         if (!filled) {
             List<InlineKeyboardButton> row = new ArrayList<>();
             cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);

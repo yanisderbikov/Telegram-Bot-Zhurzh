@@ -14,7 +14,7 @@ public class WelcomeCommand implements GroupCommand {
     @Override
     public void execute(Update update) {
         if (update.hasMessage() && update.getMessage().hasText() && update.getMessage().getText().contains("@ZhurzhBot")) {
-            var out = "Привет! \nЯ пока что боюсь общаться в каналах, но ты можешь пообщаться со мной " +
+            var out = "Привет! \nЯ пока что немного боюсь говорить здесь, но ты можешь пообщаться со мной " +
                     "<a href=\"https://t.me/ZhurzhBot\">лично</a>\n";
             cm.groupSendAnswer(update, out);
         }else {

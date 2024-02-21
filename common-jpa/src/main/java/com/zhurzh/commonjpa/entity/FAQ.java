@@ -38,12 +38,5 @@ public class FAQ {
     @CreationTimestamp
     private LocalDate creationDate;
 
-    // Методы для обновления популярности
-    public void incrementViewCount() {
-        this.viewCount += 1;
-    }
 
-    public void updatePopularityScore(int score) {
-        this.popularityScore = score;
-    }
 }

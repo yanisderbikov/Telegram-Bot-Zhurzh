@@ -27,7 +27,7 @@ public class PriceListCommand implements Command {
 
     private final String VK = "https://vk.com/art_by_zhurzh";
 
-    private final String PA = "https://www.patreon.com/ZHURZHDragonartist";
+    private final String PA = "https://www.patreon.com/ZHURZH_dragonartist";
     private final String BO = "https://boosty.to/zhurzh";
     private final String TW = "https://twitter.com/zhurzh_art";
 
@@ -60,7 +60,7 @@ public class PriceListCommand implements Command {
             row = new ArrayList<>();
 
             if (appUser.getLanguage().equals("eng")){
-                cm.addButtonToRowAsURL(row, "Patron", PA);
+                cm.addButtonToRowAsURL(row, "Patreon", PA);
                 cm.addButtonToRowAsURL(row, "Twitter", TW);
             }else {
                 cm.addButtonToRowAsURL(row, "Boosty", BO);

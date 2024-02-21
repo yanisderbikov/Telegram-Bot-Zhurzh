@@ -3,20 +3,14 @@ package com.zhurzh.nodefaqservice.service;
 import com.zhurzh.commonjpa.dao.FAQRepository;
 import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonjpa.entity.FAQ;
-import com.zhurzh.nodefaqservice.controller.FAQCachController;
+import com.zhurzh.nodefaqservice.controller.CacheController;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -25,16 +19,15 @@ import java.util.*;
 @AllArgsConstructor
 public class FAQService {
     private final FAQRepository faqRepository;
-    private FAQCachController cash;
+    private CacheController cash;
 
     public List<FAQ> getFAQsSortedByPopularity(int limit, String language) {
         return faqRepository.findByLanguageAndAnswerIsNotNullOrderByPopularityScoreDesc(language, PageRequest.of(0, limit));
     }
 
     public Optional<FAQ> findById(Long id, AppUser appUser){
-        var faqOpt = faqRepository.findById(id);
-        faqOpt.ifPresent(faq -> registerClick(faq.getId(), appUser.getId()));
-        return faqOpt;
+        registerClick(id, appUser.getId());
+        return faqRepository.findById(id);
     }
 
     public Optional<FAQ> getNextPopularFAQ(AppUser appUser) {
@@ -59,58 +52,55 @@ public class FAQService {
         return Optional.empty();
     }
 
-
-
-    public void updatePopularityScore(Long faqId) {
-        FAQ faq = faqRepository.findById(faqId).orElse(null);
-        if (faq != null) {
-            int newPopularityScore = calculatePopularityScore(faq);
-            faq.setPopularityScore(newPopularityScore);
+    public void registerClick(Long faqId, Long userId) {
+        if (cash.updateLastViewedFAQ(userId, faqId)){
+            var faq = faqRepository.findById(faqId).orElseThrow();
+            faq.setPopularityScore(faq.getPopularityScore() + 1);
             faqRepository.save(faq);
         }
     }
+    @Scheduled(cron = "${cron.scheduler.calculate}")
+    public void calculate(){
+        var list = faqRepository.findAll().stream()
+                .sorted(new Comparator<FAQ>() {
+                    @Override
+                    public int compare(FAQ o1, FAQ o2) {
+                        return o2.getPopularityScore() - o1.getPopularityScore();
+                    }
+                }).toList();
 
-    public int getUniqueViewCount(Long faqId) {
-        Set<Long> uniqueViewers = cash.getUniqueViewers(faqId);
-        return uniqueViewers.size();
-    }
+        normalizeList(list);
 
-    public boolean registerClick(Long faqId, Long userId) {
-        Set<Long> uniqueViewers = cash.registerUniqueViewer(faqId, userId);
-        FAQ faq = faqRepository.findById(faqId).orElse(null);
-        if (faq != null) {
-            faq.setViewCount(faq.getViewCount() + 1);
-            faq.setPopularityScore(calculatePopularityScore(faq));
-            var got = cash.updateLastViewedFAQ(userId, faqId);
-            faqRepository.save(faq);
-            log.debug(String.format("Click registered; user: %s; faq: %s", userId, faqId));
-            return true;
+        faqRepository.saveAll(list);
+        StringBuilder builder = new StringBuilder();
+        for (var faq : list) {
+            builder.append(faq.getQuestion()).append(":").append(faq.getPopularityScore()).append("\n");
         }
-        log.debug(String.format("Click NOT registered (not unique); user: %s; faq: %s", userId, faqId));
-        return false;
+
+        log.debug("Updated popularity");
+        log.debug(builder.toString());
     }
+    private void normalizeList(List<FAQ> list) {
+        if (list.isEmpty()) return;
 
-    private int calculatePopularityScore(FAQ faq) {
-        double viewCountWeight = 0.6;
-        double uniqueViewWeight = 0.3;
-        double timeFactorWeight = 0.1;
+        int max = list.get(0).getPopularityScore();
+        int min = list.get(list.size() - 1).getPopularityScore();
 
-        int totalViews = faq.getViewCount();
-        int uniqueViews = getUniqueViewCount(faq.getId());
-        long daysSinceCreation = ChronoUnit.DAYS.between(getCreationDate(faq.getId()), LocalDate.now());
+        // Нормализация значений
+        if (max > Integer.MAX_VALUE) {
+            int normalizationFactor = max / Integer.MAX_VALUE + 1;
+            for (var faq : list) {
+                faq.setPopularityScore(faq.getPopularityScore() / normalizationFactor);
+            }
+            // Обновляем минимальное значение после нормализации
+            min = list.get(list.size() - 1).getPopularityScore();
+        }
 
-        double timeFactor = Math.max(0, 1 - (0.01 * daysSinceCreation));
-
-        double popularityScore = (totalViews * viewCountWeight) +
-                (uniqueViews * uniqueViewWeight) +
-                (timeFactor * timeFactorWeight);
-
-        return (int) popularityScore;
+        // Дополнительная нормализация, чтобы масштаб значений начинался с 1
+        if (min > 1) {
+            for (var faq : list) {
+                faq.setPopularityScore(faq.getPopularityScore() / min);
+            }
+        }
     }
-
-    private LocalDate getCreationDate(Long faqId) {
-        FAQ faq = faqRepository.findById(faqId).orElse(null);
-        return (faq != null) ? faq.getCreationDate() : null;
-    }
-
 }

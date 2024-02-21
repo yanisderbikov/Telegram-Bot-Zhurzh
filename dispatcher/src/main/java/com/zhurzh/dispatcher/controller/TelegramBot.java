@@ -112,6 +112,7 @@ public class TelegramBot extends TelegramWebhookBot {
     public ResponseEntity<String> sendPhoto(SendPhoto photo) {
         if (photo != null){
             try {
+                photo.setParseMode("HTML");
                 execute(photo);
                 return new ResponseEntity<>("Successful send photo", HttpStatus.OK);
             }catch (TelegramApiException e) {

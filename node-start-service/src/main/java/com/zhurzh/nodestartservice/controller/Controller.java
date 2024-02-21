@@ -30,7 +30,7 @@ public class Controller implements Branches {
     @PostMapping("/execute")
     public ResponseEntity<String> execute(@RequestBody Update update){
         try {
-            log.debug("update come text manage: " + update);
+//            log.debug("update come text manage: " + update);
             mainNodeStartService.execute(update);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){

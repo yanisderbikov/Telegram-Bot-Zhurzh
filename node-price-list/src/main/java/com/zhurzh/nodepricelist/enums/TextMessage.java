@@ -2,11 +2,11 @@ package com.zhurzh.nodepricelist.enums;
 
 
 public enum TextMessage {
-    ACTIVATION_BUTTON("Contact with Zhurzh", "Связаться с Журжем"),
+    ACTIVATION_BUTTON("Zhurzh's links", "Связаться с Журжем"),
 
-    PRICE_LIST_MESSAGE("I am always happy to help! But if necessary, you can directly contact Zhurzh in a way that's convenient for you:",
+    PRICE_LIST_MESSAGE("I am always happy to help! But if necessary, you can directly contact Zhurzh in a way that's convenient for you",
 
-            "Я всегда буду рад помочь! Но если это нужно, ты можешь напрямую связаться с Журжем удобным для тебя способом: "),
+            "Я всегда буду рад помочь! Но если это нужно, ты можешь напрямую связаться с Журжем удобным для тебя способом"),
 
     TO_MAIN_MENU("To main menu", "На главное меню"),
 
