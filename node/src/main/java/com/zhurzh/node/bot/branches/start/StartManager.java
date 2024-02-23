@@ -7,8 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StartManager  extends ConnectionClass {
     public StartManager(@Value("${start.service.callbackpath}") String s,
-            @Value("${start.service.url}") String url,
-                             @Value("${start.service.port}") String port){
-        super(s, url, port);
+            @Value("${start.service.url}") String url){
+        super(s, url);
     }
 }

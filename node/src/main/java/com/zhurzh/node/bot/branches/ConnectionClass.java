@@ -20,11 +20,9 @@ import org.springframework.web.client.RestTemplate;
 public class ConnectionClass implements Branches {
     private String callbackPath;
     private String url;
-    private String port;
 
-    public ConnectionClass(String callbackPath, String url, String port){
+    public ConnectionClass(String callbackPath, String url){
         this.callbackPath = callbackPath;
-        this.port = port;
         this.url = url;
     }
     @Override
@@ -78,12 +76,7 @@ public class ConnectionClass implements Branches {
         }
     }
 
-    private URI buildUri(String path) throws URISyntaxException {
-        return new URIBuilder()
-                .setScheme("http")
-                .setPort(Integer.parseInt(port))
-                .setHost(url)
-                .setPath(path)
-                .build();
+    private String buildUri(String path) {
+        return url + path;
     }
 }

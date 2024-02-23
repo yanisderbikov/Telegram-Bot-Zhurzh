@@ -7,4 +7,5 @@ public enum BranchStatus {
     CHECK_ORDER,
     PRICE_LIST,
     FAQ,
+    SEA_REM,
 }

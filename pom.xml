@@ -38,6 +38,7 @@
         <module>node-price-list</module>
         <module>node-faq-service</module>
         <module>group-node</module>
+        <module>node-sea-rem-service</module>
     </modules>
 
     <dependencies>
