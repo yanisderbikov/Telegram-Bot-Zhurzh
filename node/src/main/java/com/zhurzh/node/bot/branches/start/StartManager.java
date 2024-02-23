@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StartManager  extends ConnectionClass {
+public class StartManager extends ConnectionClass {
     public StartManager(@Value("${start.service.callbackpath}") String s,
             @Value("${start.service.url}") String url){
         super(s, url);

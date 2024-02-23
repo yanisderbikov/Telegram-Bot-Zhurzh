@@ -1,4 +1,4 @@
-package com.zhurzh.commonjpa.entity;
+package com.zhurzh.nodesearemservice.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,10 +11,11 @@ import java.time.LocalDate;
 @EqualsAndHashCode(exclude = {"id"})
 @Builder
 @NoArgsConstructor
+@ToString
 @AllArgsConstructor
 @Entity
 @Table(name = "faq_table")
-public class FAQ {
+public class SeaRemFAQ {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,8 +33,6 @@ public class FAQ {
 
     @Column(nullable = false)
     private Long fromUserId;
-    @Builder.Default
-    private Integer viewCount = 0;
 
     @CreationTimestamp
     private LocalDate creationDate;

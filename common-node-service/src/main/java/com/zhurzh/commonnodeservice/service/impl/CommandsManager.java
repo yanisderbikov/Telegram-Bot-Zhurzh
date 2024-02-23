@@ -1,8 +1,5 @@
 package com.zhurzh.commonnodeservice.service.impl;
 
-import com.zhurzh.commonjpa.dao.AppUserDAO;
-import com.zhurzh.commonjpa.enums.BranchStatus;
-import com.zhurzh.commonnodeservice.cache.UserMessageCache;
 import com.zhurzh.commonnodeservice.service.ProducerService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -35,12 +32,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CommandsManager {
     private ProducerService producerService;
-    private AppUserDAO appUserDAO;
-    private UserMessageCache userMessageCache;
-
     private ConnectionToDispatcherPhoto connectionToDispatcherPhoto;
 
-    public void groupSendAnswer(@NonNull Update update, String out){
+    public void groupSendAnswer(@NonNull Update update, String out) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(out);
         sendMessage.setChatId(update.getMessage().getChatId());
@@ -49,11 +43,6 @@ public class CommandsManager {
 
     public void sendAnswerEdit(AppUser appUser, Update update, @NotNull String text, List<List<InlineKeyboardButton>> list) {
         sendAnswerEdit(appUser, update, text, new InlineKeyboardMarkup(list));
-    }
-
-    public void sendAnswerEdit(@NotNull Update update, @NotNull String text, @NotNull List<List<InlineKeyboardButton>> list) {
-        var appUser = findOrSaveAppUser(update);
-        sendAnswerEdit(appUser, update, text, list);
     }
 
     public void sendAnswerEdit(AppUser appUser, Update update, String text) {
@@ -66,7 +55,7 @@ public class CommandsManager {
             sendAnswer(appUser, text, markup);
             return;
         }
-        if (update.hasCallbackQuery() && update.getCallbackQuery().getMessage().hasPhoto()){
+        if (update.hasCallbackQuery() && update.getCallbackQuery().getMessage().hasPhoto()) {
             deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());
             sendAnswer(appUser, text, markup);
             return;
@@ -79,28 +68,6 @@ public class CommandsManager {
         sendAnswer(message);
     }
 
-    /**
-     *
-     * Данный метод позволяет определить если в update приходит сообщение, которое выше чем последнее актуальное, то метод возвращает true
-     * Если сообщение находятся после последнего актуального, то false, что позволяет все обработать в штатном режиме.
-     */
-    public boolean checkIsLastMessageAndSave(Update update) {
-        if (update == null) return false;
-        var appUser = findOrSaveAppUser(update);
-        var lastMessage = userMessageCache.getLastMessage(appUser);
-        Integer curMessage = null;
-        if (update.hasMessage()) {
-            curMessage = update.getMessage().getMessageId();
-        }
-        if (update.hasCallbackQuery() && update.getCallbackQuery().getMessage() != null) {
-            curMessage = update.getCallbackQuery().getMessage().getMessageId();
-        }
-        if (lastMessage != null && curMessage != null && lastMessage > curMessage){
-            return true;
-        }
-        if (curMessage != null) userMessageCache.setCache(appUser, curMessage);
-        return false;
-    }
 
     public void deleteMessage(@NotNull AppUser appUser, @NotNull Integer messageId) {
         DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(appUser.getChatId()), messageId);
@@ -116,7 +83,7 @@ public class CommandsManager {
         sendPhoto.setProtectContent(true);
         sendPhoto.setReplyMarkup(new InlineKeyboardMarkup(list));
 
-        if (update != null && update.hasMessage()){
+        if (update != null && update.hasMessage()) {
             if (!update.getMessage().getText().equals("/start")) {
                 deleteMessage(appUser, update.getMessage().getMessageId());
             }
@@ -124,7 +91,7 @@ public class CommandsManager {
             deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId());
         }
         var responce = connectionToDispatcherPhoto.sendRequest(sendPhoto);
-        if (!responce.getStatusCode().is2xxSuccessful()){
+        if (!responce.getStatusCode().is2xxSuccessful()) {
             log.error(responce);
             sendAnswerEdit(appUser, update, out, list);
         }
@@ -134,10 +101,10 @@ public class CommandsManager {
     /**
      * Либо отрпавляеет сообщение со всеми данными, либо полностью нет.
      */
-    public boolean sendMedia(AppUser appUser, @NotNull List<InputMedia> medias){
+    public boolean sendMedia(AppUser appUser, @NotNull List<InputMedia> medias) {
 
         // Проверяем, есть ли что отправлять
-        if (medias.isEmpty()) throw new RuntimeException("Media is empty") ;
+        if (medias.isEmpty()) throw new RuntimeException("Media is empty");
         SendMediaGroup sendMediaGroup = new SendMediaGroup();
         sendMediaGroup.setMedias(medias);
         sendMediaGroup.setProtectContent(true);
@@ -149,7 +116,6 @@ public class CommandsManager {
     public void addButtonToMainMenu(List<List<InlineKeyboardButton>> list, AppUser appUser) {
         list.add(buttonMainMenu(appUser.getLanguage()));
     }
-
 
 
     public void addButtonToList(List<List<InlineKeyboardButton>> list, String buttonText, String callbackMessage) {
@@ -191,6 +157,7 @@ public class CommandsManager {
         button.setUrl(url);
         row.add(button);
     }
+
     private void sendAnswer(SendMessage sendMessage) {
         producerService.producerAnswer(sendMessage);
     }
@@ -198,6 +165,7 @@ public class CommandsManager {
     private void sendAnswer(EditMessageText sendMessage) {
         producerService.producerAnswer(sendMessage);
     }
+
     private void sendAnswer(AppUser appUser, String text, ReplyKeyboard replyKeyboard) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(text);
@@ -215,8 +183,8 @@ public class CommandsManager {
         list.add(button);
         return list;
     }
-    public void sendToMainMenu(Update update){
-        var appUser = findOrSaveAppUser(update);
+
+    public void sendToMainMenu(AppUser appUser, Update update) {
         List<List<InlineKeyboardButton>> lists = new ArrayList<>();
         var isEng = appUser.getLanguage().equals("eng");
         addButtonToList(lists,
@@ -225,25 +193,5 @@ public class CommandsManager {
         sendAnswerEdit(appUser, update, isEng ? "Something wrong. Back to menu?" : "Что-то не так. Вернемся?", lists);
     }
 
-    public AppUser findOrSaveAppUser(Update update) {
-        User telegramUser = update.hasCallbackQuery() ? update.getCallbackQuery().getFrom() : update.getMessage().getFrom();
-        var userid = telegramUser.getId();
-        Optional<AppUser> optional = Optional.empty();
-        try {
-            optional = appUserDAO.findByTelegramUserId(userid);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        if (optional.isEmpty()) {
-            AppUser transientAppUser = AppUser.builder()
-                    .telegramUserId(telegramUser.getId())
-                    .telegramUserName(telegramUser.getUserName())
-                    .branchStatus(BranchStatus.START)
-                    .chatId(update.getMessage().getChatId())
-                    .build();
-            return appUserDAO.save(transientAppUser);
-        }
-        return optional.get();
-    }
 }
 

@@ -61,7 +61,7 @@ class NodeOrderOrderServiceApplicationTests {
     }
 
     void getAllConnectionsFiles(){
-        var orders = orderDAO.findAll().stream().filter(Order::isAllFilled).toList();
+        var orders = orderDAO.findAll().stream().filter(Order::getIsFinished).toList();
         for (var order : orders){
             var name = order.getName();
             var ownerTelegram = order.getOwner().getTelegramUserName();

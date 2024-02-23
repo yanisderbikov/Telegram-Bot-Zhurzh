@@ -1,7 +1,7 @@
 package com.zhurzh.node.service.impl;
 
-import com.zhurzh.node.service.ConsumerService;
-import com.zhurzh.node.service.MainService;
+import com.zhurzh.node.bot.branches.BranchesManagerInterface;
+import com.zhurzh.node.service.ConsumerServiceRabbitMQ;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -13,18 +13,19 @@ import static com.zhurzh.commonrabbitmq.model.RabbitQueue.*;
 @Service
 @Log4j
 @AllArgsConstructor
-public class ConsumerServiceImpl implements ConsumerService {
-    private final MainService mainService;
+public class ConsumerServiceRabbitMQRabbitMQImpl implements ConsumerServiceRabbitMQ {
+    private final BranchesManagerInterface branchesManagerInterface;
 
     @Override
     @RabbitListener(queues = TEXT_MESSAGE_UPDATE)
     public void consumeTextMessageUpdates(Update update) {
-        mainService.processTextMessage(update);
+        branchesManagerInterface.consume(update);
     }
+
 
     @Override
     @RabbitListener(queues = CALLBACK_MESSAGE_UPDATE)
     public void consumeCallbackMessageUpdates(Update update) {
-        mainService.processCallBackMessage(update);
+        branchesManagerInterface.consume(update);
     }
 }

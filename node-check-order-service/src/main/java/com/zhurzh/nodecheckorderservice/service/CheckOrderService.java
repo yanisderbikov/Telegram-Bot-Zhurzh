@@ -1,5 +1,6 @@
 package com.zhurzh.nodecheckorderservice.service;
 
+import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.nodecheckorderservice.controller.UserState;
 import com.zhurzh.nodecheckorderservice.controller.UserCasheController;
@@ -22,14 +23,13 @@ public class CheckOrderService {
 
 
 
-    public void mange(Update update){
+    public void mange(AppUser appUser, Update update){
         try {
-            var appUser = cm.findOrSaveAppUser(update);
             var command = us.getCommand(appUser, update);
-            command.execute(update);
+            command.execute(appUser, update);
         }catch (Exception e){
             log.error(e);
-            cm.sendToMainMenu(update);
+            cm.sendToMainMenu(appUser, update);
         }
     }
 }

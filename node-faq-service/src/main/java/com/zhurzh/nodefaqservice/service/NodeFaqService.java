@@ -1,5 +1,6 @@
 package com.zhurzh.nodefaqservice.service;
 
+import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.nodefaqservice.controller.UserCasheController;
 import com.zhurzh.nodefaqservice.controller.UserState;
@@ -20,14 +21,13 @@ public class NodeFaqService {
     private CommandsManager cm;
     private UserCasheController us;
 
-    public void mange(Update update){
+    public void mange(AppUser appUser, Update update){
         try {
-            var appUser = cm.findOrSaveAppUser(update);
             var command = us.getCommand(appUser, update);
-            command.execute(update);
+            command.execute(appUser, update);
         }catch (Exception e){
             log.error(e);
-            cm.sendToMainMenu(update);
+            cm.sendToMainMenu(appUser, update);
         }
     }
 

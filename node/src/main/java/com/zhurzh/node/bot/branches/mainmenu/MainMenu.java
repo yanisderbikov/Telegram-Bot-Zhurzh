@@ -1,14 +1,13 @@
 package com.zhurzh.node.bot.branches.mainmenu;
 
+import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
+import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.commonutils.model.Branches;
 import com.zhurzh.node.bot.branches.ConnectionClass;
-import com.zhurzh.node.bot.branches.order.CheckOrderManager;
-import com.zhurzh.node.bot.branches.order.OrderManager;
-import com.zhurzh.node.bot.branches.pricelist.PriceListManager;
+import com.zhurzh.node.bot.branches.searem.SeaRemBranch;
 import com.zhurzh.node.bot.branches.start.StartManager;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
+import com.zhurzh.node.service.ConnectionAppUser;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +28,8 @@ import java.util.Map;
 public class MainMenu implements Branches {
     @Autowired
     private CommandsManager commandsManager;
+    @Autowired
+    private ConnectionAppUser connectionAppUser;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -41,14 +42,14 @@ public class MainMenu implements Branches {
 
 
     @Override
-    public ResponseEntity<String> isActive(Update update) {
+    public ResponseEntity<String> isActive(Body body) {
         return ResponseEntity.ok("ok");
     }
 
     @Override
-    public ResponseEntity<String> execute(Update update) {
+    public ResponseEntity<String> execute(Body body) {
         try {
-            manager(update);
+            manager(body.getUpdate());
             return ResponseEntity.ok("ok");
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -67,10 +68,10 @@ public class MainMenu implements Branches {
      */
     private void manager(Update update){
         List<List<InlineKeyboardButton>> list = new ArrayList<>();
-        var appUser = commandsManager.findOrSaveAppUser(update);
+        var appUser = connectionAppUser.findOrSaveAppUser(update);
         var lan = appUser.getLanguage();
-        if (lan == null) throw new RuntimeException("No language for user : " + commandsManager.findOrSaveAppUser(update));
-        addButtons(list, update);
+        if (lan == null) throw new RuntimeException("No language for user : " + connectionAppUser.findOrSaveAppUser(update));
+        addButtons(list, update, appUser);
         if (list.isEmpty()){
             commandsManager.sendAnswerEdit(appUser, update, TextMessage.NO_SERVICE_AVAILABLE.getMessage(appUser.getLanguage()));
         }else {
@@ -78,10 +79,15 @@ public class MainMenu implements Branches {
         }
     }
 
-    private void addButtons(List<List<InlineKeyboardButton>> list, Update update){
+    private void addButtons(List<List<InlineKeyboardButton>> list, Update update, AppUser appUser){
+
         for (var con : connectionClasses){
             if (con instanceof StartManager) continue;
-            var response = con.isActive(update);
+            if (con instanceof SeaRemBranch &&
+                    !connectionAppUser.findOrSaveAppUser(update).getTelegramUserName().equals("yanderbikov"))  {
+                continue;
+            }
+            var response = con.isActive(new Body(appUser, update));
             var callbackPath = con.getCallbackPath();
             var body = response.getBody();
             if (response.getStatusCode().is2xxSuccessful()) {

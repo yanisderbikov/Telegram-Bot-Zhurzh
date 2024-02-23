@@ -42,9 +42,8 @@ public class DeadLineCommand implements Command, HasUserState {
     }
 
     @Override
-    public void execute(Update update) throws CommandException {
+    public void execute(AppUser appUser, Update update) throws CommandException {
         // может приходить /orderservice
-        var appUser = cm.findOrSaveAppUser(update);
         if (startCommand(appUser, update)) return;
         if (doesntMatter(appUser, update)) return;
         if (isChangeMonth(appUser, update)) return;

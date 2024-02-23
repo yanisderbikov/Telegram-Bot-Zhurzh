@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.zhurzh</groupId>
     <artifactId>node-check-order-service</artifactId>
-    <version>1.0.0</version>
+    <version>1.2.0</version>
     <name>node-check-order-service</name>
     <description>node-check-order-service</description>
     <properties>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.zhurzh</groupId>
             <artifactId>common-node-service</artifactId>
-            <version>1.0.0</version>
+            <version>LATEST</version>
 
         </dependency>
 
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-utils</artifactId>
-            <version>1.0.0</version>
+            <version>LATEST</version>
 
         </dependency>
     </dependencies>

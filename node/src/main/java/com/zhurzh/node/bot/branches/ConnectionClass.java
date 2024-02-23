@@ -1,9 +1,12 @@
 package com.zhurzh.node.bot.branches;
 
+import com.zhurzh.commonjpa.entity.AppUser;
+import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.commonutils.model.Branches;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.apache.http.client.utils.URIBuilder;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.ResponseEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -25,39 +28,41 @@ public class ConnectionClass implements Branches {
         this.callbackPath = callbackPath;
         this.url = url;
     }
-    @Override
-    public ResponseEntity<String> isActive(Update update) {
+    public ResponseEntity<String> isActive(Body body) {
+        var update = body.getUpdate();
+        var appUser = body.getAppUser();
         String path = "/";
-        var response =  sendRequest(update, path);
-        log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
+        var actualUrl = buildUri(path);
+        var response =  sendRequest(appUser, update, actualUrl);
+        log.debug(String.format("Status : %s, Body : %s, Path : %s", response.getStatusCodeValue(), response.getBody(), actualUrl));
         return response;
     }
 
 
-    @Override
-    public ResponseEntity<String> execute(Update update) {
+    public ResponseEntity<String> execute(Body body) {
+        var update = body.getUpdate();
+        var appUser = body.getAppUser();
         String path = "/execute";
-        var response =  sendRequest(update, path);
+        var actualUrl = buildUri(path);
+        var response =  sendRequest(appUser, update, actualUrl);
         if (!response.getStatusCode().is2xxSuccessful()) {
-            log.debug(String.format("Status : %s, Body : %s", response.getStatusCodeValue(), response.getBody()));
+            log.debug(String.format("Status : %s, Body : %s, Url : %s", response.getStatusCodeValue(), response.getBody(), actualUrl));
         }
         return response;
     }
 
 
 
-    private ResponseEntity<String> sendRequest(Update update, String path) {
+    private ResponseEntity<String> sendRequest(AppUser appUser, Update update, String url) {
         try {
-            // Создание URL
-            var url = buildUri(path);
-//            log.debug("URI: " + url);
+            // Создание URL//            log.debug("URI: " + url);
 
             // Создание HTTP-заголовков
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             // Создание HTTP-сущности с объектом Update и заголовками
-            HttpEntity<Update> requestEntity = new HttpEntity<>(update, headers);
+            HttpEntity<Body> requestEntity = new HttpEntity<>(new Body(appUser, update), headers);
 
             // Создание RestTemplate
             RestTemplate restTemplate = new RestTemplate();

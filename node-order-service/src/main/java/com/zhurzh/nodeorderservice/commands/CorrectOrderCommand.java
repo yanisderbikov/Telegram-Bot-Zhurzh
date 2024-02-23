@@ -32,9 +32,7 @@ public class CorrectOrderCommand implements Command, HasUserState {
     }
 
     @Override
-    public void execute(Update update) throws CommandException {
-        var appUser = cm.findOrSaveAppUser(update);
-//        if (buttonsToUnfilledPositions(appUser, update)) return;
+    public void execute(AppUser appUser, Update update) throws CommandException {
         if (startCommand(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
 

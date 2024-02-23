@@ -39,9 +39,7 @@ public class DeleteOrderCommand implements Command, HasUserState {
     }
 
     @Override
-    public void execute(Update update) throws CommandException {
-        var appUser = cm.findOrSaveAppUser(update);
-//        if (startCommand(appUser, update)) return;
+    public void execute(AppUser appUser, Update update) throws CommandException {
         if (endCommand(appUser, update)) return;
         if (checkChosenOrderCommand(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());

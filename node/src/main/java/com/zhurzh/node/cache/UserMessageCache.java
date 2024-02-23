@@ -1,4 +1,4 @@
-package com.zhurzh.commonnodeservice.cache;
+package com.zhurzh.node.cache;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class UserMessageCache {
     private Cache<Long, Integer> cache;
-    @Value("${cache.maxSize}")
+    @Value(" ${cache.maxSize}")
     private int cacheMaxSize;
 
     @PostConstruct

@@ -9,7 +9,7 @@
 
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>1.0.1</version>
+    <version>1.2.0</version>
 
 
     <artifactId>node</artifactId>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>com.zhurzh</groupId>
             <artifactId>common-node-service</artifactId>
-            <version>1.0.0</version>
+            <version>LATEST</version>
 
         </dependency>
 
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-utils</artifactId>
-            <version>1.0.0</version>
+            <version>LATEST</version>
 
         </dependency>
 

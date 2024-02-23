@@ -32,8 +32,7 @@ public class ViewOrderCommand implements Command, HasUserState {
     }
 
     @Override
-    public void execute(Update update) throws CommandException {
-        var appUser = cm.findOrSaveAppUser(update);
+    public void execute(AppUser appUser, Update update) throws CommandException {
         if (startCommand(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
     }

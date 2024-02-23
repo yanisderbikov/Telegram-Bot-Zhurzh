@@ -1,6 +1,8 @@
 package com.zhurzh.nodepricelist.controller;
 
+import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
+import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.commonutils.model.Branches;
 import com.zhurzh.nodepricelist.enums.TextMessage;
 import com.zhurzh.nodepricelist.service.PriceListService;
@@ -18,20 +20,18 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @AllArgsConstructor
 public class Controller implements Branches {
 
-    private CommandsManager cm;
     private PriceListService priceListService;
     @Override
     @PostMapping
-    public ResponseEntity<String> isActive(@RequestBody Update update){
-        var appUser = cm.findOrSaveAppUser(update);
-        var out = TextMessage.ACTIVATION_BUTTON.getMessage(appUser.getLanguage());
+    public ResponseEntity<String> isActive(@RequestBody Body body){
+        var out = TextMessage.ACTIVATION_BUTTON.getMessage(body.getAppUser().getLanguage());
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
     @Override
     @PostMapping("/execute")
-    public ResponseEntity<String> execute(@RequestBody Update update){
+    public ResponseEntity<String> execute(@RequestBody Body body){
         try {
-            priceListService.manage(update);
+            priceListService.manage(body.getAppUser(), body.getUpdate());
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);

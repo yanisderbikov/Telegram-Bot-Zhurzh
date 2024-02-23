@@ -1,5 +1,7 @@
 package com.zhurzh.nodestartservice.controller;
 
+import com.zhurzh.commonjpa.entity.AppUser;
+import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.commonutils.model.Branches;
 import com.zhurzh.nodestartservice.service.MainNodeStartService;
 import lombok.AllArgsConstructor;
@@ -21,17 +23,17 @@ public class Controller implements Branches {
 
     @Override
     @PostMapping
-    public ResponseEntity<String> isActive(@RequestBody Update update){
+    public ResponseEntity<String> isActive(@RequestBody Body body){
         var out = "The branch 'start service' is online";
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
 
     @Override
     @PostMapping("/execute")
-    public ResponseEntity<String> execute(@RequestBody Update update){
+    public ResponseEntity<String> execute(@RequestBody Body body){
         try {
 //            log.debug("update come text manage: " + update);
-            mainNodeStartService.execute(update);
+            mainNodeStartService.execute(body.getAppUser(), body.getUpdate());
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);

@@ -8,7 +8,7 @@
         <version>1.0.0</version>
 
     </parent>
-    <version>1.0.0</version>
+    <version>1.2.0</version>
 
     <groupId>com.zhurzh</groupId>
     <artifactId>common-node-service</artifactId>
@@ -33,8 +33,7 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-jpa</artifactId>
-            <version>1.0.0</version>
-
+            <version>LATEST</version>
         </dependency>
 
         <dependency>
@@ -52,7 +51,7 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-rabbitmq</artifactId>
-            <version>1.0.0</version>
+            <version>LATEST</version>
 
         </dependency>
 
@@ -63,18 +62,9 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-utils</artifactId>
-            <version>1.0.0</version>
+            <version>LATEST</version>
 
         </dependency>
     </dependencies>
-
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
 
 </project>

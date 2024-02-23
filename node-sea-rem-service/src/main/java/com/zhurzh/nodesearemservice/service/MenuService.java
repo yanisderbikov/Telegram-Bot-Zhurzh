@@ -1,34 +1,58 @@
 package com.zhurzh.nodesearemservice.service;
 
-import com.zhurzh.commonjpa.dao.AppUserDAO;
+import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.commonutils.exception.CommandException;
+import com.zhurzh.nodesearemservice.dao.SeaRemFaqRepository;
+import com.zhurzh.nodesearemservice.entity.SeaRemFAQ;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Log4j
 @AllArgsConstructor
 public class MenuService {
     private CommandsManager cm;
-    private AppUserDAO appUserDAO;
+    private SeaRemFaqRepository seaRemFaqRepository;
 
-    @Value("${image.hello.url}")
-    private String imageHello;
-
-    public void execute(Update update) throws CommandException {
-//        var text = update.getCallbackQuery().getMessage().getText();
-        var appUser = cm.findOrSaveAppUser(update);
-        if (start(update)) return;
-        throw new CommandException(Thread.currentThread().getStackTrace());
+    public void execute(AppUser appUser, Update update) throws CommandException {
+        if (start(appUser, update)) return;
+        saveBD(appUser, update);
 
     }
-    private boolean start(Update update){
-        // switch case ru/eng
 
+    private void saveBD(AppUser appUser, Update update) {
+        if (update.hasMessage() && update.getMessage().hasText()) {
+
+            SeaRemFAQ seaRemFAQ = SeaRemFAQ.builder()
+                    .fromUserId(appUser.getTelegramUserId())
+                    .question(update.getMessage().getText())
+                    .creationDate(LocalDate.now())
+                    .language(appUser.getLanguage())
+                    .build();
+            seaRemFaqRepository.save(seaRemFAQ);
+
+            var list = seaRemFaqRepository.findAll();
+            if (list.isEmpty()) System.out.println("EMPTY");
+            System.out.println(list);
+        }
+    }
+
+    private boolean start(AppUser appUser, Update update){
+        if (!update.hasMessage()) {
+            var out = "Lor of Sea Rem";
+            List<List<InlineKeyboardButton>> list = new ArrayList<>();
+            cm.addButtonToMainMenu(list, appUser);
+            cm.sendAnswerEdit(appUser, update, out, list);
+            return true;
+        }
         return false;
     }
 

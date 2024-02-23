@@ -35,10 +35,9 @@ public class NameCreationCommand implements Command, HasUserState {
     }
 
     @Override
-    public void execute(Update update) throws CommandException {
-        var appuser = cm.findOrSaveAppUser(update);
-        if (startCommand(appuser, update)) return;
-        if (endCommand(appuser, update)) return;
+    public void execute(AppUser appUser, Update update) throws CommandException {
+        if (startCommand(appUser, update)) return;
+        if (endCommand(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
 
     }

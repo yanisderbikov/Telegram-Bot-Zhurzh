@@ -1,5 +1,6 @@
 package com.zhurzh.nodesearemservice.enums;
 public enum TextMessage {
+    ACTIVATION_BUTTON("Sea Rem", "Sea Rem"),
     SWITCH_LAN("Switch the <b>language</b>", "Выбери язык"),
     WELCOME("Hello! My name is Marzipan! I am the most important assistant of the artist Zhurzh, her right paw, and the most beloved gecko in the world! I can tell you something about the author, help calculate the cost of an illustration, or take a commission that I will personally deliver to Zhurzh a bit later.",
 
