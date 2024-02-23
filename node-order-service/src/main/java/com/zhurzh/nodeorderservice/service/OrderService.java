@@ -29,7 +29,8 @@ public class OrderService {
             var command = us.getCommand(appUser, update);
             command.execute(update);
         }catch (Exception e){
-            log.error(e);
+            var list = Arrays.asList(e.getStackTrace());
+            log.error(list);
             cm.sendToMainMenu(update);
         }
     }

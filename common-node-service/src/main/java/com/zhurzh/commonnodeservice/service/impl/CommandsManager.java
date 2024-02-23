@@ -222,7 +222,7 @@ public class CommandsManager {
         addButtonToList(lists,
                 isEng ? "Menu" : "Меню"
                 , "/menu");
-        sendAnswerEdit(appUser, update, isEng ? "Back to menu?" : "Что-то не так. Вернемся?", lists);
+        sendAnswerEdit(appUser, update, isEng ? "Something wrong. Back to menu?" : "Что-то не так. Вернемся?", lists);
     }
 
     public AppUser findOrSaveAppUser(Update update) {

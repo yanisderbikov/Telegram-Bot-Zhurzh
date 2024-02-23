@@ -64,7 +64,7 @@ public class PriceCommand implements Command, HasUserState {
                             new ArrayList<>(List.of(row)));
                     return true;
                 }
-                var out = cc.findActiveOrder(appUser).calculatePrice()
+                var out = TextMessage.PRICE_PRE.getMessage(appUser.getLanguage()) + cc.findActiveOrder(appUser).calculatePrice()
                         + TextMessage.PRICE_START.getMessage(appUser.getLanguage());
 
                 cm.sendAnswerEdit(appUser, update, out);

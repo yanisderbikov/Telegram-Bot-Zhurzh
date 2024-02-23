@@ -53,32 +53,45 @@ public class CommentToArtCommand implements Command, HasUserState {
         if (update.hasCallbackQuery()){
             if (!update.getCallbackQuery().getData().equals(userState.getPath())) return false;
             var out = TextMessage.COMMENT_TO_ART_START.getMessage(appUser.getLanguage());
-            cm.sendAnswerEdit(appUser, update, out);
+            List<List<InlineKeyboardButton>> list = new ArrayList<>();
+            cm.addButtonToList(list,
+                    TextMessage.BUTTON_SKIP.getMessage(appUser.getLanguage()),
+                    TextMessage.BUTTON_SKIP.name());
+            cm.sendAnswerEdit(appUser, update, out, list);
             return true;
         }
         return false;
     }
 
     private boolean endCommand(AppUser appUser, Update update){
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            var input = update.getMessage().getText();
-            var order = cc.findActiveOrder(appUser);
-            order.setCommentToArt(input);
-            orderDAO.save(order);
-            var out = TextMessage.COMMENT_TO_ART_END.getMessage(appUser.getLanguage());
-            List<InlineKeyboardButton> row = new ArrayList<>();
-            cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
-            cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
-            return true;
-        }
         if (update.hasMessage() && update.getMessage().getMediaGroupId() != null
                 && cacheManager.checkAndAdd(update.getMessage().getMediaGroupId())){
             return true;
         }
+        if (update.hasCallbackQuery() && update.getCallbackQuery().getData().equals(TextMessage.BUTTON_SKIP.name())){
+            saveCommentAndSendMessage(appUser, update, "");
+            return true;
+        }
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            var input = update.getMessage().getText();
+            saveCommentAndSendMessage(appUser, update, input);
+            return true;
+        }
+
         // if photos or smth else
         var out = TextMessage.COMMENT_TO_ART_ERROR.getMessage(appUser.getLanguage());
         cm.sendAnswerEdit(appUser, update, out);
         return true;
+    }
+
+    private void saveCommentAndSendMessage(AppUser appUser, Update update, String input){
+        var order = cc.findActiveOrder(appUser);
+        order.setCommentToArt(input);
+        orderDAO.save(order);
+        var out = TextMessage.COMMENT_TO_ART_END.getMessage(appUser.getLanguage());
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
+        cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
     }
 
 }

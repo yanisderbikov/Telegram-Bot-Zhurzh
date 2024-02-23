@@ -3,6 +3,7 @@ package com.zhurzh.nodeorderservice.enums;
 
 public enum TextMessage {
     ACTIVATION_BUTTON("Calculate commission", "Рассчитать стоимость"),
+    BUTTON_SKIP("Skip", "Пропустить"),
     TO_MAIN_MENU("To main menu", "На главное меню"),
     CORRECT_ORDER("We need to add some correction to your commission",
             "Нам нужно внести несколько изменений в твою заявку"),
@@ -40,12 +41,13 @@ public enum TextMessage {
             "If you want to send photos, attach them to the <b>references</b> item. You can do this after completing the form.",
             "Напиши текстом, пожалуйста.\nЕсли хочешь отправить фотографии, прикрепи их к пункту <b>референсы</b>. Если что ты сможешь это сделать по завершению заявки"),
     COMMENT_TO_ART_END("Ok next one", "Хорошо, далее"),
+    PRICE_PRE("Around cost is: ", "Ориентировочная цена: "),
     PRICE_START("\nZhurzh will be very, very happy if you write below the price you're willing to pay for the commission.\n" +
-            "\n" +
-            "If you want to make any changes to the request, you'll be able to do it later, and I'll gladly prepare a recalculation.",
+            "If you want to make any changes to the request, you'll be able to do it later, and I'll gladly prepare a recalculation." +
+            "\n\nHow much you will be able to pay for the art?",
     "\nЖурж будет очень-очень рада, если ты напишешь ниже ту стоимость заказа, которую ты будешь готов оплатить.\n" +
-            "\n" +
-            "Если ты захочешь что-то исправить в заявке, ты сможешь сделать это дальше, а я с радостью подготовлю перерасчет"),
+            "Если ты захочешь что-то исправить в заявке, ты сможешь сделать это дальше, а я с радостью подготовлю перерасчет" +
+            "\n\nПрошу написать сколько ты был бы готов заплатить за работу??"),
     PRICE_INVALID_NUM("I can't understand. Write down just a simple number. It should be more than zero",
             "Я не очень понял. Напиши пожалуйста просто цифру больше нуля"),
     PRICE_END("Let's check to make sure:", "Давай проверим, чтоб наверняка: "),
