@@ -62,7 +62,7 @@ public class CommentToArtCommand implements Command, HasUserState {
         return false;
     }
 
-    private boolean endCommand(AppUser appUser, Update update){
+    private boolean endCommand(AppUser appUser, Update update) throws CommandException {
         if (update.hasMessage() && update.getMessage().getMediaGroupId() != null
                 && cacheManager.checkAndAdd(update.getMessage().getMediaGroupId())){
             return true;
@@ -83,14 +83,18 @@ public class CommentToArtCommand implements Command, HasUserState {
         return true;
     }
 
-    private void saveCommentAndSendMessage(AppUser appUser, Update update, String input){
+    private void saveCommentAndSendMessage(AppUser appUser, Update update, String input) throws CommandException {
         var order = cc.findActiveOrder(appUser);
         order.setCommentToArt(input);
         orderDAO.save(order);
-        var out = TextMessage.COMMENT_TO_ART_END.getMessage(appUser.getLanguage());
-        List<InlineKeyboardButton> row = new ArrayList<>();
-        cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
-        cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+        if (!input.isEmpty()) {
+            var out = TextMessage.COMMENT_TO_ART_END.getMessage(appUser.getLanguage());
+            List<InlineKeyboardButton> row = new ArrayList<>();
+            cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
+            cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+        }else {
+            cc.getNextCommandAndExecute(appUser, update);
+        }
     }
 
 }

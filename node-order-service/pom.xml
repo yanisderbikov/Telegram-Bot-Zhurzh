@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.zhurzh</groupId>
     <artifactId>node-order-service</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 
     <name>node-order-service</name>
     <description>node-order-service</description>

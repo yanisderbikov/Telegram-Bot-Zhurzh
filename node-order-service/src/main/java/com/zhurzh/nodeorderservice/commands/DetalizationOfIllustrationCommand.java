@@ -88,7 +88,7 @@ public class DetalizationOfIllustrationCommand implements Command, HasUserState 
         }
         return false;
     }
-    private boolean endCommand(AppUser appUser, Update update){
+    private boolean endCommand(AppUser appUser, Update update) throws CommandException {
         if (update.hasCallbackQuery()){
             var detalization = DetalizationOfIllustration.values()
                     [Integer.parseInt(update.getCallbackQuery().getData())];
@@ -97,14 +97,7 @@ public class DetalizationOfIllustrationCommand implements Command, HasUserState 
             order.setDetalizationOfIllustration(detalization);
             orderDAO.save(order);
 
-//            for (int i = 1; i <= (appUser.getLanguage().equals("ru") ? listOfImagesRu.size() : listOfImagesEng.size()); i++) {
-//                cm.deleteMessage(appUser, update.getCallbackQuery().getMessage().getMessageId() - i);
-//            }
-
-            List<InlineKeyboardButton> row = new ArrayList<>();
-            cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
-            var out = TextMessage.DETALIZATION_END.getMessage(appUser.getLanguage());
-            cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+            cc.getNextCommandAndExecute(appUser, update);
             return true;
         }
         return false;

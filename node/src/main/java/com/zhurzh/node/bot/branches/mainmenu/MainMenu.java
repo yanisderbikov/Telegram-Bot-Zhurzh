@@ -4,7 +4,7 @@ import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.commonutils.model.Branches;
-import com.zhurzh.node.bot.branches.ConnectionClass;
+import com.zhurzh.commonnodeservice.service.impl.ConnectionToService;
 import com.zhurzh.node.bot.branches.searem.SeaRemBranch;
 import com.zhurzh.node.bot.branches.start.StartManager;
 import com.zhurzh.node.service.ConnectionAppUser;
@@ -34,7 +34,7 @@ public class MainMenu implements Branches {
 
     @Autowired
     private ApplicationContext applicationContext;
-    private List<ConnectionClass> connectionClasses;
+    private List<ConnectionToService> connectionToServices;
 
     @Value("${image.menu.url.ru}")
     private String linkRu;
@@ -61,9 +61,9 @@ public class MainMenu implements Branches {
 
     @PostConstruct
     private void init(){
-        connectionClasses = new ArrayList<>();
-        Map<String, ConnectionClass> beansOfType = applicationContext.getBeansOfType(ConnectionClass.class);
-        connectionClasses.addAll(beansOfType.values());
+        connectionToServices = new ArrayList<>();
+        Map<String, ConnectionToService> beansOfType = applicationContext.getBeansOfType(ConnectionToService.class);
+        connectionToServices.addAll(beansOfType.values());
     }
 
     /**
@@ -83,7 +83,7 @@ public class MainMenu implements Branches {
     }
 
     private void addButtons(List<List<InlineKeyboardButton>> list, Update update, AppUser appUser){
-        for (var con : connectionClasses){
+        for (var con : connectionToServices){
             if (con instanceof StartManager) continue;
             if (con instanceof SeaRemBranch
                     && appUser.getTelegramUserName() != null

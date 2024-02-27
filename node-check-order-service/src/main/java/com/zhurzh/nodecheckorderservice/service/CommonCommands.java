@@ -17,7 +17,6 @@ import java.util.List;
 @Log4j
 public class CommonCommands {
     private CommandsManager cm;
-    private OrderDAO orderDAO;
 
 
     public void addButtonToNextStep(List<InlineKeyboardButton> row, AppUser appUser,
@@ -35,8 +34,4 @@ public class CommonCommands {
                 nextState.getPath());
 
     }
-//    public void addButtonToMenuCheckOrderService(List<InlineKeyboardButton> row, AppUser appUser){
-//        TextMessage.BU
-//    }
-
 }

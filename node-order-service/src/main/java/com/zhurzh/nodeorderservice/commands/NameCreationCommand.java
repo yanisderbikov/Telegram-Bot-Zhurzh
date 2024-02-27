@@ -71,7 +71,7 @@ public class NameCreationCommand implements Command, HasUserState {
                 return true;
             }
         }catch (Exception e){
-            log.error(e);
+            log.error(List.of(e.getStackTrace()));
         }
         return false;
     }

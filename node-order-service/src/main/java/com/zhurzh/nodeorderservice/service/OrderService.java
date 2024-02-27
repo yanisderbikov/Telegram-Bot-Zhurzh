@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -23,8 +24,7 @@ public class OrderService {
             var command = us.getCommand(appUser, update);
             command.execute(appUser, update);
         }catch (Exception e){
-            var list = Arrays.asList(e.getStackTrace());
-            log.error(list);
+            log.error(List.of(e.getStackTrace()));
             cm.sendToMainMenu(appUser, update);
         }
     }

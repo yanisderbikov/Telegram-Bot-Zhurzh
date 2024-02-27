@@ -67,7 +67,7 @@ public class DeadLineCommand implements Command, HasUserState {
         return false;
     }
 
-    private boolean doesntMatter(AppUser appUser, Update update) {
+    private boolean doesntMatter(AppUser appUser, Update update) throws CommandException {
         if (update.hasCallbackQuery() && update.getCallbackQuery().getData().equals(TextMessage.DOESNT_MATTER.name())){
             Calendar calendar = Calendar.getInstance(new Locale("ru"));
             calendar.add(Calendar.YEAR, 1);
@@ -125,7 +125,7 @@ public class DeadLineCommand implements Command, HasUserState {
         }
         return false;
     }
-    private boolean handlerYesNo(AppUser appUser, Update update){
+    private boolean handlerYesNo(AppUser appUser, Update update) throws CommandException {
         if (update.hasCallbackQuery()){
             var yes = update.getCallbackQuery().getData().equals(TextMessage.BUTTON_YES.name());
             var no = update.getCallbackQuery().getData().equals(TextMessage.BUTTON_NO.name());
@@ -135,10 +135,7 @@ public class DeadLineCommand implements Command, HasUserState {
                 var order = cc.findActiveOrder(appUser);
                 order.setDeadLine(dateMap.get(appUser.getId()));
                 orderDAO.save(order);
-                var out = TextMessage.DEADLINE_END.getMessage(appUser.getLanguage());
-                List<InlineKeyboardButton> row = new ArrayList<>();
-                cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
-                cm.sendAnswerEdit(appUser, update, out, List.of(row));
+                cc.getNextCommandAndExecute(appUser, update);
             }else {
                 calendarHelper.chooseDays_cmd(appUser, update, map.get(appUser.getId()));
             }

@@ -1,6 +1,7 @@
 package com.zhurzh.nodecheckorderservice.commands;
 
 import com.zhurzh.commonjpa.entity.AppUser;
+import com.zhurzh.commonjpa.entity.Order;
 import com.zhurzh.commonjpa.enums.StatusZhurzh;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.commonutils.exception.CommandException;
@@ -8,7 +9,7 @@ import com.zhurzh.commonutils.model.Command;
 import com.zhurzh.nodecheckorderservice.controller.HasUserState;
 import com.zhurzh.nodecheckorderservice.controller.OrderCasheController;
 import com.zhurzh.nodecheckorderservice.controller.UserState;
-import com.zhurzh.nodecheckorderservice.service.CommonCommands;
+import com.zhurzh.nodecheckorderservice.enums.TextMessage;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
@@ -22,18 +23,18 @@ import java.util.List;
 @AllArgsConstructor
 public class ViewOrderCommand implements Command, HasUserState {
     private CommandsManager cm;
-    private CommonCommands cc;
-    private OrderCasheController oc;
+    private OrderCasheController orderCasheController;
     @NonNull
     private final UserState userState = UserState.VIEW_ORDER;
+
     @Override
     public UserState getUserState() {
         return userState;
     }
 
     @Override
+    @Deprecated
     public void execute(AppUser appUser, Update update) throws CommandException {
-        if (startCommand(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
     }
 
@@ -42,21 +43,21 @@ public class ViewOrderCommand implements Command, HasUserState {
         return false;
     }
 
-    private boolean startCommand(AppUser appUser, Update update){
-        if (update.hasCallbackQuery()){
-            if (!update.getCallbackQuery().getData().equals(userState.getPath())) return false;
-            var order = oc.getCurrentOrder(appUser);
-            var out = order.toString();
-            List<InlineKeyboardButton> row = new ArrayList<>();
-            cc.addButtonToNextStep(row, appUser, userState);
-            if (order.getStatusZhurzh() == StatusZhurzh.UNSEEN) {
-                cm.addButtonToRow(row,
-                        DeleteOrderCommand.userState.getMessage(appUser.getLanguage()),
-                        DeleteOrderCommand.userState.getPath());
-            }
-            cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
-            return true;
+    public void showOrder(AppUser appUser, Update update, Order order) {
+        var out = order.toString();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        List<List<InlineKeyboardButton>> lists = new ArrayList<>();
+        cm.addButtonToRow(row,
+                TextMessage.BUTTON_BACK_TO_LIST.getMessage(appUser.getLanguage()),
+                ChooseOrderCommand.userState.getPath());
+        if (order.getStatusZhurzh() == StatusZhurzh.UNSEEN || order.getStatusZhurzh() == StatusZhurzh.SEEN) {
+            orderCasheController.setOrder(appUser, order);
+            cm.addButtonToRow(row,
+                    DeleteOrderCommand.userState.getMessage(appUser.getLanguage()),
+                    DeleteOrderCommand.userState.getPath());
         }
-        return false;
+        lists.add(row);
+        cm.addButtonToMainMenu(lists, appUser);
+        cm.sendAnswerEdit(appUser, update, out, lists);
     }
 }

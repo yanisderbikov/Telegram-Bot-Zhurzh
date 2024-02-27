@@ -49,34 +49,9 @@ public class DeleteOrderCommand implements Command, HasUserState {
     public boolean isExecuted(AppUser appUser) {
         return false;
     }
-
-//    private boolean startCommand(AppUser appUser, Update update) {
-//        if (update.hasCallbackQuery()){
-//            if (!update.getCallbackQuery().getData().equals(userState.getPath())) return false;
-//            var out = TextMessage.DELETE_ORDER_START.getMessage(appUser.getLanguage());
-//            // выводится список заказов, которые не подтверждены
-//            var orders = orderDAO.findByOwner(appUser).stream()
-//                    .filter(e -> e.getStatusZhurzh() == StatusZhurzh.UNSEEN)
-//                    .filter(Order::getIsFinished)
-//                    .toList();
-//            List<List<InlineKeyboardButton>> lists = new ArrayList<>();
-//            for (var order : orders){
-//                cm.addButtonToList(lists, order.getName(), order.getId());
-//            }
-//            cm.addButtonToList(lists,
-//                    TextMessage.BUTTON_BACK.getMessage(appUser.getLanguage()),
-//                    ChooseOrderCommand.userState.getPath());
-//
-//            cm.sendAnswerEdit(appUser, update, out, lists);
-//            return true;
-//        }
-//        return false;
-//    }
-
     private boolean checkChosenOrderCommand(AppUser appUser, Update update) {
         if (update.hasCallbackQuery()){
             try {
-//                Long idOrder = Long.parseLong(update.getCallbackQuery().getData());
                 orderCasheController.getCurrentOrder(appUser);
             }catch (Exception e){
                 return false;
@@ -118,7 +93,9 @@ public class DeleteOrderCommand implements Command, HasUserState {
             }else {
                 out = TextMessage.DELETE_ORDER_NOT_DELETED.getMessage(appUser.getLanguage());
             }
-            cm.addButtonToMainMenu(lists, appUser);
+            cm.addButtonToList(lists,
+                    TextMessage.BUTTON_BACK_TO_LIST.getMessage(appUser.getLanguage()),
+                    ChooseOrderCommand.userState.getPath());
             cm.sendAnswerEdit(appUser, update, out, lists);
             return true;
         }

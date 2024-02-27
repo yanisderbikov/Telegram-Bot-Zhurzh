@@ -61,7 +61,7 @@ public class FormatIllustrationCommand implements Command, HasUserState {
         return false;
 
     }
-    private boolean endCommand(AppUser appUser, Update update){
+    private boolean endCommand(AppUser appUser, Update update) throws CommandException {
         if (update.hasCallbackQuery()){
             var input = Integer.parseInt(update.getCallbackQuery().getData());
             var format = FormatOfIllustration.values()[input];
@@ -70,11 +70,7 @@ public class FormatIllustrationCommand implements Command, HasUserState {
             var order = cc.findActiveOrder(appUser);
             order.setFormatOfIllustration(format);
             orderDAO.save(order);
-            List<List<InlineKeyboardButton>> lists = new ArrayList<>();
-            List<InlineKeyboardButton> row = new ArrayList<>();
-            cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
-            lists.add(row);
-            cm.sendAnswerEdit(appUser, update, out, lists);
+            cc.getNextCommandAndExecute(appUser, update);
             return true;
         }
         return false;

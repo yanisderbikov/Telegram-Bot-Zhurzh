@@ -4,7 +4,7 @@ public enum TextMessage {
     ACTIVATION_BUTTON("Check status", "Проверить статус"),
     CHOOSE_ORDER_START("Choose the commission you want to check.",
             "Выбери заявку, которую хочешь проверить"),
-    FAIL_FIND_ORDER("I think you do not have any commission now, but you can do it",
+    FAIL_FIND_ORDER("You do not have any finished commission now, but you can do it",
             "У тебя нет сейчас заказов, но ты можешь его сделать"),
     CHOOSE_ORDER_END("Ok, Let's check", "Отлично, давай проверим твой заказ"),
 
@@ -15,6 +15,7 @@ public enum TextMessage {
     DELETE_ORDER_DELETED("Your commission is deleted", "Твой заказ был удален"),
     DELETE_ORDER_NOT_DELETED("Usshh, I was a little bit terrified",
             "Уфф, я даже немного испугался"),
+    BUTTON_BACK_TO_LIST("To list", "К списку"),
     BUTTON_BACK("Back", "Вернуться"),
     BUTTON_YES("Yes", "Да"),
     BUTTON_NO("No", "Нет")

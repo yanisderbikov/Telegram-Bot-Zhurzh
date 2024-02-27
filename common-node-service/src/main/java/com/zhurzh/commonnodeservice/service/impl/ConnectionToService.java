@@ -1,17 +1,12 @@
-package com.zhurzh.node.bot.branches;
+package com.zhurzh.commonnodeservice.service.impl;
 
 import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.commonutils.model.Branches;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j;
-import org.apache.http.client.utils.URIBuilder;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.ResponseEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,11 +15,11 @@ import org.springframework.web.client.RestTemplate;
 
 @Log4j
 @Getter
-public class ConnectionClass implements Branches {
+public class ConnectionToService implements Branches {
     private String callbackPath;
     private String url;
 
-    public ConnectionClass(String callbackPath, String url){
+    public ConnectionToService(String callbackPath, String url){
         this.callbackPath = callbackPath;
         this.url = url;
     }

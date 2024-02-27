@@ -28,7 +28,7 @@ public class CheckOrderService {
             var command = us.getCommand(appUser, update);
             command.execute(appUser, update);
         }catch (Exception e){
-            log.error(e);
+            log.error(List.of(e.getStackTrace()));
             cm.sendToMainMenu(appUser, update);
         }
     }

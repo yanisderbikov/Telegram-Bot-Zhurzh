@@ -132,9 +132,8 @@ public class ReferencesCommand implements Command, HasUserState {
                 List<List<InlineKeyboardButton>> lists = new ArrayList<>();
                 cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
                 lists.add(row);
-                var out = TextMessage.REFERENCE_END.getMessage(appUser.getLanguage());
-                cm.sendAnswerEdit(appUser, update, out, lists);
                 userCache.clearReferenceCache(appUser);
+                cc.getNextCommandAndExecute(appUser, update);
                 return true;
             }
         }catch (Exception e){
