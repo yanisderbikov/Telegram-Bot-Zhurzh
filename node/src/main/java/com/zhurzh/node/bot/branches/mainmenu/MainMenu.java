@@ -20,6 +20,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,8 @@ public class MainMenu implements Branches {
             manager(body.getUpdate());
             return ResponseEntity.ok("ok");
         }catch (Exception e){
+            var list = Arrays.asList(e.getStackTrace());
+            log.error(list);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -80,11 +83,11 @@ public class MainMenu implements Branches {
     }
 
     private void addButtons(List<List<InlineKeyboardButton>> list, Update update, AppUser appUser){
-
         for (var con : connectionClasses){
             if (con instanceof StartManager) continue;
-            if (con instanceof SeaRemBranch &&
-                    !connectionAppUser.findOrSaveAppUser(update).getTelegramUserName().equals("yanderbikov"))  {
+            if (con instanceof SeaRemBranch
+                    && appUser.getTelegramUserName() != null
+                    && !appUser.getTelegramUserName().equals("yanderbikov"))  {
                 continue;
             }
             var response = con.isActive(new Body(appUser, update));

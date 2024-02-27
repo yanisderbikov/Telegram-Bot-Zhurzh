@@ -32,7 +32,6 @@
             <groupId>com.zhurzh</groupId>
             <artifactId>common-node-service</artifactId>
             <version>LATEST</version>
-
         </dependency>
 
         <dependency>
@@ -43,7 +42,6 @@
             <groupId>com.zhuzh</groupId>
             <artifactId>common-utils</artifactId>
             <version>LATEST</version>
-
         </dependency>
     </dependencies>
 

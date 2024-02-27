@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Details</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+
+<h1>Order Details</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Owner</th>
+        <th class="min-width-100">Status</th>
+        <th class="min-width-100">Deadline</th>
+        <th class="min-width-text">Comment to Art</th>
+        <th>Calculated price</th>
+        <th>Person's price</th>
+        <th>Count of Persons</th>
+        <th>Format of Illustration</th>
+        <th>Detalization of Illustration</th>
+        <th>Background of Illustration</th>
+        <th class="min-width-100">Name</th>
+        <th>Art Reference</th>
+        <th>Finished</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="viewOrder : ${orders}">
+        <td th:text="${viewOrder.id}"></td>
+        <td th:text="${viewOrder.owner.telegramUserName}"></td>
+        <td th:text="${viewOrder.getStatusZhurzh().getMessage('eng')}"></td>
+        <td th:text="${#dates.format(viewOrder.deadLine, 'yyyy-MM-dd')}"></td>
+        <td th:text="${viewOrder.commentToArt}"></td>
+        <td th:text="${viewOrder.calculatedPrice}"></td>
+        <td th:text="${viewOrder.price}"></td>
+        <td th:text="${viewOrder.countOfPersons}"></td>
+        <td th:text="${viewOrder.formatOfIllustration}"></td>
+        <td th:text="${viewOrder.detalizationOfIllustration}"></td>
+        <td th:text="${viewOrder.backgroundOfIllustration}"></td>
+        <td th:text="${viewOrder.name}"></td>
+        <td th:text="${viewOrder.artReference}"></td>
+        <td th:text="${viewOrder.isFinished}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+
+</body>
+</html>
+
+
+<!--<td>
+            <span th:if="${viewOrder.statusEditable}">
+                <select th:model="${viewOrder.getStatusZhurzh()}" class="status-select">
+                    <option value="UNSEEN" th:selected="${viewOrder.getStatusZhurzh() == 'UNSEEN'}">Unseen</option>
+                    <option value="SEEN" th:selected="${viewOrder.getStatusZhurzh() == 'SEEN'}">Seen</option>
+                    <option value="ACCEPTED"
+                            th:selected="${viewOrder.getStatusZhurzh() == 'ACCEPTED'}">Accepted</option>
+                    <option value="REJECTED"
+                            th:selected="${viewOrder.getStatusZhurzh() == 'REJECTED'}">Rejected</option>
+                </select>
+                <button onclick="saveStatus('${viewOrder.id}')">Save</button>
+            </span>
+            <span th:unless="${viewOrder.statusEditable}">
+                <span th:text="${viewOrder.statusZhurzh.getMessage('eng')}"></span>
+            </span>
+        </td>-->

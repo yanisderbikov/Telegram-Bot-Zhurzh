@@ -75,6 +75,7 @@ public class CommandsManager {
     }
 
     public boolean sendPhoto(AppUser appUser, Update update, String out, @NotNull String imagePath, List<List<InlineKeyboardButton>> list) {
+        log.debug("SendPhoto for user : " + appUser.getTelegramUserId());
         long chatId = appUser.getChatId();
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setPhoto(new InputFile(imagePath));
@@ -95,6 +96,8 @@ public class CommandsManager {
             log.error(responce);
             sendAnswerEdit(appUser, update, out, list);
         }
+        log.debug(String.format("SendPhoto via DispatcherPhoto, status : %s, body : %s",
+                responce.getStatusCodeValue(), responce.getBody()));
         return responce.getStatusCode().is2xxSuccessful();
     }
 

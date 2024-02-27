@@ -2,6 +2,7 @@ package com.zhurzh.nodestartservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
@@ -9,7 +10,11 @@ import org.springframework.context.annotation.ComponentScan;
 public class NodeStartServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(NodeStartServiceApplication.class, args);
+        SpringApplication app = new SpringApplication(NodeStartServiceApplication.class);
+        // Указываете путь к файлу, куда будет записан PID
+        String pidFilePath = "pids/application-node-start.pid";
+        app.addListeners(new ApplicationPidFileWriter(pidFilePath));
+        app.run(args);
     }
 
 }

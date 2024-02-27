@@ -26,10 +26,6 @@ public class MainNodeStartService {
     private final String RU = "/ru";
     private final String ENG = "/eng";
     private final String RULES = "/rules";
-    private final String WelcomeFunc = "welcomeMessage";
-    private final String ToMainMenu = "toMainMenu";
-
-    private final String IMAGE = "/start";
     private final String SWITCH_LANGUAGE = "/switch_language";
 
     @Value("${image.hello.url}")
