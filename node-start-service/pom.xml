@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.zhurzh</groupId>
     <artifactId>node-start-service</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.3</version>
     <name>node-start-service</name>
     <description>node-start-service</description>
     <properties>

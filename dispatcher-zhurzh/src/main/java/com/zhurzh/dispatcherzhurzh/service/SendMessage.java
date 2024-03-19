@@ -58,4 +58,11 @@ public class SendMessage {
 
     }
 
+    public void sendMessageWithLinkZhurzh(Long telegramUserId, String message){
+        var appUser = appUserDAO.findByTelegramUserId(telegramUserId).orElseThrow();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        cm.addButtonToRowAsURL(row, "Zhurzh", "https://t.me/KateZhurzh");
+        cm.sendAnswerEdit(appUser, null, message, List.of(row));
+    }
+
 }
