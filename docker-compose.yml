@@ -1,66 +1,49 @@
 version: '3.8'
 services:
-  app1:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: zhurzhbot/dispatcher-zhurzh-1.0.0.jar
-    ports:
-      - "8090:8090"
-    restart: always
-    container_name: site-commissions-zhurzh
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
-      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
-      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
-      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
-      SPRING_JPA_GENERATE_DDL: "true"
-      TARGET_HOST: ${TARGET_HOST}
-    deploy:
-      resources:
-        limits:
-          memory: 150M
+#  site-commissions:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#      args:
+#        JAR_FILE: dispatcher-zhurzh-1.0.0.jar
+#    ports:
+#      - "8095:8090"
+#    restart: always
+#    container_name: site-commissions-zhurzh
+#    environment:
+#      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+#      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+#      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+#      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
+#      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
+#      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
+#      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
+#      SPRING_JPA_GENERATE_DDL: "true"
+#      TARGET_HOST: ${TARGET_HOST}
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 150M
+#    logging:
+#      options:
+#        max-size: "10m"
+#        max-file: "3"
 
-  app2:
+  unified-services:
     build:
       context: .
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: zhurzhbot/node-1.2.3.jar
+      dockerfile: Dockerfile-all
     ports:
-      - "8195:8195"
+      - "8195:8195"  # app2
+      - "9002:9002"  # app3
+      - "9003:9003"  # app5
+      - "9005:9005"  # app6
+      - "9001:9001"  # app7
+      - "9004:9004"  # app8
     restart: always
-    container_name: node-main-getaway
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
-      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
-      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
-      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
-      SPRING_JPA_GENERATE_DDL: "true"
-      TARGET_HOST: ${TARGET_HOST}
-      DISPATCHER_STATIC_URL: ${DISPATCHER_STATIC_URL}
-    deploy:
-      resources:
-        limits:
-          memory: 150M
-
-  app3:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: zhurzhbot/node-order-service-1.2.3.jar
-    ports:
-      - "9002:9002"
-    restart: always
-    container_name: order-service
+    container_name: unified-services
+    volumes:
+      - .:/app
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
@@ -76,16 +59,24 @@ services:
     deploy:
       resources:
         limits:
-          memory: 150M
+          cpus: '0.35'
+          memory: 500M
+        reservations:
+          cpus: '0.25'
+          memory: 300M
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   app4:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        JAR_FILE: zhurzhbot/dispatcher-1.2.3.jar
+        JAR_FILE: dispatcher-1.2.3.jar
     ports:
-      - "8443:8999"
+      - "8090:8999"
     restart: always
     container_name: dispatcher
     environment:
@@ -105,111 +96,7 @@ services:
       resources:
         limits:
           memory: 150M
-
-  app5:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: zhurzhbot/node-check-order-service-1.2.3.jar
-    ports:
-      - "9003:9003"
-    restart: always
-    container_name: check-order-service
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
-      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
-      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
-      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
-      SPRING_JPA_GENERATE_DDL: "true"
-      TARGET_HOST: ${TARGET_HOST}
-      DISPATCHER_STATIC_URL: ${DISPATCHER_STATIC_URL}
-      BOT_TOKEN: ${BOT_TOKEN}
-    deploy:
-      resources:
-        limits:
-          memory: 150M
-
-  app6:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: zhurzhbot/node-faq-service-1.2.3.jar
-    ports:
-      - "9005:9005"
-    restart: always
-    container_name: faq-service
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
-      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
-      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
-      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
-      SPRING_JPA_GENERATE_DDL: "true"
-      TARGET_HOST: ${TARGET_HOST}
-      DISPATCHER_STATIC_URL: ${DISPATCHER_STATIC_URL}
-      BOT_TOKEN: ${BOT_TOKEN}
-    deploy:
-      resources:
-        limits:
-          memory: 150M
-
-  app7:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: zhurzhbot/node-start-service-1.2.3.jar
-    ports:
-      - "9001:9001"
-    restart: always
-    container_name: start-service
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
-      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
-      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
-      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
-      SPRING_JPA_GENERATE_DDL: "true"
-      TARGET_HOST: ${TARGET_HOST}
-      DISPATCHER_STATIC_URL: ${DISPATCHER_STATIC_URL}
-      BOT_TOKEN: ${BOT_TOKEN}
-    deploy:
-      resources:
-        limits:
-          memory: 150M
-
-  app8:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        JAR_FILE: zhurzhbot/node-price-list-1.2.3.jar
-    ports:
-      - "9004:9004"
-    restart: always
-    container_name: price-list
-    environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
-      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
-      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
-      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
-      SPRING_JPA_GENERATE_DDL: "true"
-      TARGET_HOST: ${TARGET_HOST}
-      DISPATCHER_STATIC_URL: ${DISPATCHER_STATIC_URL}
-      BOT_TOKEN: ${BOT_TOKEN}
-    deploy:
-      resources:
-        limits:
-          memory: 150M
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"

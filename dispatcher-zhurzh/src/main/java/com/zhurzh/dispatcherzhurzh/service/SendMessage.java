@@ -39,7 +39,6 @@ public class SendMessage {
             cm.sendAnswerEdit(appUser, null, message, new ArrayList<>(){{add(cm.buttonMainMenu(appUser.getLanguage()));}});
         }
     }
-
     public void sendMessageGroupAppUsers(List<AppUser> appUserList, String engMessage, String ruMessage){
         List<List<InlineKeyboardButton>> list = new ArrayList<>();
 //        cm.addButtonToList(list, );
