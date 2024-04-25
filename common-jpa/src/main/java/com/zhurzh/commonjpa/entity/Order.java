@@ -123,6 +123,10 @@ public class Order {
                 && ! isNull(deadLine)
                 ;
     }
+
+    /**
+     * @return Выдает результат, даже если заявка не полностью заполнена
+     */
     public String calculatePrice() {
         if (isAllFilledExceptPrice()) {
             try {

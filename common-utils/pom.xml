@@ -8,16 +8,11 @@
         <version>1.0.0</version>
 
     </parent>
-    <version>1.0.0</version>
+    <version>1.2.0</version>
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>common-utils</artifactId>
-
-<!--    <properties>-->
-<!--        <maven.compiler.source>11</maven.compiler.source>-->
-<!--        <maven.compiler.target>11</maven.compiler.target>-->
-<!--    </properties>-->
 
     <dependencies>
         <dependency>
@@ -28,7 +23,7 @@
         <dependency>
             <groupId>com.zhuzh</groupId>
             <artifactId>common-jpa</artifactId>
-            <version>1.0.0</version>
+            <version>LATEST</version>
 
         </dependency>
         <dependency>

@@ -1,5 +1,6 @@
 package com.zhurzh.nodepricelist.service;
 
+import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
 import com.zhurzh.nodepricelist.commands.PriceListCommand;
 import lombok.AllArgsConstructor;
@@ -18,12 +19,12 @@ public class PriceListService {
 
     private PriceListCommand command;
     private CommandsManager cm;
-    public void manage(Update update){
+    public void manage(AppUser appUser, Update update){
         try {
-            command.execute(update);
+            command.execute(appUser, update);
         }catch (Exception e){
             log.error(e);
-            cm.sendToMainMenu(update);
+            cm.sendToMainMenu(appUser, update);
         }
     }
 }

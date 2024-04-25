@@ -52,13 +52,11 @@ public class ReferencesCommand implements Command, HasUserState {
         return userState;
     }
     @Override
-    public void execute(Update update) throws CommandException {
-        var appUser = cm.findOrSaveAppUser(update);
+    public void execute(AppUser appUser, Update update) throws CommandException {
         if (startCommand(appUser, update)) return;
         if (catcherFilesCommand(appUser, update)) return;
         if (endCommand(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
-
     }
 
     @Override
@@ -134,9 +132,8 @@ public class ReferencesCommand implements Command, HasUserState {
                 List<List<InlineKeyboardButton>> lists = new ArrayList<>();
                 cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
                 lists.add(row);
-                var out = TextMessage.REFERENCE_END.getMessage(appUser.getLanguage());
-                cm.sendAnswerEdit(appUser, update, out, lists);
                 userCache.clearReferenceCache(appUser);
+                cc.getNextCommandAndExecute(appUser, update);
                 return true;
             }
         }catch (Exception e){

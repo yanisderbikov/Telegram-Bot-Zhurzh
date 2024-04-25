@@ -1,8 +1,8 @@
 package com.zhurzh.commonnodeservice.service.impl;
 
-import lombok.Value;
 import lombok.extern.log4j.Log4j;
 import org.apache.http.client.utils.URIBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,8 +20,8 @@ import java.net.URISyntaxException;
 @Log4j
 public class ConnectionToDispatcherPhoto {
 
-    private String port = "8999";
-    private String url = "localhost";
+    @Value("${dispatcher.server.url}")
+    private String url;
 
     public ResponseEntity<String> sendRequest(SendPhoto sendPhoto) {
         try {
@@ -76,12 +76,7 @@ public class ConnectionToDispatcherPhoto {
         }
     }
 
-    private URI buildUri(String path) throws URISyntaxException {
-        return new URIBuilder()
-                .setScheme("http")
-                .setPort(Integer.parseInt(port))
-                .setHost(url)
-                .setPath(path)
-                .build();
+    private String buildUri(String path) throws URISyntaxException {
+        return url + path;
     }
 }

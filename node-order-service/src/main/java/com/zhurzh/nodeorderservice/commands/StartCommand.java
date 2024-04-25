@@ -51,9 +51,8 @@ public class StartCommand implements Command, HasUserState {
     }
 
     @Override
-    public void execute(Update update) throws CommandException {
+    public void execute(AppUser appUser, Update update) throws CommandException {
         // может приходить /orderservice
-        var appUser = cm.findOrSaveAppUser(update);
         if (isThereNotFinished(appUser, update)) return;
         if (isMainMessage(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());

@@ -43,8 +43,7 @@ public class BackgroundOfIllustrationCommand implements Command, HasUserState {
     }
 
     @Override
-    public void execute(Update update) throws CommandException {
-        var appUser = cm.findOrSaveAppUser(update);
+    public void execute(AppUser appUser, Update update) throws CommandException {
         if (startCommand(appUser, update)) return;
         if (endCommand(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
@@ -68,7 +67,7 @@ public class BackgroundOfIllustrationCommand implements Command, HasUserState {
         }
         return false;
     }
-    private boolean endCommand(AppUser appUser, Update update){
+    private boolean endCommand(AppUser appUser, Update update) throws CommandException {
         if (update.hasCallbackQuery()){
             var background = BackgroundOfIllustration.values()[
                     Integer.parseInt(update.getCallbackQuery().getData())];
@@ -76,9 +75,7 @@ public class BackgroundOfIllustrationCommand implements Command, HasUserState {
             var order = cc.findActiveOrder(appUser);
             order.setBackgroundOfIllustration(background);
             orderDAO.save(order);
-            List<InlineKeyboardButton> row = new ArrayList<>();
-            cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
-            cm.sendAnswerEdit(appUser, update, out, new ArrayList<>(List.of(row)));
+            cc.getNextCommandAndExecute(appUser, update);
             return true;
         }
         return false;

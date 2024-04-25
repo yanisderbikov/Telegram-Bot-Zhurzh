@@ -41,13 +41,13 @@ public enum TextMessage {
             "If you want to send photos, attach them to the <b>references</b> item. You can do this after completing the form.",
             "Напиши текстом, пожалуйста.\nЕсли хочешь отправить фотографии, прикрепи их к пункту <b>референсы</b>. Если что ты сможешь это сделать по завершению заявки"),
     COMMENT_TO_ART_END("Ok next one", "Хорошо, далее"),
-    PRICE_PRE("Around cost is: ", "Ориентировочная цена: "),
-    PRICE_START("\nZhurzh will be very, very happy if you write below the price you're willing to pay for the commission.\n" +
-            "If you want to make any changes to the request, you'll be able to do it later, and I'll gladly prepare a recalculation." +
-            "\n\nHow much you will be able to pay for the art?",
-    "\nЖурж будет очень-очень рада, если ты напишешь ниже ту стоимость заказа, которую ты будешь готов оплатить.\n" +
-            "Если ты захочешь что-то исправить в заявке, ты сможешь сделать это дальше, а я с радостью подготовлю перерасчет" +
-            "\n\nПрошу написать сколько ты был бы готов заплатить за работу??"),
+    PRICE_PRE("<b>Around cost is</b>: ", "<b>Ориентировочная цена</b>: "),
+    PRICE_START("\nIf you want to make any changes to the request, you can do so later, and I'll gladly prepare a recalculation.\n" +
+            "\n" +
+            "Zhurzh will be very happy if you write below the cost of the order that you are willing to pay!",
+    "\nЕсли ты захочешь что-то исправить в заявке, то ты сможешь сделать это дальше, а я с радостью подготовлю перерасчет.  \n" +
+            "\n" +
+            "Журж будет очень рада, если ты напишешь ниже ту стоимость заказа, которую будешь готов оплатить!"),
     PRICE_INVALID_NUM("I can't understand. Write down just a simple number. It should be more than zero",
             "Я не очень понял. Напиши пожалуйста просто цифру больше нуля"),
     PRICE_END("Let's check to make sure:", "Давай проверим, чтоб наверняка: "),

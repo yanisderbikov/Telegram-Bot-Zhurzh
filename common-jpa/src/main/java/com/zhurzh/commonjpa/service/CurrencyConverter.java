@@ -47,7 +47,7 @@ public class CurrencyConverter {
 //      @Scheduled(cron = "0 0 9 * * MON-FRI"): Запускать в 9:00 утра с понедельника по пятницу.
 //      @Scheduled(cron = "0 0 9 1 * *"): Запускать в 9:00 утра первого числа каждого месяца.
 
-    @Scheduled(cron = "0 0 0/5 * * *")
+    @Scheduled(cron = "0 0 9 * * *")
     public void updateCurrency(){
         actualCurrency = getUsdToRubRate();
         log.debug("Updated currency : "  + actualCurrency);

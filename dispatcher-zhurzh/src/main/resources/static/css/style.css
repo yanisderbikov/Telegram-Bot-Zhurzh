@@ -1,0 +1,164 @@
+/* Общие стили */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+h1, p {
+    text-align: center;
+}
+/* Стилизация форм */
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 20px auto;
+}
+
+/* Стили для левого колонтитула */
+.left-header {
+    background-color: #000;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Стилизация таблиц */
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #000;
+    color: white;
+}
+th.min-width-text {
+    min-width: 500px;
+}
+th.min-width-100 {
+    min-width: 100px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Новые стили кнопок */
+.custom-btn {
+    padding: 10px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+    outline: none;
+    min-width: 100px;
+}
+
+.custom-btn:hover, .custom-btn:focus {
+    background-color: #454546;
+    min-width: 100px;
+}
+
+.custom-btn:active {
+    background-color: #454546;
+    transform: translateY(1px);
+    min-width: 100px;
+}
+
+
+.centered-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+textarea {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    background-color: #f8f8f8;
+    font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    resize: vertical; /* Позволяет пользователю изменять только вертикальный размер */
+    outline: none; /* Убирает стандартный фокус браузера */
+}
+
+textarea:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0,122,255,0.25);
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    background-color: #f8f8f8;
+    font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    outline: none;
+}
+
+input[type="text"]:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0,122,255,0.25);
+}
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    appearance: none; /* Убирает стандартный вид выпадающего списка */
+    -webkit-appearance: none; /* Для Safari */
+    -moz-appearance: none; /* Для Firefox */
+    outline: none;
+}
+
+select:focus {
+    border-color: #007aff;
+    box-shadow: 0 0 0 3px rgba(0,122,255,0.25);
+}
+
+

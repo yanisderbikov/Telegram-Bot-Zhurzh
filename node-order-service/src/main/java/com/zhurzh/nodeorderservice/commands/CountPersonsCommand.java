@@ -39,8 +39,7 @@ public class CountPersonsCommand implements Command, HasUserState {
     }
 
     @Override
-    public void execute(Update update) throws CommandException {
-        var appUser = cm.findOrSaveAppUser(update);
+    public void execute(AppUser appUser, Update update) throws CommandException {
         if (startCommand(appUser, update)) return;
         if (endCommand(update, appUser)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
@@ -64,19 +63,15 @@ public class CountPersonsCommand implements Command, HasUserState {
         return false;
     }
 
-    private boolean endCommand(Update update, AppUser appUser) {
+    private boolean endCommand(Update update, AppUser appUser) throws CommandException {
         if (update.hasCallbackQuery()) {
             var ordinal = Integer.parseInt(update.getCallbackQuery().getData());
             var c = CountOfPersons.values()[ordinal];
             Order order = cc.findActiveOrder(appUser);
             order.setCountOfPersons(c);
             orderDAO.save(order);
-            List<InlineKeyboardButton> row = new ArrayList<>();
-            cc.addButtonToNextStepAndCorrectionButton(row, appUser, userState);
-            List<List<InlineKeyboardButton>> lists = new ArrayList<>();
-            lists.add(row);
-            var out = TextMessage.COUNT_OF_PERSONS_END.getMessage(appUser.getLanguage());
-            cm.sendAnswerEdit(appUser, update, out, lists);
+
+            cc.getNextCommandAndExecute(appUser, update);
             return true;
         }
         return false;

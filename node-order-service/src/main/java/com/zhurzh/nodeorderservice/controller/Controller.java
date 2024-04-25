@@ -1,6 +1,8 @@
 package com.zhurzh.nodeorderservice.controller;
 
+import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
+import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.nodeorderservice.enums.TextMessage;
 import com.zhurzh.nodeorderservice.service.OrderService;
 import lombok.AllArgsConstructor;
@@ -24,16 +26,15 @@ public class Controller implements Branches {
 
     @Override
     @PostMapping
-    public ResponseEntity<String> isActive(@RequestBody Update update){
-        var appUser = cm.findOrSaveAppUser(update);
-        var out = TextMessage.ACTIVATION_BUTTON.getMessage(appUser.getLanguage());
+    public ResponseEntity<String> isActive(@RequestBody Body body){
+        var out = TextMessage.ACTIVATION_BUTTON.getMessage(body.getAppUser().getLanguage());
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
     @Override
     @PostMapping("/execute")
-    public ResponseEntity<String> execute(@RequestBody Update update){
+    public ResponseEntity<String> execute(@RequestBody Body body){
         try {
-            orderService.text(update);
+            orderService.execute(body.getAppUser(), body.getUpdate());
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);

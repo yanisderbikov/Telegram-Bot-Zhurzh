@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
  * Интерфейс прослушивает очереди
  */
 
-public interface ConsumerService {
+public interface ConsumerServiceRabbitMQ {
     void consumeTextMessageUpdates(Update update);
 //    void consumeDocMessageUpdates(Update update);
 //    void consumePhotoMessageUpdates(Update update);

@@ -1,6 +1,8 @@
 package com.zhurzh.nodefaqservice.controller;
 
+import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
+import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.commonutils.model.Branches;
 import com.zhurzh.nodefaqservice.enums.TextMessage;
 import com.zhurzh.nodefaqservice.service.NodeFaqService;
@@ -15,14 +17,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Log4j
 @AllArgsConstructor
 public class Controller implements Branches {
-    private CommandsManager cm;
     private NodeFaqService nodeFaqService;
 
     @Override
     @PostMapping("/")
-    public ResponseEntity<String> isActive(@RequestBody Update update) {
-        var appUser = cm.findOrSaveAppUser(update);
-        var out = TextMessage.ACTIVATION_BUTTON.getMessage(appUser.getLanguage());
+    public ResponseEntity<String> isActive(@RequestBody Body body) {
+        var out = TextMessage.ACTIVATION_BUTTON.getMessage(body.getAppUser().getLanguage());
         log.debug("FAQ is active and get");
         return new ResponseEntity<>(out, HttpStatus.OK);
     }
@@ -30,9 +30,9 @@ public class Controller implements Branches {
 
     @Override
     @PostMapping("/execute")
-    public ResponseEntity<String> execute(@RequestBody Update update){
+    public ResponseEntity<String> execute(@RequestBody Body body){
         try {
-            nodeFaqService.mange(update);
+            nodeFaqService.mange(body.getAppUser(), body.getUpdate());
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             log.error(e);

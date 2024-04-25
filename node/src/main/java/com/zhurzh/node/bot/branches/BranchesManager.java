@@ -1,15 +1,17 @@
 package com.zhurzh.node.bot.branches;
 
-
 import com.zhurzh.commonjpa.dao.AppUserDAO;
 import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonjpa.enums.BranchStatus;
-import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
+import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.commonutils.model.Branches;
 import com.zhurzh.node.bot.branches.faq.FAQManager;
 import com.zhurzh.node.bot.branches.mainmenu.MainMenu;
 import com.zhurzh.node.bot.branches.pricelist.PriceListManager;
+import com.zhurzh.node.bot.branches.searem.SeaRemBranch;
 import com.zhurzh.node.bot.branches.start.StartManager;
+import com.zhurzh.node.service.CheckLastMessage;
+import com.zhurzh.node.service.ConnectionAppUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;
@@ -20,7 +22,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 @AllArgsConstructor
 @Log4j
-public class BranchesManager  implements BranchesManagerInterface{
+public class BranchesManager implements BranchesManagerInterface{
 
     private AppUserDAO appUserDAO;
     private CheckOrderManager checkOrderManager;
@@ -28,44 +30,50 @@ public class BranchesManager  implements BranchesManagerInterface{
     private StartManager startManager;
     private MainMenu mainMenu;
     private PriceListManager priceListManager;
-    private CommandsManager commandsManager;
     private FAQManager faqManager;
-//    @NonNull
-//    private Map<String, Branches> beansOfCommands;
+    private SeaRemBranch seaRemBranch;
+    private ConnectionAppUser connectionAppUser;
+    private CheckLastMessage checkLastMessage;
 
-//    @Override
+    @Override
     public void consume(Update update) {
-        if (commandsManager.checkIsLastMessageAndSave(update)) return;
-        findCurrentBranch(update).execute(update);
+        var appUser = connectionAppUser.findOrSaveAppUser(update);
+        if (checkLastMessage.checkIsLastMessageAndSave(update)) return;
+        findCurrentBranch(appUser, update).execute(new Body(appUser, update));
     }
 
 
-//    @PostConstruct
-//    private void findAllBranchBeans() {
-//        // Получаем все бины, реализующие интерфейс Branch, из контекста приложения
-//        beansOfCommands = applicationContext.getBeansOfType(Branches.class);
-
-//    }
-
-    private Branches findCurrentBranch(Update update){
+    private Branches findCurrentBranch(AppUser appUser, Update update){
         Branches branches;
 
-        AppUser appUser = commandsManager.findOrSaveAppUser(update);
         if (isStartBranch(update, appUser)) return startManager;
         if (isMenuBranch(update, appUser)) return mainMenu;
         if (isCheckOrderBranch(update, appUser)) return checkOrderManager;
         if (isOrderBranch(update, appUser)) return orderManager;
         if (isPriceListBranch(update, appUser)) return priceListManager;
         if (isFaqBranch(update, appUser)) return faqManager;
+        if (isSeaRemBranch(update, appUser)) return seaRemBranch;
         switch (appUser.getBranchStatus()){
             case START -> branches = startManager;
             case ORDER -> branches = orderManager;
             case PRICE_LIST -> branches = priceListManager;
             case CHECK_ORDER -> branches = checkOrderManager;
             case FAQ -> branches = faqManager;
+            case SEA_REM -> branches = seaRemBranch;
             default -> branches = mainMenu;
         }
         return branches;
+    }
+
+    private boolean isSeaRemBranch(Update update, AppUser appUser) {
+        var isTrue =  update.hasCallbackQuery() &&
+                update.getCallbackQuery().getData().equals(seaRemBranch.getCallbackPath());
+        if (isTrue) {
+            appUser.setBranchStatus(BranchStatus.SEA_REM);
+            appUserDAO.save(appUser);
+            return true;
+        }
+        return false;
     }
 
     private boolean isFaqBranch(Update update, AppUser appUser) {

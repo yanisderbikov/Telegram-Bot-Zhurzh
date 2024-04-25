@@ -25,8 +25,4 @@ public class OrderCasheController {
     public void setOrder(AppUser appUser, Order order){
         orderMap.put(appUser, order.getId());
     }
-    public void setOrder(AppUser appUser, Long l){
-        orderMap.put(appUser, l);
-
-    }
 }

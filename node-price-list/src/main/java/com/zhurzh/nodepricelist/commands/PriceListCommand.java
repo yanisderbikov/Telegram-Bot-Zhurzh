@@ -38,8 +38,7 @@ public class PriceListCommand implements Command {
     private String imagePathMenuEng;
 
     @Override
-    public void execute(Update update) throws CommandException {
-        var appUser = cm.findOrSaveAppUser(update);
+    public void execute(AppUser appUser, Update update) throws CommandException {
         if (startCommand(update, appUser)) return;
         throw new CommandException(PriceListCommand.class.getName());
     }

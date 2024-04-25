@@ -38,5 +38,4 @@ public class FAQ {
     @CreationTimestamp
     private LocalDate creationDate;
 
-
 }
