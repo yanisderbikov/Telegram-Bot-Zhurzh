@@ -1,10 +1,13 @@
 package com.zhurzh.nodefaqservice.controller;
 
+import com.zhurzh.commonjpa.enums.BranchStatus;
 import com.zhurzh.commonutils.model.Body;
+import com.zhurzh.commonutils.model.Branch;
 import com.zhurzh.commonutils.model.BranchesInterface;
 import com.zhurzh.nodefaqservice.enums.TextMessage;
 import com.zhurzh.nodefaqservice.service.NodeFaqService;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +16,15 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Log4j
-@AllArgsConstructor
 @Component
-public class FaqController implements BranchesInterface {
+public class FaqController extends Branch {
 
-    private NodeFaqService nodeFaqService;
+    private final NodeFaqService nodeFaqService;
+
+    public FaqController(NodeFaqService nodeFaqService) {
+        super(BranchStatus.FAQ);
+        this.nodeFaqService = nodeFaqService;
+    }
 
     @Override
     public String isActiveAndGetButtonName(@RequestBody Body body) {

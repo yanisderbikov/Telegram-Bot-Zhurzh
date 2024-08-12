@@ -10,6 +10,7 @@ import com.zhurzh.nodeorderservice.controller.HasUserState;
 import com.zhurzh.nodeorderservice.controller.UserState;
 import com.zhurzh.nodeorderservice.enums.TextMessage;
 import com.zhurzh.nodeorderservice.service.CommonCommands;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +20,6 @@ import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
 import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 

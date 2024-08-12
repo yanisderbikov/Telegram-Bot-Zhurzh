@@ -6,12 +6,14 @@ import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.zhurzh.commonnodeservice",
-        "com.zhurzh.node",
-//        "com.zhurzh.nodecheckorderservice",
-        "com.zhurzh.nodefaqservice",
-        "com.zhurzh.nodeorderservice",
-})
+//@ComponentScan(basePackages = {"com.zhurzh.commonnodeservice",
+//        "com.zhurzh.node",
+////        "com.zhurzh.nodecheckorderservice",
+//        "com.zhurzh.nodefaqservice",
+//        "com.zhurzh.nodeorderservice",
+//        "com.zhurzh.nodepricelist",
+//        "com.zhurzh.nodestartservice",
+//})
 public class NodeApplication {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(NodeApplication.class);

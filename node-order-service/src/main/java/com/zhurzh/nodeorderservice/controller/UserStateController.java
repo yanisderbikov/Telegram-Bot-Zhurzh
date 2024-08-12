@@ -5,13 +5,13 @@ import com.zhurzh.commonutils.model.Command;
 //import com.zhurzh.nodeorderservice.commands.DefaultCommand;
 import com.zhurzh.nodeorderservice.commands.StartCommand;
 import com.zhurzh.nodeorderservice.ehcache.MyCacheManager;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 

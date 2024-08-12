@@ -4,12 +4,12 @@ import com.google.common.cache.CacheBuilder;
 import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.nodeorderservice.commands.StartCommand;
 import com.zhurzh.nodeorderservice.controller.UserState;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 
 @Component

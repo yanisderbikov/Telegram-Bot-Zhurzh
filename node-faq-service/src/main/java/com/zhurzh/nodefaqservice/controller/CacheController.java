@@ -3,10 +3,10 @@ package com.zhurzh.nodefaqservice.controller;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.zhurzh.commonjpa.entity.AppUser;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;

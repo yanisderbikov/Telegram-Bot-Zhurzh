@@ -1,6 +1,7 @@
 package com.zhurzh.commonnodeservice.service.impl;
 
 import com.zhurzh.commonnodeservice.service.ProducerService;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
@@ -19,10 +20,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import com.zhurzh.commonjpa.entity.AppUser;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Этот класс помагает легко справляться с любыми возможными сообщениями

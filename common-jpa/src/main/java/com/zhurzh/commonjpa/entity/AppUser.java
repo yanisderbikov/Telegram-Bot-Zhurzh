@@ -1,10 +1,10 @@
 package com.zhurzh.commonjpa.entity;
 
 import com.zhurzh.commonjpa.enums.BranchStatus;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter

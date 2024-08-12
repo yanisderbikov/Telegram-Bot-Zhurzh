@@ -3,6 +3,7 @@ package com.zhurzh.node.branches;
 import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.commonutils.model.Branch;
+import com.zhurzh.node.branches.main.MainMenu;
 import com.zhurzh.node.service.CheckLastMessage;
 import com.zhurzh.node.service.ConnectionAppUser;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ public class BranchesManager implements BranchesManagerInterface {
     private final List<Branch> branches;
     private CheckLastMessage checkLastMessage;
     private ConnectionAppUser connectionAppUser;
+    private MainMenu mainMenu;
 
 
     @Override
@@ -35,6 +37,6 @@ public class BranchesManager implements BranchesManagerInterface {
                 return branch;
             }
         }
-        throw new RuntimeException();
+        return mainMenu;
     }
 }

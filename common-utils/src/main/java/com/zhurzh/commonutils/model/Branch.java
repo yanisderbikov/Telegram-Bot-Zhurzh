@@ -6,12 +6,16 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-@AllArgsConstructor
 public abstract class Branch implements BranchesInterface {
 
     @Getter
-    @NonNull private String path;
-    @NonNull private BranchStatus currentBranchStatus;
+    private final String path;
+    private final BranchStatus currentBranchStatus;
+
+    public Branch(@NonNull BranchStatus currentBranchStatus) {
+        this.path = currentBranchStatus.getPath();
+        this.currentBranchStatus = currentBranchStatus;
+    }
 
     public boolean isCurrentBranch(Update update, BranchStatus branchStatus) {
         if (byBranchStatus(branchStatus)) return true;

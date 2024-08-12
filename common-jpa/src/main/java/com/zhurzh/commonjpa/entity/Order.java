@@ -4,7 +4,8 @@ import com.zhurzh.commonjpa.enums.*;
 import com.zhurzh.commonjpa.service.CurrencyConverter;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

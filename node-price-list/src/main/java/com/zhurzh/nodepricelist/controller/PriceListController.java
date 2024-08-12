@@ -1,6 +1,8 @@
 package com.zhurzh.nodepricelist.controller;
 
+import com.zhurzh.commonjpa.enums.BranchStatus;
 import com.zhurzh.commonutils.model.Body;
+import com.zhurzh.commonutils.model.Branch;
 import com.zhurzh.commonutils.model.BranchesInterface;
 import com.zhurzh.nodepricelist.enums.TextMessage;
 import com.zhurzh.nodepricelist.service.PriceListService;
@@ -10,11 +12,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Log4j
-@AllArgsConstructor
 @Component
-public class PriceListController implements BranchesInterface {
+public class PriceListController extends Branch {
 
-    private PriceListService priceListService;
+    private final PriceListService priceListService;
+
+    public PriceListController(PriceListService priceListService) {
+        super(BranchStatus.PRICE_LIST);
+        this.priceListService = priceListService;
+    }
 
     @Override
     public String isActiveAndGetButtonName(@RequestBody Body body){
