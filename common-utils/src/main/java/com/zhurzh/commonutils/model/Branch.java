@@ -2,12 +2,14 @@ package com.zhurzh.commonutils.model;
 
 import com.zhurzh.commonjpa.enums.BranchStatus;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @AllArgsConstructor
 public abstract class Branch implements BranchesInterface {
 
+    @Getter
     @NonNull private String path;
     @NonNull private BranchStatus currentBranchStatus;
 

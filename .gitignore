@@ -1,14 +1,14 @@
 .idea
+.env
 /logs
 common-jpa/target
 common-node-service/target
 common-rabbitmq/target
 common-utils/target
-demo/target
 dispatcher/target
 node/target
 node-check-order-service/target
+node-faq-service/target
 node-order-service/target
+node-price-list/target
 node-start-service/target
-
-dispatcher/src/main/resources/application.properties

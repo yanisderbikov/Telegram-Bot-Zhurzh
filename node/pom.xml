@@ -2,87 +2,72 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>Telegram-Bot-Zhurzh</artifactId>
         <groupId>com.zhuzh</groupId>
-        <version>1.0.0</version>
-
+        <version>2.0.0</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
-    <version>1.2.3</version>
-
+    <version>2.0.0</version>
 
     <artifactId>node</artifactId>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.telegram</groupId>
-            <artifactId>telegrambots-spring-boot-starter</artifactId>
-            <version>${telegrambot.starter.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.zhurzh</groupId>
-            <artifactId>common-node-service</artifactId>
-            <version>LATEST</version>
-
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.zhuzh</groupId>
-            <artifactId>common-utils</artifactId>
-            <version>LATEST</version>
-
-        </dependency>
-        <dependency>
-            <groupId>com.zhurzh</groupId>
-            <artifactId>node-check-order-service</artifactId>
-            <version>1.2.3</version>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>com.zhurzh</groupId>
             <artifactId>node-faq-service</artifactId>
-            <version>1.2.3</version>
-            <scope>compile</scope>
+            <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zhurzh</groupId>
+            <artifactId>node-order-service</artifactId>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>com.zhurzh</groupId>
             <artifactId>node-price-list</artifactId>
-            <version>1.2.3</version>
-            <scope>compile</scope>
+            <version>LATEST</version>
         </dependency>
         <dependency>
             <groupId>com.zhurzh</groupId>
             <artifactId>node-start-service</artifactId>
-            <version>1.2.3</version>
-            <scope>compile</scope>
+            <version>LATEST</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.18</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+            <version>${hibernate-types.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zhuzh</groupId>
+            <artifactId>common-rabbitmq</artifactId>
+            <version>LATEST</version>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
-            <!-- Плагин для упаковки и запуска Spring Boot приложения -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>com.zhurzh.node.NodeApplication</mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration>
+                    <mainClass>com.zhurzh.node.NodeApplication</mainClass> <!-- Укажите полный путь к вашему основному классу -->
+                </configuration>
             </plugin>
         </plugins>
     </build>

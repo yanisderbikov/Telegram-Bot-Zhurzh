@@ -8,9 +8,9 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.zhurzh.commonnodeservice",
         "com.zhurzh.node",
-        "com.zhurzh.nodecheckorderservice",
+//        "com.zhurzh.nodecheckorderservice",
         "com.zhurzh.nodefaqservice",
-        "com.zhurzh.orderservice",
+        "com.zhurzh.nodeorderservice",
 })
 public class NodeApplication {
     public static void main(String[] args) {

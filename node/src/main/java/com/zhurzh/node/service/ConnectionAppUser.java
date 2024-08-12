@@ -25,6 +25,7 @@ public class ConnectionAppUser {
      */
     @Transactional
     public AppUser findOrSaveAppUser(Update update) {
+        if (update == null) throw new RuntimeException("update is null");
         User telegramUser = update.hasCallbackQuery() ? update.getCallbackQuery().getFrom() : update.getMessage().getFrom();
         var userid = telegramUser.getId();
         Optional<AppUser> optional = Optional.empty();

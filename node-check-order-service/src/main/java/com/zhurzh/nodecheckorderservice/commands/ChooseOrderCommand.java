@@ -9,7 +9,7 @@ import com.zhurzh.commonutils.model.Command;
 import com.zhurzh.nodecheckorderservice.controller.HasUserState;
 import com.zhurzh.nodecheckorderservice.controller.UserState;
 import com.zhurzh.nodecheckorderservice.enums.TextMessage;
-import com.zhurzh.orderservice.controller.OrderServiceController;
+import com.zhurzh.nodeorderservice.controller.OrderServiceController;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;

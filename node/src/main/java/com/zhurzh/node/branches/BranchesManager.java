@@ -21,6 +21,7 @@ public class BranchesManager implements BranchesManagerInterface {
     private CheckLastMessage checkLastMessage;
     private ConnectionAppUser connectionAppUser;
 
+
     @Override
     public void consume(Update update) {
         var appUser = connectionAppUser.findOrSaveAppUser(update);
