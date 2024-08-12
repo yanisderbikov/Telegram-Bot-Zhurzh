@@ -12,7 +12,7 @@ files_to_send=(
     "docker-compose.yml"
 #    "Dockerfile-all"
 #    "start-apps.sh"
-#    "Dockerfile"
+    "Dockerfile"
 #    ".env"
 )
 

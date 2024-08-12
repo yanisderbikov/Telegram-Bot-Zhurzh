@@ -1,49 +1,51 @@
 version: '3.8'
 services:
-#  site-commissions:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#      args:
-#        JAR_FILE: dispatcher-zhurzh-1.0.0.jar
-#    ports:
-#      - "8095:8090"
-#    restart: always
-#    container_name: site-commissions-zhurzh
-#    environment:
-#      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-#      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-#      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-#      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
-#      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
-#      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
-#      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
-#      SPRING_JPA_GENERATE_DDL: "true"
-#      TARGET_HOST: ${TARGET_HOST}
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 150M
-#    logging:
-#      options:
-#        max-size: "10m"
-#        max-file: "3"
-
-  unified-services:
+  node-main-getaway:
     build:
       context: .
-      dockerfile: Dockerfile-all
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: node/target/node-1.2.3.jar
     ports:
-      - "8195:8195"  # app2
-      - "9002:9002"  # app3
-      - "9003:9003"  # app5
-      - "9005:9005"  # app6
-      - "9001:9001"  # app7
-      - "9004:9004"  # app8
+      - "8195:8195"
     restart: always
-    container_name: unified-services
-    volumes:
-      - .:/app
+    container_name: node-main-getaway
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
+      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
+      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
+      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
+      SPRING_JPA_GENERATE_DDL: "true"
+      TARGET_HOST: ${TARGET_HOST}
+      DISPATCHER_STATIC_URL: ${DISPATCHER_STATIC_URL}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 150M
+        reservations:
+          cpus: '0.10'
+          memory: 80M
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - app-network
+
+  order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: node-order-service/target/node-order-service-1.2.3.jar
+    ports:
+      - "9002:9002"
+    restart: always
+    container_name: order-service
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
@@ -59,22 +61,24 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.35'
-          memory: 500M
-        reservations:
           cpus: '0.25'
-          memory: 300M
+          memory: 150M
+        reservations:
+          cpus: '0.10'
+          memory: 80M
     logging:
       options:
         max-size: "10m"
         max-file: "3"
+    networks:
+      - app-network
 
-  app4:
+  dispatcher:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        JAR_FILE: dispatcher-1.2.3.jar
+        JAR_FILE: dispatcher/target/dispatcher-1.2.3.jar
     ports:
       - "8090:8999"
     restart: always
@@ -95,8 +99,165 @@ services:
     deploy:
       resources:
         limits:
+          cpus: '0.25'
           memory: 150M
+        reservations:
+          cpus: '0.10'
+          memory: 80M
     logging:
       options:
         max-size: "10m"
         max-file: "3"
+    networks:
+      - app-network
+
+  check-order-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: node-check-order-service/target/node-check-order-service-1.2.3.jar
+    ports:
+      - "9003:9003"
+    restart: always
+    container_name: check-order-service
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
+      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
+      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
+      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
+      SPRING_JPA_GENERATE_DDL: "true"
+      TARGET_HOST: ${TARGET_HOST}
+      DISPATCHER_STATIC_URL: ${DISPATCHER_STATIC_URL}
+      BOT_TOKEN: ${BOT_TOKEN}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 150M
+        reservations:
+          cpus: '0.10'
+          memory: 80M
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - app-network
+
+  faq-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: node-faq-service/target/node-faq-service-1.2.3.jar
+    ports:
+      - "9005:9005"
+    restart: always
+    container_name: faq-service
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
+      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
+      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
+      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
+      SPRING_JPA_GENERATE_DDL: "true"
+      TARGET_HOST: ${TARGET_HOST}
+      DISPATCHER_STATIC_URL: ${DISPATCHER_STATIC_URL}
+      BOT_TOKEN: ${BOT_TOKEN}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 150M
+        reservations:
+          cpus: '0.10'
+          memory: 80M
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - app-network
+
+  start-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: node-start-service/target/node-start-service-1.2.3.jar
+    ports:
+      - "9001:9001"
+    restart: always
+    container_name: start-service
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
+      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
+      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
+      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
+      SPRING_JPA_GENERATE_DDL: "true"
+      TARGET_HOST: ${TARGET_HOST}
+      DISPATCHER_STATIC_URL: ${DISPATCHER_STATIC_URL}
+      BOT_TOKEN: ${BOT_TOKEN}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 150M
+        reservations:
+          cpus: '0.10'
+          memory: 80M
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - app-network
+
+  price-list-links:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: node-price-list/target/node-price-list-1.2.3.jar
+    ports:
+      - "9004:9004"
+    restart: always
+    container_name: price-list-links
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_RABBITMQ_HOST: ${TARGET_HOST}
+      SPRING_RABBITMQ_PORT: ${SPRING_RABBITMQ_PORT}
+      SPRING_RABBITMQ_USERNAME: ${SPRING_RABBITMQ_USERNAME}
+      SPRING_RABBITMQ_PASSWORD: ${SPRING_RABBITMQ_PASSWORD}
+      SPRING_JPA_GENERATE_DDL: "true"
+      TARGET_HOST: ${TARGET_HOST}
+      DISPATCHER_STATIC_URL: ${DISPATCHER_STATIC_URL}
+      BOT_TOKEN: ${BOT_TOKEN}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 150M
+        reservations:
+          cpus: '0.10'
+          memory: 80M
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - app-network
+networks:
+  app-network:
+    external: true

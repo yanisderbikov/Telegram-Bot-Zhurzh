@@ -41,6 +41,30 @@
             <version>LATEST</version>
 
         </dependency>
+        <dependency>
+            <groupId>com.zhurzh</groupId>
+            <artifactId>node-check-order-service</artifactId>
+            <version>1.2.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zhurzh</groupId>
+            <artifactId>node-faq-service</artifactId>
+            <version>1.2.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zhurzh</groupId>
+            <artifactId>node-price-list</artifactId>
+            <version>1.2.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zhurzh</groupId>
+            <artifactId>node-start-service</artifactId>
+            <version>1.2.3</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
     <build>

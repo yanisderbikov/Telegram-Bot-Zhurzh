@@ -17,10 +17,10 @@ import java.util.Optional;
 @AllArgsConstructor
 @Log4j
 public class ConnectionAppUser {
+
     private AppUserDAO appUserDAO;
 
     /**
-     *
      * Connect to PostgreSQL
      */
     @Transactional

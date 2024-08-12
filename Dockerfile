@@ -11,4 +11,4 @@ WORKDIR /app
 COPY ${JAR_FILE} /app/my-app.jar
 
 # Укажите команду для запуска вашего приложения
-CMD ["java", "-jar", "my-app.jar"]
+CMD ["java","-Xms50m", "-Xmx100m", "-jar", "my-app.jar"]

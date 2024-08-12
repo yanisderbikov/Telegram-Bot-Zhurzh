@@ -1,13 +1,17 @@
 package com.zhurzh.node;
 
-import lombok.extern.log4j.Log4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.zhurzh.commonnodeservice", "com.zhurzh.node"})
+@ComponentScan(basePackages = {"com.zhurzh.commonnodeservice",
+        "com.zhurzh.node",
+        "com.zhurzh.nodecheckorderservice",
+        "com.zhurzh.nodefaqservice",
+        "com.zhurzh.orderservice",
+})
 public class NodeApplication {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(NodeApplication.class);

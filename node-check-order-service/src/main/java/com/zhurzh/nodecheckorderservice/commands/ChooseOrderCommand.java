@@ -3,15 +3,13 @@ package com.zhurzh.nodecheckorderservice.commands;
 import com.zhurzh.commonjpa.dao.OrderDAO;
 import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
-import com.zhurzh.commonnodeservice.service.impl.ConnectionToService;
 import com.zhurzh.commonutils.exception.CommandException;
 import com.zhurzh.commonutils.model.Body;
 import com.zhurzh.commonutils.model.Command;
 import com.zhurzh.nodecheckorderservice.controller.HasUserState;
-import com.zhurzh.nodecheckorderservice.controller.OrderCasheController;
-import com.zhurzh.nodecheckorderservice.controller.UserCasheController;
 import com.zhurzh.nodecheckorderservice.controller.UserState;
 import com.zhurzh.nodecheckorderservice.enums.TextMessage;
+import com.zhurzh.orderservice.controller.OrderServiceController;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +24,16 @@ import java.util.List;
 @Component
 @Log4j
 public class ChooseOrderCommand implements Command, HasUserState {
+
     @Autowired
     private CommandsManager cm;
     @Autowired
     private OrderDAO orderDAO;
     @Autowired
     private ViewOrderCommand viewOrderCommand;
+
+    @Autowired
+    private OrderServiceController orderServiceController;
 
     @Value("${image.path.empty.order}")
     private String imagePathEmptyOrder;
@@ -100,18 +102,15 @@ public class ChooseOrderCommand implements Command, HasUserState {
     }
 
     private List<InlineKeyboardButton> getButtonToOrder(AppUser appUser, Update update){
-        ConnectionToService connectToOrderService = new ConnectionToService(pathToOrderService, urlToOrderService);
-        var response = connectToOrderService.isActive(new Body(appUser, update));
-        var body = response.getBody();
-        if (response.getStatusCode().is2xxSuccessful() && body != null) {
-            InlineKeyboardButton button = new InlineKeyboardButton(body);
+
+        var response = orderServiceController.isActiveAndGetButtonName(new Body(appUser, update));
+        if (response != null && !response.isEmpty()) {
+            InlineKeyboardButton button = new InlineKeyboardButton(response);
             button.setCallbackData(pathToOrderService);
             return List.of(button);
         }else {
             log.warn("Fail to connect to Order service : "+ urlToOrderService + " path: " + pathToOrderService);
             return cm.buttonMainMenu(appUser.getLanguage());
         }
-
     }
-
 }

@@ -27,12 +27,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--     -->
-        <dependency>
-            <groupId>com.zhurzh</groupId>
-            <artifactId>common-node-service</artifactId>
-            <version>LATEST</version>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -43,6 +37,11 @@
             <artifactId>common-utils</artifactId>
             <version>LATEST</version>
         </dependency>
+        <dependency>
+            <groupId>com.zhurzh</groupId>
+            <artifactId>node-order-service</artifactId>
+            <version>LATEST</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -50,6 +49,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.zhurzh.node.NodeApplication</mainClass> <!-- Укажите полный путь к вашему основному классу -->
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,23 +1,24 @@
-package com.zhurzh.nodefaqservice.service;
+package com.zhurzh.orderservice.service;
 
 import com.zhurzh.commonjpa.entity.AppUser;
 import com.zhurzh.commonnodeservice.service.impl.CommandsManager;
-import com.zhurzh.nodefaqservice.controller.UserCacheController;
+import com.zhurzh.orderservice.controller.UserStateController;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 
-@Service
-@Log4j
+@Component
 @AllArgsConstructor
-public class NodeFaqService {
-    private CommandsManager cm;
-    private UserCacheController us;
+@Log4j
+public class OrderService {
 
-    public void mange(AppUser appUser, Update update){
+    private UserStateController us;
+    private CommandsManager cm;
+
+    public void execute(AppUser appUser, Update update) {
         try {
             var command = us.getCommand(appUser, update);
             command.execute(appUser, update);
@@ -28,3 +29,4 @@ public class NodeFaqService {
     }
 
 }
+

@@ -61,8 +61,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.zhurzh.node.NodeApplication</mainClass> <!-- Укажите полный путь к вашему основному классу -->
+                </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

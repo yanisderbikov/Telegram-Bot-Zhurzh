@@ -1,6 +1,6 @@
 package com.zhurzh.node.service.impl;
 
-import com.zhurzh.node.bot.branches.BranchesManagerInterface;
+import com.zhurzh.node.branches.BranchesManagerInterface;
 import com.zhurzh.node.service.ConsumerServiceRabbitMQ;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
