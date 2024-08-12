@@ -16,14 +16,18 @@ public abstract class Branch implements BranchesInterface {
         this.currentBranchStatus = currentBranchStatus;
     }
 
+    /**
+     *
+     * @param update текущее сообщение
+     * @param branchStatus текущий статус в {@link com.zhurzh.app.commonjpa.entity.AppUser}
+     * @return true если это сообщение из этого, если нет, то false
+     */
     public boolean isCurrentBranch(Update update, BranchStatus branchStatus) {
-        if (byBranchStatus(branchStatus)) return true;
-        if (byMessage(update)) return true;
-        return false;
+        return byMessage(update) || byBranchStatus(branchStatus);
     }
 
     private boolean byMessage(Update update) {
-        if (update.hasMessage()) {
+        if (update.hasMessage() && update.getMessage().hasText()) {
             var message = update.getMessage();
             return message.getText().startsWith(path);
         } else if (update.hasCallbackQuery()) {

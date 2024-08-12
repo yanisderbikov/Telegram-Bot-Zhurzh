@@ -106,7 +106,6 @@ public class DeadLineCommand implements Command, HasUserState {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
                     dateMap.put(appUser.getId(), date);
                     String formattedDate = dateFormat.format(date);
-                    log.debug(formattedDate);
                     var out = TextMessage.DEADLINE_CONFIRM_1.getMessage(appUser.getLanguage()) + formattedDate
                             + TextMessage.DEADLINE_CONFIRM_2.getMessage(appUser.getLanguage());
                     List<InlineKeyboardButton> row = new ArrayList<>();

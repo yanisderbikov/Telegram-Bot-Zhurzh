@@ -1,5 +1,7 @@
 package com.zhurzh.app.nodefaqservice.controller;
 
+import com.zhurzh.app.commonjpa.enums.BranchStatus;
+
 /**
  * Тут название кнопок и пути к конкретному состоянию/классу.
  * Каждая имплементация Command имеет свой собственный UserState
@@ -8,7 +10,7 @@ package com.zhurzh.app.nodefaqservice.controller;
  *
  */
 public enum UserState {
-    FAQ("FAQ", "FAQ", "/faqservice"),
+    FAQ("FAQ", "FAQ", BranchStatus.FAQ.getPath()),
     ADD_NEW_QUESTION("Add question", "Добавить вопрос", "/add_own_question_command"),
 
     MAIN_MENU("Menu", "Меню", "/menu");

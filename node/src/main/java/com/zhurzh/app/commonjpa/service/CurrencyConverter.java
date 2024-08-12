@@ -16,7 +16,6 @@ public class CurrencyConverter {
     private static double actualCurrency = getUsdToRubRate();
 
     public static double getActualCurrency(){
-        log.debug(actualCurrency);
         return actualCurrency;
     }
 

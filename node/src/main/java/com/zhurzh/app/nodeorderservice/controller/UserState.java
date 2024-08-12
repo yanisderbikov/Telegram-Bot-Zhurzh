@@ -1,5 +1,7 @@
 package com.zhurzh.app.nodeorderservice.controller;
 
+import com.zhurzh.app.commonjpa.enums.BranchStatus;
+
 /**
  * Тут название кнопок и пути к конкретному состоянию/классу.
  * Каждая имплементация Command имеет свой собственный UserState
@@ -10,7 +12,7 @@ package com.zhurzh.app.nodeorderservice.controller;
 public enum UserState {
     ADDITIONAL_MESSANGER("Add", "Добавить", "/add_additional_messanger"),
     CORRECT_ORDER("Correction", "Исправить", "/correct_order_command"),
-    START("Start over", "Начать с начала", "/orderservice"),
+    START("Start over", "Начать с начала", BranchStatus.ORDER.getPath()),
     COUNT_PERSONS("Count of persons", "Количество персонажей", "/count_persons_command"),
     REFERENCES("Reference", "Референс", "/reference_command"),
     FORMAT_ILLUSTRATION("Format", "Вид иллюстрации", "/format_illustration_command"),

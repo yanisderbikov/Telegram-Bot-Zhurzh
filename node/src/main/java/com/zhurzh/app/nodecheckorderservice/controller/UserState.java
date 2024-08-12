@@ -1,5 +1,7 @@
 package com.zhurzh.app.nodecheckorderservice.controller;
 
+import com.zhurzh.app.commonjpa.enums.BranchStatus;
+
 /**
  * Тут название кнопок и пути к конкретному состоянию/классу.
  * Каждая имплементация Command имеет свой собственный UserState
@@ -9,7 +11,7 @@ package com.zhurzh.app.nodecheckorderservice.controller;
  */
 public enum UserState {
     DELETE_ORDER("Delete order", "Удалить заказ", "/delete_order_command"),
-    CHOOSE_ORDER("Choose order", "Выбрать заказ", "/checkorderservice"),
+    CHOOSE_ORDER("Choose order", "Выбрать заказ", BranchStatus.CHECK_ORDER.getPath()),
     VIEW_ORDER("View order", "Посмотреть", "/view_order_command"),
     MAIN_MENU("Menu", "Меню", "/menu");
 

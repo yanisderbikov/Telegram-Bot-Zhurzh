@@ -103,9 +103,6 @@ public class ReferencesCommand implements Command, HasUserState {
                 addUserFile(appUser, update.getMessage().getText());
             }
 
-            log.debug(String.format("OUT FOR user '%s' : %s",
-                    appUser.getTelegramUserName(), userCache.getReferenceCache(appUser)));
-
             if (mediaGroupId != null && userCache.checkAndAdd(mediaGroupId)){
                 return true;
             }
