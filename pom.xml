@@ -25,16 +25,8 @@
     </parent>
 
     <modules>
-        <module>common-jpa</module>
-        <module>common-utils</module>
         <module>common-rabbitmq</module>
-        <module>common-node-service</module>
         <module>dispatcher</module>
-        <module>node-price-list</module>
-        <module>node-order-service</module>
-        <module>node-start-service</module>
-        <module>node-faq-service</module>
-<!--        <module>node-check-order-service</module>-->
         <module>node</module>
     </modules>
 
@@ -70,25 +62,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>com.zhuzh</groupId>
-            <artifactId>common-jpa</artifactId>
-            <version>LATEST</version>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
         </dependency>
         <dependency>
-            <groupId>com.zhurzh</groupId>
-            <artifactId>common-node-service</artifactId>
-            <version>LATEST</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.zhuzh</groupId>-->
-<!--            <artifactId>common-rabbitmq</artifactId>-->
-<!--            <version>LATEST</version>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>com.zhuzh</groupId>
-            <artifactId>common-utils</artifactId>
-            <version>LATEST</version>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.1</version>
         </dependency>
 
         <dependency>

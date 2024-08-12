@@ -19,7 +19,6 @@ public class WebHookController {
         if (update.hasMessage() && update.getMessage().getChat().getType().equals("private") ||
         update.hasCallbackQuery() && update.getCallbackQuery().getMessage().getChat().getType().equals("private")) {
             updateProcessor.processUpdate(update);
-            log.debug("Update come : " + update);
             return ResponseEntity.ok().build();
         }else {
             log.debug("GROUP MESSAGE : " + update);

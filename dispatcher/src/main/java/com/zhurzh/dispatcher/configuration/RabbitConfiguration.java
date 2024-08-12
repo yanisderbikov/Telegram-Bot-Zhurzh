@@ -7,7 +7,6 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//@EnableScheduling
 @Configuration
 public class RabbitConfiguration {
     @Bean
@@ -17,42 +16,24 @@ public class RabbitConfiguration {
 
     @Bean
     public Queue textMessageQueue() {
-        return new Queue(RabbitQueue.TEXT_MESSAGE_UPDATE);
+        return new Queue(RabbitQueue.TEXT_TO_SERVER);
     }
 
-//    @Bean
-//    public Queue docMessageQueue() {
-//        return new Queue(RabbitQueue.DOC_MESSAGE_UPDATE);
-//    }
-
-//    @Bean
-//    public Queue photoMessageQueue() {
-//        return new Queue(RabbitQueue.PHOTO_MESSAGE_UPDATE);
-//    }
-
+    @Bean
+    public Queue dataCallbackQueue() {
+        return new Queue(RabbitQueue.CALLBACK_TO_SERVER);
+    }
     @Bean
     public Queue answerMessageQueue() {
-        return new Queue(RabbitQueue.ANSWER_MESSAGE);
+        return new Queue(RabbitQueue.TEXT_TO_TELEGRAM);
     }
     @Bean
     public Queue answerCallbackQueue() {
-        return new Queue(RabbitQueue.ANSWER_CALLBACK);
+        return new Queue(RabbitQueue.CALLBACK_TO_TELEGRAM);
     }
-    @Bean
-    public Queue dataCallbackQueue() {
-        return new Queue(RabbitQueue.CALLBACK_MESSAGE_UPDATE);
-    }
-//    @Bean
-//    public Queue answerPhotoQueue() {
-//        return new Queue(RabbitQueue.ANSWER_PHOTO_MESSAGE);
-//    }
-//    @Bean
-//    public Queue editPhotoQueue() {
-//        return new Queue(RabbitQueue.EDIT_PHOTO_MESSAGE);
-//    }
     @Bean
     public Queue deleteMessageQueue() {
-        return new Queue(RabbitQueue.DELETE_MESSAGE_ANSWER);
+        return new Queue(RabbitQueue.DELETE_MESSAGE_TO_TELEGRAM);
     }
     @Bean
     public Queue groupTextMessage() {

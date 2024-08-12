@@ -4,20 +4,11 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
-import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 import com.zhurzh.dispatcher.service.UpdateProducer;
 import com.zhurzh.dispatcher.utils.MessageUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import static com.zhurzh.commonrabbitmq.model.RabbitQueue.*;
 
@@ -55,31 +46,31 @@ public class UpdateProcessor {
 
     private void distributeMessagesByType(Update update) {
         if (update.hasCallbackQuery()) {
-            processCallbackMessage(update);
+            sendCallbackToServer(update);
             return;
         }
-        processTextMessage(update);
+        sendTextToServer(update);
     }
 
 
-    public void setView(SendMessage sendMessage) {
+    public void sendTextToTelegram(SendMessage sendMessage) {
         telegramBot.sendAnswerMessage(sendMessage);
     }
 
-    public void setCallback(EditMessageText editMessageText) {
+    public void sendCallbackToTelegram(EditMessageText editMessageText) {
         telegramBot.sendCallBack(editMessageText);
     }
 
-    private void processTextMessage(Update update) {
-        updateProducer.produce(TEXT_MESSAGE_UPDATE, update);
-    }
-
-    private void processCallbackMessage(Update update) {
-        updateProducer.produce(CALLBACK_MESSAGE_UPDATE, update);
-    }
-
-
-    public void setDeleteMessage(DeleteMessage deleteMessage) {
+    public void sendDeleteMessageToTelegram(DeleteMessage deleteMessage) {
         telegramBot.sendDeleteMessage(deleteMessage);
     }
+
+    private void sendTextToServer(Update update) {
+        updateProducer.produce(TEXT_TO_SERVER, update);
+    }
+
+    private void sendCallbackToServer(Update update) {
+        updateProducer.produce(CALLBACK_TO_SERVER, update);
+    }
+
 }
