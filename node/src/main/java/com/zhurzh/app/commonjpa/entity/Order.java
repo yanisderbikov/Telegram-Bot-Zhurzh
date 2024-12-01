@@ -47,6 +47,12 @@ public class Order {
     @Column(columnDefinition = "TEXT")
     private String commentToArt;
     private String price;
+    @ElementCollection(targetClass = AdditionsOptionsEnum.class)
+    @CollectionTable(name = "order_additions", joinColumns = @JoinColumn(name = "order_id"))
+    @Column(name = "addition_option")
+    @Enumerated(EnumType.STRING)
+    private List<AdditionsOptionsEnum> additionsOptions;
+
 
     @Override
     public String toString(){
@@ -147,14 +153,8 @@ public class Order {
         double min = 1;
         double max = 1;
         switch (detalizationOfIllustration){
-            case DETAILED -> {
-                switch (formatOfIllustration){
-                    case PORTRAIT -> min = 170;
-                    case HALF_BODY -> min = 210;
-                    case FULL_BODY -> min = 250;
-                }
-            }
-            case LINE_ART_SHADING -> {
+
+            case LINE_ART -> {
                 switch (formatOfIllustration){
                     case PORTRAIT -> min = 100;
                     case HALF_BODY -> min = 130;
@@ -167,13 +167,6 @@ public class Order {
                     case PORTRAIT -> min = 85;
                     case HALF_BODY -> min = 130;
                     case FULL_BODY -> min = 155;
-                }
-            }
-            case BLACK_AND_WHITE_SKETCH -> {
-                switch (formatOfIllustration){
-                    case PORTRAIT -> min = 55;
-                    case HALF_BODY -> min = 70;
-                    case FULL_BODY -> min = 100;
                 }
             }
         }

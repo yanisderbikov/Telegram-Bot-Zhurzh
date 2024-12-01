@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-//import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,6 @@ import java.util.NoSuchElementException;
 
 @Log4j
 @Component
-//@AllArgsConstructor
 public class StartCommand implements Command, HasUserState {
     @Autowired
     private CommandsManager cm;
@@ -32,19 +30,18 @@ public class StartCommand implements Command, HasUserState {
     private CommonCommands cc;
     @Autowired
     private OrderDAO orderDAO;
-//    @NonNull
+
     public static final UserState userState = UserState.START;
-//    @NonNull
+
     public static final String veryBegin = "/very_begin";
-//    @NonNull
+
     @Value("${image.path.unfinished.order}")
     private String unfinishedImage;
-
-//    @NonNull
     @Value("${image.path.initial.order.ru}")
     private String initialImageRu;
     @Value("${image.path.initial.order.eng}")
     private String initialImageEng;
+
     @Override
     public UserState getUserState() {
         return userState;
@@ -58,14 +55,14 @@ public class StartCommand implements Command, HasUserState {
         throw new CommandException(Thread.currentThread().getStackTrace());
 
     }
+
     @Override
     public boolean isExecuted(AppUser appUser) {
         return true;
     }
 
 
-
-    private boolean isMainMessage(AppUser appUser, Update update){
+    private boolean isMainMessage(AppUser appUser, Update update) {
         Order order = Order.builder().owner(appUser).build();
         try {
             Order existingOrder = cc.findActiveOrder(appUser);
@@ -85,7 +82,7 @@ public class StartCommand implements Command, HasUserState {
         return true;
     }
 
-    private boolean isThereNotFinished(AppUser appUser, Update update){
+    private boolean isThereNotFinished(AppUser appUser, Update update) {
         // есть незаконченная заявка
 
         if (update.hasCallbackQuery() && (!update.getCallbackQuery().getData().equals(userState.getPath())
@@ -107,8 +104,5 @@ public class StartCommand implements Command, HasUserState {
             log.warn(e);
             return false;
         }
-
-
     }
-
 }

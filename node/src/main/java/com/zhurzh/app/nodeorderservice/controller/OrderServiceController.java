@@ -24,6 +24,7 @@ public class OrderServiceController extends Branch {
     public String isActiveAndGetButtonName(Body body){
         return TextMessage.ACTIVATION_BUTTON.getMessage(body.getAppUser().getLanguage());
     }
+
     @Override
     public void execute(Body body){
         try {

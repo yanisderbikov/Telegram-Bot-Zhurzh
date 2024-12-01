@@ -1,13 +1,15 @@
 package com.zhurzh.app.commonjpa.enums;
 
-public enum DetalizationOfIllustration implements Language {
-    CLASSICAL("Classical", "Классическая"),
-    LINE_ART("Line Art", "Лайнарт");
+public enum AdditionsOptionsEnum implements Language {
+
+    DETAIL("Detail", "Детальная"),
+    NSFW("NSFW", "NSFW"),
+    BRIGHT("Bright colors", "Яркие цвета");
 
     private final String englishMessage;
     private final String russianMessage;
 
-    DetalizationOfIllustration(String englishMessage, String russianMessage) {
+    AdditionsOptionsEnum(String englishMessage, String russianMessage) {
         this.englishMessage = englishMessage;
         this.russianMessage = russianMessage;
     }

@@ -78,9 +78,7 @@ public class MainNodeStartService {
             List<List<InlineKeyboardButton>> lists = new ArrayList<>();
             cm.addButtonToList(lists, TextMessage.RULES_BUTTON.getMessage(appUser.getLanguage()), RULES);
 
-            if (cm.sendPhoto(appUser, update, out, imageHello, lists)) {
-                log.debug(String.format("File executed %s", imageHello));
-            } else {
+            if (!cm.sendPhoto(appUser, update, out, imageHello, lists)) {
                 log.error(String.format("File NOT executed %s", imageHello));
                 cm.sendAnswerEdit(appUser, update, out, lists);
             }

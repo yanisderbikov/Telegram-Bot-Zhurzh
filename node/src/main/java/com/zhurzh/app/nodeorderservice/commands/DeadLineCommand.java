@@ -43,14 +43,12 @@ public class DeadLineCommand implements Command, HasUserState {
 
     @Override
     public void execute(AppUser appUser, Update update) throws CommandException {
-        // может приходить /orderservice
         if (startCommand(appUser, update)) return;
         if (doesntMatter(appUser, update)) return;
         if (isChangeMonth(appUser, update)) return;
         if (chosenDay(appUser, update)) return;
         if (handlerYesNo(appUser, update)) return;
         throw new CommandException(Thread.currentThread().getStackTrace());
-
     }
 
     @Override

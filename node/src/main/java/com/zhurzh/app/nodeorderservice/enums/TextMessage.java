@@ -84,6 +84,9 @@ public enum TextMessage {
     DOESNT_MATTER("Doesn't matter", "Не важно"),
     DEADLINE_CONFIRM_1("You've chosen ", "Ты выбрал "),
     DEADLINE_CONFIRM_2("\nCorrect?", "\nВсе правильно?"),
+    ADDITIONAL_OPTIONS_MESSAGE_1("Choose additional options", "Выбери дополнительные варианты"),
+    ADDITIONAL_BUTTON_DONE("Done", "Я все"),
+
     ;
 
     private final String englishMessage;
